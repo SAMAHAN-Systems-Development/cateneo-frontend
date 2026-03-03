@@ -32,13 +32,20 @@ $ git clone https://github.com/SAMAHAN-Systems-Development/cateneo-frontend
 $ git fetch
 ```
 
-3. Install the libraries with this command:
+3. Change Directory to cateneo-frontend
+
+```bash
+$ cd cateneo-frontend
+```
+
+
+4. Install the libraries with this command:
 
 ```bash
 $ npm i
 ```
 
-4. Duplicate .env.example file and rename it to .env
+5. Paste the .env
 
 ## Running Application
 

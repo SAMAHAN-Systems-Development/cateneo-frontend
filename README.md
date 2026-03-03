@@ -14,7 +14,7 @@ Install the following:
 
 - VSCode
 
-Vscode Extension:
+VSCode Extension:
 
 - Prettier (VSCode Extension)
 

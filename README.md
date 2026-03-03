@@ -60,3 +60,9 @@ $ git pull origin main
 ```bash
 $ npm i
 ```
+
+3. Run the Server with this command:
+
+```bash
+$ npm run dev
+```

@@ -12,6 +12,12 @@ Install the following:
 
 - Node.js
 
+Vscode Extension:
+
+- Prettier (VSCode Extension)
+
+- ESlint
+
 ## Project setup
 
 1. Clone the repository

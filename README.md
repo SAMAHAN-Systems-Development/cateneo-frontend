@@ -32,7 +32,7 @@ $ git clone https://github.com/SAMAHAN-Systems-Development/cateneo-frontend
 $ git fetch
 ```
 
-3. Change Directory to cateneo-frontend
+3. Change Directory to "cateneo-frontend"
 
 ```bash
 $ cd cateneo-frontend

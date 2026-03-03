@@ -2,7 +2,7 @@
 
 ## Description
 
-Official frontend repository for the **Cateneo Website**, built with **Next JS**, **Tanstack**
+Official frontend repository for the **Cateneo Website**, built with **Next JS**
 
 ## Pre-requisite Installations
 

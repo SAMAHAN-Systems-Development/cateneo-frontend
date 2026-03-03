@@ -12,6 +12,8 @@ Install the following:
 
 - Node.js
 
+- VSCode
+
 Vscode Extension:
 
 - Prettier (VSCode Extension)

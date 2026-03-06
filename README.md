@@ -28,16 +28,16 @@ VSCode Extension:
 $ git clone https://github.com/SAMAHAN-Systems-Development/cateneo-frontend
 ```
 
-2. Fetch the updates
-
-```bash
-$ git fetch
-```
-
-3. Change Directory to "cateneo-frontend"
+2. Change Directory to "cateneo-frontend"
 
 ```bash
 $ cd cateneo-frontend
+```
+
+3. Fetch the updates
+
+```bash
+$ git fetch
 ```
 
 

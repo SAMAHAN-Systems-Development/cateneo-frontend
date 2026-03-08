@@ -1,0 +1,105 @@
+import type { UseFormReturn } from "react-hook-form";
+import { type loginFormData } from '@/schemas/login-form-schema';
+import { MdMailOutline } from "react-icons/md";
+import { GoLock } from "react-icons/go";
+
+
+interface LoginFormProps {
+    form: UseFormReturn<loginFormData>;
+    onSubmit: (data: loginFormData ) => void;
+}
+
+const LoginForm = ({form, onSubmit}: LoginFormProps) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = form;
+    return(
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 py-8">
+            <div className="w-full max-w-md bg-amber-50 border-2 sm:border-3 md:border-4 border-amber-700 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-lg">
+               
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-900 text-center mb-6 sm:mb-8 font-gaegu">
+                    Welcome back!
+                </h1>
+
+                
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5 font-gaegu">
+                    
+                    <div className="relative">
+                        <div className="flex items-center border-2 border-amber-700 rounded-full px-4 sm:px-5 py-2.5 sm:py-3">
+                            <span className="text-amber-700 mr-2 sm:mr-3 text-lg sm:text-xl"><MdMailOutline /></span>
+                            <input
+                                type="email"
+                                placeholder="Email"
+                                {...register('email')}
+                                className="flex-1 bg-transparent outline-none text-sm sm:text-base text-amber-900 placeholder-amber-700 placeholder-opacity-70"
+                            />
+                        </div>
+                        {errors.email && (
+                            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.email.message}</p>
+                        )}
+                    </div>
+
+                   
+                    <div className="relative">
+                        <div className="flex items-center border-2 border-amber-700 rounded-full px-4 sm:px-5 py-2.5 sm:py-3">
+                            <span className="text-amber-700 mr-2 sm:mr-3 text-lg sm:text-xl"><GoLock /></span>
+                            <input
+                                type="password"
+                                placeholder="Password"
+                                {...register('password')}
+                                className="flex-1 bg-transparent outline-none text-sm sm:text-base text-amber-900 placeholder-amber-700 placeholder-opacity-70"
+                            />
+                        </div>
+                        {errors.password && (
+                            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.password.message}</p>
+                        )}
+                    </div>
+
+                 
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2.5 sm:py-3 px-6 rounded-full transition duration-200 disabled:opacity-50 mt-6 sm:mt-8 cursor-pointer text-sm sm:text-base"
+                    >
+                        {isSubmitting ? 'Logging in...' : 'Log In'}
+                    </button>
+                </form>
+
+                <p className="text-center text-amber-900 mt-4 sm:mt-6 font-gaegu text-sm sm:text-base">
+                    Don&apos;t have an account?{' '}
+                    <a href="/signup" className="text-amber-700 hover:underline font-semibold">
+                        Sign Up
+                    </a>
+                </p>
+            </div>
+        </div>
+    );
+}
+
+export default LoginForm;
+
+
+//////// FOR page.tsx TESTING ////////
+
+// const Page = () => {
+//   const form = useForm<loginFormData>({
+//     resolver: zodResolver(loginFormSchema),
+//     defaultValues: { email: '', password: '' },
+//   });
+
+//   const onSubmit = (data: loginFormData) => {
+//     console.log('submitted', data);
+//   };
+
+//   return (
+//     <div className="min-h-screen flex items-center justify-center">
+//         <LoginForm form={form} onSubmit={onSubmit} />
+//     </div>
+//   );
+// };
+
+// export default Page;
+
+//////// FOR page.tsx TESTING ////////

@@ -9,7 +9,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="relative flex items-center justify-between px-4 py-3 text-white mx-4 md:px-8 md:py-4 md:mx-10">
+    <nav className="relative flex items-center justify-between md:justify-center px-4 py-3 text-white lg:mx-4 md:px-8 md:py-4 md:mx-10">
       {/* Logo Section */}
       <div className="shrink-0 text-xl font-gaegu tracking-wide">
         <Link href="/" className="hover:opacity-90 transition-opacity duration-200 flex items-center gap-2">
@@ -27,7 +27,7 @@ export default function Navbar() {
       <ul
         className={`${
           isMenuOpen ? 'flex' : 'hidden'
-        } absolute right-4 top-full mt-3 flex-col min-w-[200px] gap-4 rounded-2xl border-2 border-cateneo-darkbrown bg-cateneo-white p-10 text-cateneo-black text-xl font-gaegu shadow-lg lg:mx-30 lg:gap-30 lg:px-20 md:static md:mx-10 md:mt-0 md:flex md:flex-row md:items-center md:gap-6 md:rounded-full md:bg-cateneo-white md:px-10 md:py-2 shrink-0`}
+        } absolute right-4 top-full mt-3 flex-col min-w-[200px] gap-4 rounded-2xl border-2 border-cateneo-darkbrown bg-cateneo-white p-10 text-cateneo-black text-xl font-gaegu shadow-lg lg:mx-10 lg:gap-30 lg:px-20 md:static md:mx-10 md:mt-0 md:flex md:flex-row md:items-center md:gap-6 md:rounded-full md:bg-cateneo-white md:px-10 md:py-2 shrink-0`}
       >
         <li>
           <Link

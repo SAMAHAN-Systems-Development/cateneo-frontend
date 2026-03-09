@@ -32,11 +32,11 @@ const buttonVariants = cva(
         "muted-outline":      "bg-transparent border-2 border-stone-400 text-stone-400",
 
         // Text variants
-        "default-text":    "bg-transparent text-stone-800 group-hover:underline underline-offset-2 decoration-2",
-        "primary-text":    "bg-transparent text-amber-700 group-hover:underline underline-offset-2 decoration-2",
-        "secondary-text":  "bg-transparent text-amber-500 group-hover:underline underline-offset-2 decoration-2",
-        "accent-text":     "bg-transparent text-amber-300 group-hover:underline underline-offset-2 decoration-2",
-        "muted-text":      "bg-transparent text-stone-400 group-hover:underline underline-offset-2 decoration-2",
+        "default-text":    "bg-transparent text-stone-800 hover:underline underline-offset-2 decoration-2",
+        "primary-text":    "bg-transparent text-amber-700 hover:underline underline-offset-2 decoration-2",
+        "secondary-text":  "bg-transparent text-amber-500 hover:underline underline-offset-2 decoration-2",
+        "accent-text":     "bg-transparent text-amber-300 hover:underline underline-offset-2 decoration-2",
+        "muted-text":      "bg-transparent text-stone-400 hover:underline underline-offset-2 decoration-2",
       },
 
       iconPosition: {
@@ -123,7 +123,10 @@ RoundedButton.displayName = "Button";
 
 export { RoundedButton, buttonVariants };
 
-/////////// FOR page.tsx TESTING ///////
+
+
+///////// FOR page.tsx TESTING ////////
+
 
 // "use client";
 
@@ -263,4 +266,5 @@ export { RoundedButton, buttonVariants };
 
 // export default ButtonShowcase;
 
-/////// FOR page.tsx TESTING ///////
+
+/////// FOR page.tsx TESTING /////////

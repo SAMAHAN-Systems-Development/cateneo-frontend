@@ -1,9 +1,9 @@
 import Navbar from "@/components/ui/navigation-bar";
+import { RoundedButton } from "@/components/ui/rounded-button";
 
 const page = () => {
   return (
     <>
-      <Navbar />
       <div>
         <h1 className="text-7xl font-gaegu  text-cateneo-blue">
           Welcome to Cateneo

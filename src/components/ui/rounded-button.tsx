@@ -6,7 +6,8 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   icon?: React.ReactNode;
@@ -18,47 +19,57 @@ const buttonVariants = cva(
     variants: {
       variant: {
         // Solid variants
-        "default":        "bg-cateneo-black text-cateneo-black",
-        "primary":        "bg-cateneo-darkbrown text-cateneo-black",
-        "secondary":      "bg-cateneo-lightbrown text-cateneo-black",
-        "accent":         "bg-cateneo-orange text-cateneo-black",
-        "muted":          "bg-cateneo-white text-cateneo-black",
+        default: "bg-cateneo-black text-cateneo-white",
+        primary: "bg-cateneo-darkbrown text-cateneo-white",
+        secondary: "bg-cateneo-lightbrown text-cateneo-white",
+        accent: "bg-cateneo-orange text-cateneo-white",
+        muted: "bg-cateneo-white text-cateneo-black",
 
         // Outline variants
-        "default-outline":    "bg-transparent border-2 border-cateneo-black text-cateneo-black",
-        "primary-outline":    "bg-transparent border-2 border-cateneo-darkbrown text-cateneo-darkbrown",
-        "secondary-outline":  "bg-transparent border-2 border-cateneo-lightbrown text-cateneo-lightbrown",
-        "accent-outline":     "bg-transparent border-2 border-cateneo-orange text-cateneo-orange",
-        "muted-outline":      "bg-transparent border-2 border-cateneo-white text-cateneo-white",
+        "default-outline":
+          "bg-transparent border-2 border-cateneo-black text-cateneo-black",
+        "primary-outline":
+          "bg-transparent border-2 border-cateneo-darkbrown text-cateneo-darkbrown",
+        "secondary-outline":
+          "bg-transparent border-2 border-cateneo-lightbrown text-cateneo-lightbrown",
+        "accent-outline":
+          "bg-transparent border-2 border-cateneo-orange text-cateneo-orange",
+        "muted-outline":
+          "bg-transparent border-2 border-cateneo-white text-cateneo-white",
 
         // Text variants
-        "default-text":    "bg-transparent text-cateneo-black hover:underline underline-offset-2 decoration-2",
-        "primary-text":    "bg-transparent text-cateneo-darkbrown hover:underline underline-offset-2 decoration-2",
-        "secondary-text":  "bg-transparent text-cateneo-lightbrown hover:underline underline-offset-2 decoration-2",
-        "accent-text":     "bg-transparent text-cateneo-orange hover:underline underline-offset-2 decoration-2",
-        "muted-text":      "bg-transparent text-cateneo-white hover:underline underline-offset-2 decoration-2",
+        "default-text":
+          "bg-transparent text-cateneo-black hover:underline underline-offset-2 decoration-2",
+        "primary-text":
+          "bg-transparent text-cateneo-darkbrown hover:underline underline-offset-2 decoration-2",
+        "secondary-text":
+          "bg-transparent text-cateneo-lightbrown hover:underline underline-offset-2 decoration-2",
+        "accent-text":
+          "bg-transparent text-cateneo-orange hover:underline underline-offset-2 decoration-2",
+        "muted-text":
+          "bg-transparent text-cateneo-white hover:underline underline-offset-2 decoration-2",
       },
 
       iconPosition: {
-        none:  "",
+        none: "",
         start: "pl-8 pr-10",
-        end:   "pl-10 pr-8",
+        end: "pl-10 pr-8",
       },
 
       iconSize: {
-        sm:      "[&>span>*]:w-3 [&>span>*]:h-3",
+        sm: "[&>span>*]:w-3 [&>span>*]:h-3",
         default: "[&>span>*]:w-4 [&>span>*]:h-4",
-        lg:      "[&>span>*]:w-5 [&>span>*]:h-5",
-        xl:      "[&>span>*]:w-6 [&>span>*]:h-6",
+        lg: "[&>span>*]:w-5 [&>span>*]:h-5",
+        xl: "[&>span>*]:w-6 [&>span>*]:h-6",
       },
     },
 
     defaultVariants: {
-      variant:      "default",
+      variant: "default",
       iconPosition: "none",
-      iconSize:     "default",
+      iconSize: "default",
     },
-  }
+  },
 );
 
 const RoundedButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -73,7 +84,7 @@ const RoundedButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     const Comp = asChild ? Slot : "button";
 
@@ -95,7 +106,7 @@ const RoundedButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
           ref={ref}
           className={cn(
             buttonVariants({ variant, iconPosition, iconSize }),
-            className
+            className,
           )}
           {...props}
         >
@@ -109,14 +120,14 @@ const RoundedButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={cn(
           buttonVariants({ variant, iconPosition, iconSize }),
-          className
+          className,
         )}
         {...props}
       >
         {content}
       </Comp>
     );
-  }
+  },
 );
 
 RoundedButton.displayName = "Button";

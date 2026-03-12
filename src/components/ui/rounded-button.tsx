@@ -18,8 +18,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         // Solid variants
-        "default":        "bg-cateneo-black text-cateneo-white",
-        "primary":        "bg-cateneo-darkbrown text-cateneo-white",
+        "default":        "bg-cateneo-black text-cateneo-black",
+        "primary":        "bg-cateneo-darkbrown text-cateneo-black",
         "secondary":      "bg-cateneo-lightbrown text-cateneo-black",
         "accent":         "bg-cateneo-orange text-cateneo-black",
         "muted":          "bg-cateneo-white text-cateneo-black",

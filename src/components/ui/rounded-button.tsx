@@ -80,11 +80,11 @@ const RoundedButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const content = (
       <>
         {icon && iconPosition === "start" && (
-          <span className="flex-shrink-0 transform-none">{icon}</span>
+          <span className="shrink-0 transform-none">{icon}</span>
         )}
         <span className="transform-none">{children}</span>
         {icon && iconPosition === "end" && (
-          <span className="flex-shrink-0 transform-none">{icon}</span>
+          <span className="shrink-0 transform-none">{icon}</span>
         )}
       </>
     );

@@ -18,25 +18,25 @@ const buttonVariants = cva(
     variants: {
       variant: {
         // Solid variants
-        "default":        "bg-stone-800 text-white",
-        "primary":        "bg-amber-700 text-white",
-        "secondary":      "bg-amber-500 text-stone-900",
-        "accent":         "bg-amber-300 text-stone-900",
-        "muted":          "bg-stone-200 text-stone-800",
+        "default":        "bg-cateneo-black text-cateneo-white",
+        "primary":        "bg-cateneo-darkbrown text-cateneo-white",
+        "secondary":      "bg-cateneo-lightbrown text-cateneo-black",
+        "accent":         "bg-cateneo-orange text-cateneo-black",
+        "muted":          "bg-cateneo-white text-cateneo-black",
 
         // Outline variants
-        "default-outline":    "bg-transparent border-2 border-stone-800 text-stone-800",
-        "primary-outline":    "bg-transparent border-2 border-amber-700 text-amber-700",
-        "secondary-outline":  "bg-transparent border-2 border-amber-500 text-amber-500",
-        "accent-outline":     "bg-transparent border-2 border-amber-300 text-amber-300",
-        "muted-outline":      "bg-transparent border-2 border-stone-400 text-stone-400",
+        "default-outline":    "bg-transparent border-2 border-cateneo-black text-cateneo-black",
+        "primary-outline":    "bg-transparent border-2 border-cateneo-darkbrown text-cateneo-darkbrown",
+        "secondary-outline":  "bg-transparent border-2 border-cateneo-lightbrown text-cateneo-lightbrown",
+        "accent-outline":     "bg-transparent border-2 border-cateneo-orange text-cateneo-orange",
+        "muted-outline":      "bg-transparent border-2 border-cateneo-white text-cateneo-white",
 
         // Text variants
-        "default-text":    "bg-transparent text-stone-800 hover:underline underline-offset-2 decoration-2",
-        "primary-text":    "bg-transparent text-amber-700 hover:underline underline-offset-2 decoration-2",
-        "secondary-text":  "bg-transparent text-amber-500 hover:underline underline-offset-2 decoration-2",
-        "accent-text":     "bg-transparent text-amber-300 hover:underline underline-offset-2 decoration-2",
-        "muted-text":      "bg-transparent text-stone-400 hover:underline underline-offset-2 decoration-2",
+        "default-text":    "bg-transparent text-cateneo-black hover:underline underline-offset-2 decoration-2",
+        "primary-text":    "bg-transparent text-cateneo-darkbrown hover:underline underline-offset-2 decoration-2",
+        "secondary-text":  "bg-transparent text-cateneo-lightbrown hover:underline underline-offset-2 decoration-2",
+        "accent-text":     "bg-transparent text-cateneo-orange hover:underline underline-offset-2 decoration-2",
+        "muted-text":      "bg-transparent text-cateneo-white hover:underline underline-offset-2 decoration-2",
       },
 
       iconPosition: {
@@ -122,149 +122,3 @@ const RoundedButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 RoundedButton.displayName = "Button";
 
 export { RoundedButton, buttonVariants };
-
-
-
-///////// FOR page.tsx TESTING ////////
-
-
-// "use client";
-
-// import { RoundedButton } from "@/components/ui/rounded-button";
-// import { Check } from "lucide-react";
-
-// const solidVariants = [
-//   "default",
-//   "primary",
-//   "secondary",
-//   "accent",
-//   "muted",
-// ] as const;
-
-// const outlineVariants = [
-//   "default-outline",
-//   "primary-outline",
-//   "secondary-outline",
-//   "accent-outline",
-//   "muted-outline",
-// ] as const;
-
-// const textVariants = [
-//   "default-text",
-//   "primary-text",
-//   "secondary-text",
-//   "accent-text",
-//   "muted-text",
-// ] as const;
-
-// const ButtonShowcase = () => {
-//   return (
-//     <div className="min-h-screen bg-[#d6d9ce] p-10 font-gaegu">
-
-//       {/* SOLID */}
-//       <div className="grid grid-cols-3 gap-6 mb-10">
-//         {/* Plain */}
-//         <div className="flex flex-col gap-3">
-//           {solidVariants.map((v) => (
-//             <div key={v} className="flex gap-3">
-//               <RoundedButton variant={v}>button</RoundedButton>
-//               <RoundedButton variant={v}>button</RoundedButton>
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* With icon start */}
-//         <div className="flex flex-col gap-3">
-//           {solidVariants.map((v) => (
-//             <div key={v} className="flex gap-3">
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="start" iconSize="sm">button</RoundedButton>
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="start" iconSize="sm">button</RoundedButton>
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* With icon end */}
-//         <div className="flex flex-col gap-3">
-//           {solidVariants.map((v) => (
-//             <div key={v} className="flex gap-3">
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="end" iconSize="sm">button</RoundedButton>
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="end" iconSize="sm">button</RoundedButton>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-
-
-//           {/* outline */}
-//       <div className="grid grid-cols-3 gap-6 mb-10">
-        
-//         <div className="flex flex-col gap-3">
-//           {outlineVariants.map((v) => (
-//             <div key={v} className="flex gap-3">
-//               <RoundedButton variant={v}>button</RoundedButton>
-//               <RoundedButton variant={v}>button</RoundedButton>
-//             </div>
-//           ))}
-//         </div>
-
-//         <div className="flex flex-col gap-3">
-//           {outlineVariants.map((v) => (
-//             <div key={v} className="flex gap-3">
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="start" iconSize="sm">button</RoundedButton>
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="start" iconSize="sm">button</RoundedButton>
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* With icon end */}
-//         <div className="flex flex-col gap-3">
-//           {outlineVariants.map((v) => (
-//             <div key={v} className="flex gap-3">
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="end" iconSize="sm">button</RoundedButton>
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="end" iconSize="sm">button</RoundedButton>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-
-//       {/* TEXT */}
-//       <div className="grid grid-cols-3 gap-6">
-//         {/* Plain */}
-//         <div className="flex flex-col gap-3">
-//           {textVariants.map((v) => (
-//             <div key={v} className="flex gap-3">
-//               <RoundedButton variant={v}>button</RoundedButton>
-//               <RoundedButton variant={v}>button</RoundedButton>
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* With icon start */}
-//         <div className="flex flex-col gap-3">
-//           {textVariants.map((v) => (
-//             <div key={v} className="flex gap-3">
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="start" iconSize="sm">button</RoundedButton>
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="start" iconSize="sm">button</RoundedButton>
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* With icon end */}
-//         <div className="flex flex-col gap-3">
-//           {textVariants.map((v) => (
-//             <div key={v} className="flex gap-3">
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="end" iconSize="sm">button</RoundedButton>
-//               <RoundedButton variant={v} icon={<Check />} iconPosition="end" iconSize="sm">button</RoundedButton>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-
-//     </div>
-//   );
-// };
-
-// export default ButtonShowcase;
-
-
-/////// FOR page.tsx TESTING /////////

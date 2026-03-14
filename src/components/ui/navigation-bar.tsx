@@ -10,8 +10,9 @@ export default function Navbar() {
 
   return (
     <nav className="relative flex items-center justify-between md:justify-center px-4 py-3 text-white lg:mx-4 md:px-8 md:py-4 md:mx-10">
-      {/* Logo Section */}
-      <div className="shrink-0 text-xl font-gaegu tracking-wide">
+      
+      {/* Desktop-only Logo Section */}
+      <div className="hidden md:flex shrink-0 text-xl font-gaegu tracking-wide">
         <Link href="/" className="hover:opacity-90 transition-opacity duration-200 flex items-center gap-2">
           <Image
             src="/cateneo-navbar-logo.svg"
@@ -23,12 +24,25 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {/* Desktop Navigation Links */}
+      {/* Navigation Links (Dropdown on Mobile) */}
       <ul
         className={`${
           isMenuOpen ? 'flex' : 'hidden'
-        } absolute right-4 top-full mt-3 flex-col min-w-[200px] gap-4 rounded-2xl border-2 border-cateneo-darkbrown bg-cateneo-white p-10 text-cateneo-black text-xl font-gaegu shadow-lg lg:mx-10 lg:gap-30 lg:px-20 md:static md:mx-10 md:mt-0 md:flex md:flex-row md:items-center md:gap-6 md:rounded-full md:bg-cateneo-white md:px-10 md:py-2 shrink-0`}
+        } absolute left-4 top-full mt-3 flex-col min-w-[200px] gap-4 rounded-br-[50px] border-2 border-cateneo-darkbrown bg-cateneo-white p-10 text-cateneo-black text-xl font-gaegu shadow-lg lg:mx-10 lg:gap-30 lg:px-20 md:static md:mx-10 md:mt-0 md:flex md:flex-row md:items-center md:gap-6 md:rounded-full md:bg-cateneo-white md:px-10 md:py-2 shrink-0`}
       >
+        {/* Mobile-only Logo inside the menu */}
+        <li className="md:hidden flex mb-2">
+          <Link href="/" onClick={() => setIsMenuOpen(false)} className="hover:opacity-90 transition-opacity duration-200">
+            <Image
+              src="/cateneo-navbar-logo.svg"
+              alt="Cateneo logo"
+              width={55}
+              height={55}
+              priority
+            />
+          </Link>
+        </li>
+
         <li>
           <Link
             href="/"
@@ -66,7 +80,7 @@ export default function Navbar() {
           </Link>
         </li>
         {/* Mobile-only Adopt a Cat link */}
-        <li className="md:hidden">
+        <li className="md:hidden flex justify-center mt-2">
           <Link
             href="/"
             className="font-gaegu text-cateneo-white bg-cateneo-lightbrown px-6 py-2 rounded-full inline-block hover:opacity-90 transition-opacity duration-200"
@@ -87,7 +101,7 @@ export default function Navbar() {
       {/* Mobile Burger Button */}
       <button
         type="button"
-        className="inline-flex items-center justify-center p-2 rounded-md md:hidden ml-3 "
+        className="inline-flex items-center justify-left p-2 rounded-md md:hidden mr-auto"
         aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
         aria-expanded={isMenuOpen}
         onClick={() => setIsMenuOpen((prev) => !prev)}

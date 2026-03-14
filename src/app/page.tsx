@@ -1,4 +1,5 @@
 import TabButton from "@/components/ui/tab-button";
+const colors = ["orange", "lightbrown", "darkbrown"] as const;
 
 const page = () => {
   return (
@@ -7,16 +8,43 @@ const page = () => {
         Welcome to Cateneo
       </h1>
       <div className="flex gap-2 p-8">
-        <TabButton title="button" color="amberLight" state="filled"/>
-        <TabButton title="button" color="amberMid" state="filled"/>
-        <TabButton title="button" color="cream" state="filled"/>
-        <TabButton title="button" color="darkBrown" state="filled"/>
-        <TabButton title="button" color="amberOutlined" state="outlined"/>
-        <TabButton title="button" color="amberMidOutlined" state="outlined"/>
-        <TabButton title="button" color="darkOutlined" state="outlined"/>
-        <TabButton title="button" color="brownOutlined" state="outlined"/>
-        <TabButton title="button" color="brownMidOutlined" state="outlined"/>
-        <TabButton title="button" color="darkMidOutlined" state="outlined"/>
+        {/* LEFT GROUP — white text */}
+        <div className="flex flex-col gap-3">
+          {colors.map((color) => (
+            <div key={color} className="flex gap-3">
+              <div className="w-32 h-10">
+                <TabButton color={color} style="filled" title="button" />
+              </div>
+              <div className="w-32 h-10">
+                <TabButton color={color} style="filledOutline" title="button" />
+              </div>
+              <div className="w-32 h-10">
+                <TabButton color={color} style="invertedLight" title="button" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* RIGHT GROUP — dark text */}
+        <div className="flex flex-col gap-3">
+          {colors.map((color) => (
+            <div key={color} className="flex gap-3">
+              <div className="w-32 h-10">
+                <TabButton color={color} style="filledDark" title="button" />
+              </div>
+              <div className="w-32 h-10">
+                <TabButton
+                  color={color}
+                  style="filledDarkOutline"
+                  title="button"
+                />
+              </div>
+              <div className="w-32 h-10">
+                <TabButton color={color} style="invertedDark" title="button" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

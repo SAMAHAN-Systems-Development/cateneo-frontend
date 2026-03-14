@@ -1,107 +1,87 @@
-import React, { FC } from "react";
-import { cva, type VariantProps } from "class-variance-authority";
-
-// HOW TO USE
-// <TabButton color="amberLight" title="button" />
-// <TabButton color="amberLight" state="active" title="button" />
-// <TabButton color="amberOutlined" state="outlined" title="button" />
+import { cva } from "class-variance-authority";
+import { FC } from "react";
 
 const tabButtonStyles = cva(
-  "font-gaegu w-full h-full flex items-center justify-center transition-all duration-150 rounded-t-full",
+  [
+    "font-playpen font-light",
+    "w-full h-full",
+    "flex items-center justify-center",
+    "rounded-t-[40px]",
+    "py-1 px-3",
+    "h-8 lg:h-10",
+    "text-xs sm:text-sm lg:text-base xl:text-lg",
+    "transition-all duration-150",
+  ].join(" "),
   {
     variants: {
       color: {
-        // Left panel - solid filled variants (warm palette)
-        amberLight:
-          "bg-[#D4A017] text-[#F5ECD7] hover:bg-[#C49010] active:bg-[#B48010]",
-        amberMid:
-          "bg-[#C07C1A] text-[#F5ECD7] hover:bg-[#B06C0A] active:bg-[#A05C00]",
-        cream:
-          "bg-[#F5ECD7] text-[#C07C1A] hover:bg-[#EDE0C8] active:bg-[#E0D0B0]",
-        brownMid:
-          "bg-[#9B5C1A] text-[#F5ECD7] hover:bg-[#8B4C0A] active:bg-[#7B3C00]",
-        brownDeep:
-          "bg-[#7A3B0E] text-[#F5ECD7] hover:bg-[#6A2B00] active:bg-[#5A1B00]",
-        creamLight:
-          "bg-[#FAF3E3] text-[#9B5C1A] hover:bg-[#F0E8D0] active:bg-[#E0D8C0]",
-        darkBrown:
-          "bg-[#2C1A0E] text-[#F5ECD7] hover:bg-[#1C0A00] active:bg-[#0C0000]",
-        darkMid:
-          "bg-[#3D2010] text-[#F5ECD7] hover:bg-[#2D1000] active:bg-[#1D0000]",
-        offWhite:
-          "bg-[#F0E8D5] text-[#3D2010] hover:bg-[#E0D8C5] active:bg-[#D0C8B5]",
-
-        // Right panel - outlined variants
-        amberOutlined:
-          "bg-[#D4A017] border-2 border-[#2C1A0E] text-[#F5ECD7] hover:bg-[#C49010] active:bg-[#B48010]",
-        amberMidOutlined:
-          "bg-[#C07C1A] border-2 border-[#D4A017] text-[#F5ECD7] hover:bg-[#B06C0A] active:bg-[#A05C00]",
-        darkOutlined:
-          "bg-[#2C1A0E] border-2 border-[#2C1A0E] text-[#F5ECD7] hover:bg-[#1C0A00] active:bg-[#0C0000]",
-        brownOutlined:
-          "bg-[#9B5C1A] border-2 border-[#D4A017] text-[#C07C1A] hover:bg-[#8B4C0A] active:bg-[#7B3C00]",
-        brownMidOutlined:
-          "bg-[#7A3B0E] border-2 border-[#9B5C1A] text-[#D4A017] hover:bg-[#6A2B00] active:bg-[#5A1B00]",
-        darkMidOutlined:
-          "bg-[#3D2010] border-2 border-[#7A3B0E] text-[#9B5C1A] hover:bg-[#2D1000] active:bg-[#1D0000]",
+        orange: "bg-cateneo-orange",
+        lightbrown: "bg-cateneo-lightbrown",
+        darkbrown: "bg-cateneo-darkbrown",
       },
-      state: {
-        filled: "",
-        outlined: "",
-        active: "brightness-75",
-        disabled: "opacity-50 cursor-not-allowed pointer-events-none",
-      },
-      size: {
-        sm: "h-8 py-1 px-3 text-xs",
-        md: "h-10 py-1 px-4 text-sm",
-        lg: "h-12 py-2 px-5 text-base",
-        xl: "h-14 py-2 px-6 text-lg",
-        responsive:
-          "h-8 lg:h-10 py-1 px-3 text-xs sm:text-sm lg:text-base xl:text-lg",
+      style: {
+        filled: "text-cateneo-white",
+        filledOutline:
+          "text-cateneo-white outline outline-2 outline-cateneo-white",
+        invertedLight: "",
+        filledDark: "text-cateneo-black",
+        filledDarkOutline:
+          "text-cateneo-black outline outline-2 outline-cateneo-black",
+        invertedDark: "",
       },
     },
     defaultVariants: {
-      color: "amberLight",
-      size: "responsive",
+      color: "orange",
+      style: "filled",
     },
   },
 );
 
-interface TabButtonProps extends VariantProps<typeof tabButtonStyles> {
+type ColorType = "orange" | "lightbrown" | "darkbrown";
+type StyleType =
+  | "filled"
+  | "filledOutline"
+  | "invertedLight"
+  | "filledDark"
+  | "filledDarkOutline"
+  | "invertedDark";
+
+interface TabButtonProps {
   title?: string;
-  color?:
-    | "amberLight"
-    | "amberMid"
-    | "cream"
-    | "brownMid"
-    | "brownDeep"
-    | "creamLight"
-    | "darkBrown"
-    | "darkMid"
-    | "offWhite"
-    | "amberOutlined"
-    | "amberMidOutlined"
-    | "darkOutlined"
-    | "brownOutlined"
-    | "brownMidOutlined"
-    | "darkMidOutlined";
-  size?: "sm" | "md" | "lg" | "xl" | "responsive";
-  state?: "filled" | "outlined" | "active" | "disabled";
+  color?: ColorType;
+  style?: StyleType;
   tabChange?: () => void;
   className?: string;
 }
 
+const invertedBg: Record<string, string> = {
+  invertedLight: "!bg-cateneo-white",
+  invertedDark: "!bg-cateneo-black",
+};
+
+const invertedText: Record<ColorType, string> = {
+  orange: "text-cateneo-orange",
+  lightbrown: "text-cateneo-lightbrown",
+  darkbrown: "text-cateneo-darkbrown",
+};
+
 const TabButton: FC<TabButtonProps> = ({
   title,
-  color,
-  size,
-  state,
+  color = "orange",
+  style = "filled",
   tabChange,
-  className = "",
+  className,
 }) => {
+  const isInverted = style === "invertedLight" || style === "invertedDark";
+
   return (
     <button
-      className={`${tabButtonStyles({ color, size, state })} ${className}`}
+      className={[
+        tabButtonStyles({ color, style }),
+        isInverted ? invertedBg[style] : "",
+        isInverted ? invertedText[color] : "",
+        className ?? "",
+      ].join(" ")}
       onClick={tabChange}
     >
       {title}

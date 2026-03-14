@@ -28,8 +28,26 @@ export default function Navbar() {
       <ul
         className={`${
           isMenuOpen ? 'flex' : 'hidden'
-        } absolute left-4 top-full mt-3 flex-col min-w-[200px] gap-4 rounded-br-[50px] border-2 border-cateneo-darkbrown bg-cateneo-white p-10 text-cateneo-black text-xl font-gaegu shadow-lg lg:mx-10 lg:gap-30 lg:px-20 md:static md:mx-10 md:mt-0 md:flex md:flex-row md:items-center md:gap-6 md:rounded-full md:bg-cateneo-white md:px-10 md:py-2 shrink-0`}
+        } absolute left-3 top-2 z-50 flex-col min-w-[200px] gap-4 rounded-br-[50px] border-2 border-cateneo-darkbrown bg-cateneo-white p-3 text-cateneo-black text-xl font-gaegu shadow-lg lg:mx-10 lg:gap-30 lg:px-20 md:static md:mx-10 md:mt-0 md:flex md:flex-row md:items-center md:gap-6 md:rounded-full md:bg-cateneo-white md:px-10 md:py-2 shrink-0`}
       >
+        {/* Mobile-only Hamburger/Close Button inside the menu */}
+        <li className="md:hidden flex mb-4">
+          <button
+            type="button"
+            className="inline-flex items-center justify-left"
+            aria-label="Close navigation menu"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <Image
+              src="/Property 1=Closed.svg" 
+              alt="Close navigation menu"
+              width={32}
+              height={32}
+              priority
+            />
+          </button>
+        </li>
+
         {/* Mobile-only Logo inside the menu */}
         <li className="md:hidden flex mb-2">
           <Link href="/" onClick={() => setIsMenuOpen(false)} className="hover:opacity-90 transition-opacity duration-200">
@@ -98,22 +116,23 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {/* Mobile Burger Button */}
+      {/* Mobile Burger Button (Always in the DOM, lower z-index than the menu) */}
       <button
         type="button"
-        className="inline-flex items-center justify-left p-2 rounded-md md:hidden mr-auto"
-        aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        className="inline-flex items-center justify-left p-2 rounded-md md:hidden mr-auto relative z-10"
+        aria-label="Open navigation menu"
         aria-expanded={isMenuOpen}
-        onClick={() => setIsMenuOpen((prev) => !prev)}
+        onClick={() => setIsMenuOpen(true)}
       >
         <Image
-          src={isMenuOpen ? '/Property 1=Closed.svg' : '/Property 1=Closed.svg'}
-          alt={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          src="/Property 1=Closed.svg"
+          alt="Open navigation menu"
           width={32}
           height={32}
           priority
         />
       </button>
+
     </nav>
   );
 }

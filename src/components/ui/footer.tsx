@@ -37,7 +37,7 @@ export default function Footer() {
               className="md:w-[60px] md:h-[60px]"
             />
           </div>
-          <p className="text-[20px] md:text-[24px] max-w-x md:max-w-xl">
+          <p className="text-[20px] md:text-[24px] max-w-xs md:max-w-xl">
             A socio-civic organization under the Council of Organizations of
             Ateneo de Davao University
           </p>

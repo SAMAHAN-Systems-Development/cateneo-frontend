@@ -49,6 +49,25 @@ $ npm i
 
 5. Paste the .env
 
+6. Make a separate branch for your PR
+
+```bash
+$ [type]/[ticket number]--[your branch name]
+$ e.g feat/21--add-hero-section
+```
+
+## Running Application
+
+1. Pull from the main for updates
+
+```bash
+$ git pull origin main
+```
+
+
+
+
+
 ## Running Application
 
 1. Pull from the main for updates

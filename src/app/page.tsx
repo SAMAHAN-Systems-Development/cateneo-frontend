@@ -1,3 +1,6 @@
+import Navbar from "@/components/ui/navigation-bar";
+import { RoundedButton } from "@/components/ui/rounded-button";
+
 const page = () => {
   return (
     <>

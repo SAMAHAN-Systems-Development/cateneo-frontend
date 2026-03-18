@@ -78,15 +78,15 @@ export default function Footer() {
                 <h1 className="text-[20px] md:text-[24px] lg:text-[16px] font-playpen">
                   Quick Links
                 </h1>
-                <p className="text-[20px] md:text-[24px] lg:text-[16px] font-gaegu font-bold text-cateneo-lightbrown">
+                <Link href="/about" className="text-[20px] md:text-[24px] lg:text-[16px] font-gaegu font-bold text-cateneo-lightbrown hover:text-cateneo-darkbrown transition-colors block">
                   About
-                </p>
-                <p className="text-[20px] md:text-[24px] lg:text-[16px] font-gaegu font-bold text-cateneo-lightbrown">
+                </Link>
+                <Link href="/cat-directory" className="text-[20px] md:text-[24px] lg:text-[16px] font-gaegu font-bold text-cateneo-lightbrown hover:text-cateneo-darkbrown transition-colors block">
                   Cat Directory
-                </p>
-                <p className="text-[20px] md:text-[24px] lg:text-[16px] text-cateneo-lightbrown font-gaegu font-bold">
+                </Link>
+                <Link href="/faq" className="text-[20px] md:text-[24px] lg:text-[16px] text-cateneo-lightbrown font-gaegu font-bold hover:text-cateneo-darkbrown transition-colors block">
                   FAQ
-                </p>
+                </Link>
               </div>
 
               <div className="flex flex-col items-center text-center lg:items-start lg:text-left">

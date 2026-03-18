@@ -103,9 +103,12 @@ export default function Footer() {
                 <h1 className="text-[20px] md:text-[24px] lg:text-[16px] font-playpen">
                   Email
                 </h1>
-                <p className="text-[20px] md:text-[24px] lg:text-[16px] font-gaegu font-bold text-cateneo-lightbrown">
+                <a
+                  href="mailto:cateneo@addu.edu.ph"
+                  className="text-[20px] md:text-[24px] lg:text-[16px] font-gaegu font-bold text-cateneo-lightbrown hover:text-cateneo-darkbrown transition-colors"
+                >
                   cateneo@addu.edu.ph
-                </p>
+                </a>
               </div>
 
               <div>

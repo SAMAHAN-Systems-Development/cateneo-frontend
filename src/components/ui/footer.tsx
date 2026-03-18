@@ -28,7 +28,7 @@ export default function Footer() {
                 className="w-[75px] h-[75px] lg:w-[50px] lg:h-[50px]"
               />
 
-              {/* LG,XL VIEW */}
+              {/* TITLTE & SUBHEAING- LG TO 2XL*/}
               <div className="hidden lg:flex flex-row items-center gap-2">
                 <h1 className="lg:text-[40px] font-playpen font-black lg:text-left lg:self-end lg:text-cateneo-darkbrown">
                   CATeneo
@@ -46,7 +46,7 @@ export default function Footer() {
               Ateneo de Davao University
             </p>
 
-            {/* TABLET AND MOBILE VIEW */}
+            {/* TITLE & SUBHEADING- SM TO MD */}
             <div className="lg:hidden flex flex-col items-center gap-1">
               <div className="flex items-center gap-2">
                 <h1 className="text-[44px] font-playpen font-black">CATeneo</h1>
@@ -78,13 +78,22 @@ export default function Footer() {
                 <h1 className="text-[20px] md:text-[24px] lg:text-[16px] font-playpen">
                   Quick Links
                 </h1>
-                <Link href="/about" className="text-[20px] md:text-[24px] lg:text-[16px] font-gaegu font-bold text-cateneo-lightbrown hover:text-cateneo-darkbrown transition-colors block">
+                <Link
+                  href="/about"
+                  className="text-[20px] md:text-[24px] lg:text-[16px] font-gaegu font-bold text-cateneo-lightbrown hover:text-cateneo-darkbrown transition-colors block"
+                >
                   About
                 </Link>
-                <Link href="/cat-directory" className="text-[20px] md:text-[24px] lg:text-[16px] font-gaegu font-bold text-cateneo-lightbrown hover:text-cateneo-darkbrown transition-colors block">
+                <Link
+                  href="/cat-directory"
+                  className="text-[20px] md:text-[24px] lg:text-[16px] font-gaegu font-bold text-cateneo-lightbrown hover:text-cateneo-darkbrown transition-colors block"
+                >
                   Cat Directory
                 </Link>
-                <Link href="/faq" className="text-[20px] md:text-[24px] lg:text-[16px] text-cateneo-lightbrown font-gaegu font-bold hover:text-cateneo-darkbrown transition-colors block">
+                <Link
+                  href="/faq"
+                  className="text-[20px] md:text-[24px] lg:text-[16px] text-cateneo-lightbrown font-gaegu font-bold hover:text-cateneo-darkbrown transition-colors block"
+                >
                   FAQ
                 </Link>
               </div>
@@ -181,6 +190,7 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* FOOTER- LG TO 2XL */}
         <div className="hidden lg:flex flex-col items-center gap-2 mt-8">
           <Image
             src="/footer-paw-3.svg"
@@ -209,6 +219,7 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* FOOTER- SM TO MD */}
       <div className="w-full flex justify-end">
         <Link href="/">
           <Image

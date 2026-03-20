@@ -1,8 +1,7 @@
 'use client';
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpSchema, type SignUpFormValues } from "@/schemas/sign-up-form-schema";
+import type { UseFormReturn } from "react-hook-form";
+import type { SignUpFormValues } from "@/schemas/sign-up-form-schema";
 import { Input } from "@/components/ui/input";
 import { RoundedButton } from "@/components/ui/rounded-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,27 +10,14 @@ import { GoLock } from "react-icons/go";
 import { FiUser } from "react-icons/fi";
 import Image from "next/image";
 
-const SignUpForm = () => {
-  const form = useForm<SignUpFormValues>({
-    resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-    },
-  });
+interface SignUpFormProps {
+  form: UseFormReturn<SignUpFormValues>;
+  onSubmit: (data: SignUpFormValues) => void | Promise<void>;
+}
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = form;
-
-  const onSubmit = async (data: SignUpFormValues) => {
-    // Temporary: just log to verify submission works
-    console.log("Sign up submitted", data);
-  };
+const SignUpForm = ({ form, onSubmit }: SignUpFormProps) => {
+  const { register, handleSubmit, formState } = form;
+  const { errors, isSubmitting } = formState;
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 py-8">

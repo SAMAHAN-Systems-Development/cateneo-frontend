@@ -2,11 +2,7 @@ import React from 'react'
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
   CardTitle,
-  CardAction
 } from '@/components/ui/card'
 
 
@@ -45,7 +41,7 @@ const COLOR_MAP = {
 
 function CateneanCard({ imageUrl, sex, catName, location, catColor, healthStatus, medicine, personality, svgColor }: CatProps) {
   return (
-   <Card className="flex w-[300px] h-[482px] max-h-[482px] max-w-[300px] border-[2px] rounded-[17.41px] relative" style={{ borderColor: COLOR_MAP['darkbrown'] }}>
+   <Card className="flex w-[300px] h-[482px] max-h-[482px] max-w-[300px] border-[2px] rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B]">
       <CardContent className="flex flex-col gap-[27.78px]">
         <div className="w-full flex items-center justify-center relative ">
           <svg width="216" height="176" viewBox="0 0 216 176" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -86,16 +82,7 @@ function CateneanCard({ imageUrl, sex, catName, location, catColor, healthStatus
           </div>
           <div className="pr-[41px]">
             <p className="text-[17.12px] text-cateneo-lightbrown">Personality:</p>
-            <p className="text-[21.79px] text-cateneo-darkbrown" 
-              style={{
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}>
-                {personality}
-              </p>
+            <p className="text-[21.79px] text-cateneo-darkbrown leading-none line-clamp-2">{personality}</p>
           </div>
         </div>
       </CardContent>

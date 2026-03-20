@@ -10,10 +10,6 @@ import {
 } from '@/components/ui/card'
 
 
-
-
-
-
 export type CatProps = {
   imageUrl: string;
   sex: 'male' | 'female';
@@ -83,7 +79,7 @@ function CateneanCard({ imageUrl, sex, catName, location, catColor, healthStatus
             <p className="text-[21.79px] text-cateneo-darkbrown">{healthStatus}</p>
           </div>
           <div className="flex gap-[8px] items-center">
-            <p className="text-[21.79px] text-cateneo-darkbrown">{medicine ?? 'N/A'}</p>
+            <p className="text-[21.79px] text-cateneo-darkbrown">{medicine ?? '💊 N/A'}</p>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M7.90264 0C3.53719 0 0 3.53719 0 7.90264C0 12.2681 3.53719 15.8053 7.90264 15.8053C12.2681 15.8053 15.8053 12.2681 15.8053 7.90264C15.8053 3.53719 12.2681 0 7.90264 0ZM8.62452 11.55H7.17317V6.07515H8.62452V11.55ZM7.89884 5.47866C7.46951 5.47866 7.11997 5.15191 7.11997 4.71879C7.11997 4.28566 7.47331 3.96272 7.89884 3.96272C8.33197 3.96272 8.68531 4.28566 8.68531 4.71879C8.68531 5.15191 8.33197 5.47866 7.89884 5.47866Z" fill="#BF7900"/>
             </svg>

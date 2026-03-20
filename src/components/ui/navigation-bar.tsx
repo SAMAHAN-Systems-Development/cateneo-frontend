@@ -9,11 +9,11 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="relative flex items-center justify-between md:justify-center px-4 py-3 text-white lg:mx-4 md:px-8 md:py-4 md:mx-10 bg-cateneo-white">
+    <nav className="relative flex z-50 items-center justify-between md:justify-center px-4 py-3 text-white lg:mx-4 md:px-8 md:py-4 md:mx-10 bg-cateneo-white">
       {/* Desktop-only Logo Section */}
       <div className="hidden md:flex shrink-0 text-xl font-gaegu tracking-wide">
         <Link
-          href="/"
+          href="/home"
           className="hover:opacity-90 transition-opacity duration-200 flex items-center gap-2"
         >
           <Image
@@ -53,7 +53,7 @@ export default function Navbar() {
         {/* Mobile-only Logo inside the menu */}
         <li className="md:hidden flex mb-2">
           <Link
-            href="/"
+            href="/home"
             onClick={() => setIsMenuOpen(false)}
             className="hover:opacity-90 transition-opacity duration-200"
           >
@@ -69,7 +69,7 @@ export default function Navbar() {
 
         <li>
           <Link
-            href="/"
+            href="/home"
             className="hover:text-cateneo-orange transition-colors duration-200"
             onClick={() => setIsMenuOpen(false)}
           >
@@ -128,7 +128,7 @@ export default function Navbar() {
       {/* Mobile Burger Button (Always in the DOM, lower z-index than the menu) */}
       <button
         type="button"
-        className="inline-flex items-center justify-left p-2 rounded-md md:hidden mr-auto relative z-10"
+        className="inline-flex items-center justify-left p-2 rounded-md md:hidden mr-auto relative z-40"
         aria-label="Open navigation menu"
         aria-expanded={isMenuOpen}
         onClick={() => setIsMenuOpen(true)}

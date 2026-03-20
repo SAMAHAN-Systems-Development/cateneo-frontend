@@ -19,7 +19,7 @@ export default function AboutUsSection() {
           />
           <span className="block h-[3px] w-[100px] md:w-[150px] lg:w-[150px] rounded-full mx-1 md:mx-2 bg-cateneo-darkbrown" />
         </div>
-        <p className="text-cateneo-black text-lg sm:px-10 lg:px-0 md:text-xl font-medium tracking-wide leading-relaxed font-gaegu">
+        <p className="text-cateneo-black text-md sm:px-10 lg:px-0 md:text-xl font-medium tracking-wide leading-relaxed font-gaegu">
           CATeneo is a newly established socio-civic organization under the
           Council of Organizations – Davao (COA-D), which aims to support the
           cat populations on the campus, promote cat adoption, advocate for

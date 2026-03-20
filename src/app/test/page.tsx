@@ -1,7 +1,11 @@
-import React from "react";
+import Footer from "../../components/ui/footer";
 
 const page = () => {
-  return <div></div>;
+  return (
+    <div>
+      <Footer />
+    </div>
+  );
 };
 
 export default page;

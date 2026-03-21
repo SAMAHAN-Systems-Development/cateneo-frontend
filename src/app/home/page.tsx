@@ -1,8 +1,8 @@
 "use client";
 
 import Navbar from "@/components/ui/navigation-bar";
-import HomeHeroSection from "@/components/section/home-hero-section";
-import AboutUsSection from "@/components/section/about-us";
+import HomeHeroSection from "@/components/sections/home-hero-section";
+import AboutUsSection from "@/components/sections/about-us";
 import Footer from "@/components/ui/footer";
 const page = () => {
   return (

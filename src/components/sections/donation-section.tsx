@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { RoundedButton } from "@/components/ui/rounded-button";
+import Link from "next/link";
 
 const DonationSection = () => {
   return (
@@ -34,9 +35,15 @@ const DonationSection = () => {
             Contact us if you&apos;re interested in donating or simply helping
             our campus cats.
           </p>
-          <RoundedButton className="bg-cateneo-orange w-fit">
-            Donate Now
-          </RoundedButton>
+          <Link
+            href="https://www.facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <RoundedButton className="bg-cateneo-orange w-fit">
+              Donate Now
+            </RoundedButton>
+          </Link>
         </div>
       </div>
     </section>

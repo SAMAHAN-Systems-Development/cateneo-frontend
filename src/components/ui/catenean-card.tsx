@@ -82,7 +82,7 @@ function CateneanCard({ imageUrl, sex, catName, location, catColor, healthStatus
           </div>
           <div className="pr-[41px]">
             <p className="text-[17.12px] text-cateneo-lightbrown">Personality:</p>
-            <p className="text-[21.79px] text-cateneo-darkbrown leading-none line-clamp-2">{personality}</p>
+            <p className="text-[21.79px] text-cateneo-darkbrown leading-none line-clamp-2 cursor-help" title={personality}>{personality}</p>
           </div>
         </div>
       </CardContent>

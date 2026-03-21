@@ -1,16 +1,11 @@
-import Navbar from "@/components/ui/navigation-bar";
-import { RoundedButton } from "@/components/ui/rounded-button";
+"use client";
 
-const page = () => {
+const Page = () => {
   return (
-    <>
-      <div>
-        <h1 className="text-7xl font-gaegu  text-cateneo-blue">
-          Welcome to Cateneo
-        </h1>
-      </div>
-    </>
+    <div>
+      <h1>Welcome to Cateneo</h1>
+    </div>
   );
 };
 
-export default page;
+export default Page;

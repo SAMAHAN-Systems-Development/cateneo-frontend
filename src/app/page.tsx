@@ -1,6 +1,5 @@
 import Navbar from "@/components/ui/navigation-bar";
 import { RoundedButton } from "@/components/ui/rounded-button";
-import DonationSection from "@/components/sections/donation-section";
 
 const page = () => {
   return (
@@ -10,7 +9,6 @@ const page = () => {
           Welcome to Cateneo
         </h1>
       </div>
-      <DonationSection />
     </>
   );
 };

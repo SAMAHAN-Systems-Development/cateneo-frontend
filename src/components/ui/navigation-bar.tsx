@@ -9,7 +9,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="relative flex z-50 items-center justify-between md:justify-center px-4 py-3 text-white lg:mx-4 md:px-8 md:py-4 md:mx-10 bg-cateneo-white">
+    <nav className="relative flex z-50 items-center justify-between md:justify-center px-4 py-3 text-white lg:mx-4 md:px-8 md:py-4 md:mx-10 ">
       {/* Desktop-only Logo Section */}
       <div className="hidden md:flex shrink-0 text-xl font-gaegu tracking-wide">
         <Link

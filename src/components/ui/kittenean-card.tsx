@@ -1,0 +1,52 @@
+import {
+  Card,
+  CardContent,
+  CardTitle,
+} from '@/components/ui/card'
+
+
+export type CatProps = {
+  imageUrl: string;
+  name: string;
+  gender: 'male' | 'female';
+  parent: string;
+  dateOfBirth: string;
+  medicine: string | null;
+  residence: string;
+  color: ('white' | 'darkbrown' | 'lightbrown' | 'orange' | 'black')[];  // Array of colors
+  healthStatus: string;
+  status: string;
+  personality: string;
+  svgColor: 'white' | 'darkbrown' | 'lightbrown' | 'orange' | 'black';  // Single color only
+};
+
+const MALE_SVG = <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M19.5742 0H12.7658V2.55316H17.7711L12.0956 8.2233C10.8456 7.33502 9.31371 6.80843 7.65948 6.80843C3.43081 6.80843 0 10.2392 0 14.4679C0 18.6966 3.43081 22.1274 7.65948 22.1274C11.8882 22.1274 15.319 18.6966 15.319 14.4679C15.319 12.8137 14.7924 11.2818 13.9041 10.0318L19.5742 4.35633V9.36159H22.1274V0H19.5742ZM7.65948 19.5742C4.84568 19.5742 2.55316 17.2817 2.55316 14.4679C2.55316 11.6541 4.84568 9.36159 7.65948 9.36159C10.4733 9.36159 12.7658 11.6541 12.7658 14.4679C12.7658 17.2817 10.4733 19.5742 7.65948 19.5742Z" fill="#6997ED"/>
+</svg>
+
+
+const FEMALE_SVG = <svg width="16" height="24" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15.319 7.65948C15.319 3.43081 11.8882 0 7.65948 0C3.43081 0 0 3.43081 0 7.65948C0 11.4573 2.7606 14.6062 6.3829 15.2126V17.8721H2.55316V20.4253H6.3829V23.8295H8.93606V20.4253H12.7658V17.8721H8.93606V15.2126C12.5584 14.6062 15.319 11.4573 15.319 7.65948ZM2.55316 7.65948C2.55316 4.84568 4.84568 2.55316 7.65948 2.55316C10.4733 2.55316 12.7658 4.84568 12.7658 7.65948C12.7658 10.4733 10.4733 12.7658 7.65948 12.7658C4.84568 12.7658 2.55316 10.4733 2.55316 7.65948Z" fill="#ED6985"/>
+</svg>;
+
+
+const COLOR_MAP = {
+  white: "#F1EDE2",
+  darkbrown: "#83491B",
+  lightbrown: "#BF7900",
+  orange: "#E3981B",
+  black: "#3A3A3A",
+};
+
+
+
+
+function KitteneanCard({ imageUrl, name, gender, residence, color, healthStatus, medicine, personality, svgColor }: CatProps) {
+  return (
+   <Card className="flex w-[300px] h-[482px] max-h-[482px] max-w-[300px] border-[2px] rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B]">
+      
+    </Card>
+  )
+}
+
+export default KitteneanCard

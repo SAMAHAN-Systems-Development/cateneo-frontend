@@ -1,9 +1,9 @@
-"use client";
+import AdoptionProcessSection from "@/components/section/adoption-process-section";
 
 const Page = () => {
   return (
     <div>
-      <h1>Welcome to Cateneo</h1>
+        <AdoptionProcessSection />
     </div>
   );
 };

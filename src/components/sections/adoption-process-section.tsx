@@ -3,48 +3,93 @@
 import React, { useEffect, useState } from "react";
 
 const segments = [
-  { rod: "bg-cateneo-darkbrown",  badge: "border-cateneo-darkbrown",  num: "text-cateneo-darkbrown"  },
-  { rod: "bg-cateneo-lightbrown", badge: "border-cateneo-lightbrown", num: "text-cateneo-lightbrown" },
-  { rod: "bg-cateneo-black",      badge: "border-cateneo-black",      num: "text-cateneo-black"      },
-  { rod: "bg-cateneo-darkbrown",  badge: "border-cateneo-darkbrown",  num: "text-cateneo-darkbrown"  },
-  { rod: "bg-cateneo-lightbrown", badge: "border-cateneo-lightbrown", num: "text-cateneo-lightbrown" },
+  {
+    rod: "bg-cateneo-darkbrown",
+    badge: "border-cateneo-darkbrown",
+    num: "text-cateneo-darkbrown",
+  },
+  {
+    rod: "bg-cateneo-lightbrown",
+    badge: "border-cateneo-lightbrown",
+    num: "text-cateneo-lightbrown",
+  },
+  {
+    rod: "bg-cateneo-black",
+    badge: "border-cateneo-black",
+    num: "text-cateneo-black",
+  },
+  {
+    rod: "bg-cateneo-darkbrown",
+    badge: "border-cateneo-darkbrown",
+    num: "text-cateneo-darkbrown",
+  },
+  {
+    rod: "bg-cateneo-lightbrown",
+    badge: "border-cateneo-lightbrown",
+    num: "text-cateneo-lightbrown",
+  },
 ];
 
 const steps = [
-  { number: 1, title: "Application",  description: "Fill out the official CATeneo Adoption Form" },
-  { number: 2, title: "Interview",    description: "A short conversation to help us understand your lifestyle and capacity to care for a cat." },
-  { number: 3, title: "Assessment",   description: "We want to make sure adopters can provide a stable, loving, and lifelong home. We look at a criteria shown below." },
-  { number: 4, title: "Orientation",  description: "Before adoption, all applicants must have a Cat Care Orientation." },
-  { number: 5, title: "Trial Period", description: "2–4 week adjustment period to ensure a perfect match. Volunteers may visit or call to check in." },
+  {
+    number: 1,
+    title: "Application",
+    description: "Fill out the official CATeneo Adoption Form",
+  },
+  {
+    number: 2,
+    title: "Interview",
+    description:
+      "A short conversation to help us understand your lifestyle and capacity to care for a cat.",
+  },
+  {
+    number: 3,
+    title: "Assessment",
+    description:
+      "We want to make sure adopters can provide a stable, loving, and lifelong home. We look at a criteria shown below.",
+  },
+  {
+    number: 4,
+    title: "Orientation",
+    description:
+      "Before adoption, all applicants must have a Cat Care Orientation.",
+  },
+  {
+    number: 5,
+    title: "Trial Period",
+    description:
+      "2–4 week adjustment period to ensure a perfect match. Volunteers may visit or call to check in.",
+  },
 ];
 
 // ── Desktop constants ──
-const DESIGN_W     = 1000;
-const DESIGN_H     = 1100;
-const SEGMENT_H    = 240;
-const CAP_H        = 30;
-const BADGE_SIZE   = 87;
+const DESIGN_W = 1000;
+const DESIGN_H = 1100;
+const SEGMENT_H = 240;
+const CAP_H = 30;
+const BADGE_SIZE = 87;
 const BADGE_OFFSET = (SEGMENT_H - BADGE_SIZE) / 2;
-const segTop       = (idx: number) => idx * (SEGMENT_H - CAP_H);
+const segTop = (idx: number) => idx * (SEGMENT_H - CAP_H);
 
 // ── Mobile constants ──
-const MOB_SEGMENT_H = 240;
-const MOB_CAP_H     = 12;
-const MOB_ROD_W     = 28;
-const MOB_BADGE     = 89;
+const MOB_SEGMENT_H = 228;
+const MOB_CAP_H = 12;
+const MOB_ROD_W = 26;
+const MOB_BADGE = 84;
 
 const BREAKPOINT = 1024;
+const DESKTOP_MAX_SCALE = 0.82;
 
 export default function AdoptionProcessSection() {
   const lastIdx = steps.length - 1;
   const [isMobile, setIsMobile] = useState(false);
-  const [scale, setScale]       = useState(1);
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const update = () => {
       const w = window.innerWidth;
       setIsMobile(w < BREAKPOINT);
-      setScale(w < BREAKPOINT ? 1 : Math.min(w / DESIGN_W, 1));
+      setScale(w < BREAKPOINT ? 1 : Math.min(w / DESIGN_W, DESKTOP_MAX_SCALE));
     };
     update();
     window.addEventListener("resize", update);
@@ -53,18 +98,17 @@ export default function AdoptionProcessSection() {
 
   // ── MOBILE (FIXED ABSOLUTE TIMELINE) ──
   if (isMobile) {
-    const totalHeight =
-      steps.length * (MOB_SEGMENT_H - MOB_CAP_H) + MOB_CAP_H;
+    const totalHeight = steps.length * (MOB_SEGMENT_H - MOB_CAP_H) + MOB_CAP_H;
 
     return (
-      <div className="min-h-screen w-full bg-cateneo-white flex flex-col items-center px-4 py-8">
-
-        <h2 className="font-playpen font-bold text-cateneo-darkbrown text-center text-[40px] leading-[1.2] mb-40">
-          The Adoption<br />Process
+      <div className="min-h-screen w-full bg-cateneo-white flex flex-col items-center px-4 pt-24 pb-8 md:pt-28">
+        <h2 className="font-playpen font-bold text-cateneo-darkbrown text-center text-[38px] leading-[1.2] mb-36">
+          The Adoption
+          <br />
+          Process
         </h2>
 
         <div className="flex flex-row gap-5 w-full max-w-sm">
-
           <div
             className="relative shrink-0 max-sm:px-8"
             style={{ width: MOB_BADGE, height: totalHeight }}
@@ -93,7 +137,7 @@ export default function AdoptionProcessSection() {
                     style={{
                       width: MOB_BADGE,
                       height: MOB_BADGE,
-                      fontSize: 42,
+                      fontSize: 38,
                       position: "absolute",
                       top: (MOB_SEGMENT_H - MOB_BADGE) / 2,
                       left: "50%",
@@ -107,7 +151,8 @@ export default function AdoptionProcessSection() {
                     className={`${segments[idx].rod}`}
                     style={{
                       width: MOB_ROD_W,
-                      height: MOB_SEGMENT_H - MOB_CAP_H - (isLast ? MOB_CAP_H : 0),
+                      height:
+                        MOB_SEGMENT_H - MOB_CAP_H - (isLast ? MOB_CAP_H : 0),
                     }}
                   />
 
@@ -127,28 +172,24 @@ export default function AdoptionProcessSection() {
           </div>
 
           {/* CONTENT */}
-          <div
-            className="relative flex-1"
-            style={{ height: totalHeight }}
-          >
+          <div className="relative flex-1" style={{ height: totalHeight }}>
             {steps.map((step, idx) => (
               <div
                 key={step.number}
                 className="absolute"
                 style={{
-                  top: idx * (MOB_SEGMENT_H - MOB_CAP_H) + 56,
+                  top: idx * (MOB_SEGMENT_H - MOB_CAP_H) + 52,
                 }}
               >
-                <p className="font-gaegu font-bold text-cateneo-darkbrown text-[30px] mb-1">
+                <p className="font-gaegu font-bold text-cateneo-darkbrown text-[28px] mb-1">
                   {step.title}
                 </p>
-                <p className="font-gaegu font-bold text-cateneo-black text-[18px] leading-snug">
+                <p className="font-gaegu font-bold text-cateneo-black text-[17px] leading-snug">
                   {step.description}
                 </p>
               </div>
             ))}
           </div>
-
         </div>
       </div>
     );
@@ -156,25 +197,28 @@ export default function AdoptionProcessSection() {
 
   // ── DESKTOP ──
   return (
-    <div className="bg-cateneo-white w-full min-h-screen flex items-start justify-center align-center">
+    <div className="bg-cateneo-white w-full min-h-screen flex items-start justify-center pt-24 md:pt-28">
       <div
         style={{
           width: DESIGN_W,
           height: DESIGN_H,
-          transformOrigin: "top left",
+          transformOrigin: "top center",
           transform: `scale(${scale})`,
         }}
       >
         <div className="w-full flex items-start justify-center">
           <div className="relative w-[1017px] h-[994px]">
-
             <h2
               className="absolute left-0 top-0 w-[278px] font-playpen font-black text-cateneo-darkbrown"
               style={{
                 fontSize: "clamp(56px, 7vw, 60px)",
               }}
             >
-              The<br />Adoption<br />Process
+              The
+              <br />
+              Adoption
+              <br />
+              Process
             </h2>
 
             <div className="absolute left-[327px] top-0 w-[87px] h-[994px]">
@@ -183,8 +227,11 @@ export default function AdoptionProcessSection() {
                 const top = segTop(idx);
 
                 return (
-                  <div key={step.number} className="absolute w-[87px]" style={{ top }}>
-
+                  <div
+                    key={step.number}
+                    className="absolute w-[87px]"
+                    style={{ top }}
+                  >
                     <div
                       className={`absolute w-[42px] left-[23px] top-0 ${segments[idx].rod}`}
                       style={{ height: CAP_H, borderRadius: "30px 30px 0 0" }}
@@ -221,7 +268,6 @@ export default function AdoptionProcessSection() {
                         {step.number}
                       </span>
                     </div>
-
                   </div>
                 );
               })}
@@ -249,7 +295,6 @@ export default function AdoptionProcessSection() {
                 </div>
               ))}
             </div>
-
           </div>
         </div>
       </div>

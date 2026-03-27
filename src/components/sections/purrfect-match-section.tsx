@@ -14,7 +14,7 @@ export default function PurrfectMatchSection() {
       </div>
 
       <div className="w-full max-w-2xl text-center z-10 relative flex flex-col px-5 ">
-        <h1 className="text-6xl md:text-7xl lg:text-5xl font-bold mb-4 text-cateneo-darkbrown font-playpen ">
+        <h1 className="text-5xl md:text-8xl lg:text-8xl font-bold mb-4 text-cateneo-darkbrown font-playpen ">
           The Purrfect Match
         </h1>
 

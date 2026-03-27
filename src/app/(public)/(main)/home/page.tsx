@@ -3,6 +3,7 @@
 import HomeHeroSection from "@/components/sections/home-hero-section";
 import AboutUsSection from "@/components/sections/about-us";
 import DonationSection from "@/components/sections/donation-section";
+import PillarsOfCateneoSection from "@/components/sections/pillars-of-cateneo-section";
 import Image from "next/image";
 
 const page = () => {
@@ -28,6 +29,7 @@ const page = () => {
 
       <HomeHeroSection />
       <AboutUsSection />
+      <PillarsOfCateneoSection/>
       <DonationSection />
     </div>
   );

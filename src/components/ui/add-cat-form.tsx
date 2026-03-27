@@ -23,9 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  type AddCatFormData,
-} from "@/schema/add-cat-form-schema";
+import { type AddCatFormData } from "@/schemas/add-cat-form-schema";
 
 interface AddCatFormProps {
   form: UseFormReturn<AddCatFormData>;
@@ -79,8 +77,14 @@ export default function AddCatForm({
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
 
   const imageFile = useWatch({ control: form.control, name: "image" });
-  const selectedVitamins = useWatch({ control: form.control, name: "vitamins" });
-  const selectedHealthStatuses = useWatch({ control: form.control, name: "healthStatus" });
+  const selectedVitamins = useWatch({
+    control: form.control,
+    name: "vitamins",
+  });
+  const selectedHealthStatuses = useWatch({
+    control: form.control,
+    name: "healthStatus",
+  });
 
   React.useEffect(() => {
     if (!imageFile) {
@@ -94,12 +98,18 @@ export default function AddCatForm({
     return () => URL.revokeObjectURL(nextUrl);
   }, [imageFile]);
 
-  const toggleArrayValue = (field: "vitamins" | "healthStatus", value: string) => {
+  const toggleArrayValue = (
+    field: "vitamins" | "healthStatus",
+    value: string,
+  ) => {
     const current = form.getValues(field);
     const nextValues = current.includes(value)
       ? current.filter((item) => item !== value)
       : [...current, value];
-    form.setValue(field, nextValues, { shouldValidate: true, shouldDirty: true });
+    form.setValue(field, nextValues, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
   };
 
   return (
@@ -112,7 +122,7 @@ export default function AddCatForm({
         )}
       >
         <div className="mb-4 flex flex-wrap items-center justify-center gap-2 border-b-2 border-cateneo-lightbrown pb-2 lg:justify-start">
-        <Image
+          <Image
             src="/images/paw.svg"
             alt=""
             width={32}
@@ -121,7 +131,9 @@ export default function AddCatForm({
             aria-hidden
           />
           {/* TWEAK: Made text slightly smaller on mobile to prevent clipping */}
-          <h2 className="text-1xl sm:text-3xl font-bold font-playpen">Add New Cat</h2>
+          <h2 className="text-1xl sm:text-3xl font-bold font-playpen">
+            Add New Cat
+          </h2>
           <Image
             src="/images/paw.svg"
             alt=""
@@ -178,10 +190,28 @@ export default function AddCatForm({
               )}
             />
 
-            <SelectField form={form} name="type" label="Type" placeholder="Kittenean" options={typeOptions} />
+            <SelectField
+              form={form}
+              name="type"
+              label="Type"
+              placeholder="Kittenean"
+              options={typeOptions}
+            />
             <DateOfBirthField form={form} />
-            <SelectField form={form} name="motherCat" label="Mother Cat" placeholder="Kitteean" options={parentOptions} />
-            <SelectField form={form} name="fatherCat" label="Father Cat" placeholder="Kitteean" options={parentOptions} />
+            <SelectField
+              form={form}
+              name="motherCat"
+              label="Mother Cat"
+              placeholder="Kitteean"
+              options={parentOptions}
+            />
+            <SelectField
+              form={form}
+              name="fatherCat"
+              label="Father Cat"
+              placeholder="Kitteean"
+              options={parentOptions}
+            />
             <SelectField
               form={form}
               name="adoptionStatus"
@@ -189,7 +219,13 @@ export default function AddCatForm({
               placeholder="Lorem Ipsum"
               options={statusOptions}
             />
-            <SelectField form={form} name="location" label="Location" placeholder="Lorem Ipsum" options={locationOptions} />
+            <SelectField
+              form={form}
+              name="location"
+              label="Location"
+              placeholder="Lorem Ipsum"
+              options={locationOptions}
+            />
 
             <FormField
               control={form.control}
@@ -238,7 +274,9 @@ export default function AddCatForm({
                           <button
                             key={option}
                             type="button"
-                            onClick={() => toggleArrayValue("healthStatus", option)}
+                            onClick={() =>
+                              toggleArrayValue("healthStatus", option)
+                            }
                             className={cn(
                               chipClass,
                               active
@@ -281,7 +319,7 @@ export default function AddCatForm({
           </div>
 
           <div className="flex min-w-0 max-w-full flex-col items-center space-y-4 lg:items-stretch">
-          <FormField
+            <FormField
               control={form.control}
               name="image"
               render={({ fieldState }) => (
@@ -297,12 +335,19 @@ export default function AddCatForm({
                       </span>
                       {previewUrl ? (
                         <div className="relative h-full w-full overflow-hidden rounded-lg">
-                          <Image src={previewUrl} alt="Cat preview" fill className="object-cover" />
+                          <Image
+                            src={previewUrl}
+                            alt="Cat preview"
+                            fill
+                            className="object-cover"
+                          />
                         </div>
                       ) : (
                         <div className="flex flex-col items-center p-4 text-center">
                           <Upload className="size-8" />
-                          <span className="text-sm">Click to upload cat image</span>
+                          <span className="text-sm">
+                            Click to upload cat image
+                          </span>
                         </div>
                       )}
                     </label>
@@ -314,7 +359,10 @@ export default function AddCatForm({
                     className="hidden"
                     onChange={(event) => {
                       const file = event.target.files?.[0] ?? null;
-                      form.setValue("image", file, { shouldDirty: true, shouldValidate: true });
+                      form.setValue("image", file, {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
                     }}
                   />
                   <FormMessage>{fieldState.error?.message}</FormMessage>
@@ -329,11 +377,14 @@ export default function AddCatForm({
                 <FormItem>
                   <FormControl>
                     <div className="flex w-full max-w-full min-w-0 flex-wrap items-center justify-center gap-2 lg:justify-start">
-                    <FormLabel className="w-full text-cateneo-black lg:w-auto">Color:</FormLabel>
+                      <FormLabel className="w-full text-cateneo-black lg:w-auto">
+                        Color:
+                      </FormLabel>
 
                       {colorOptions.map((option, colorIndex) => {
                         const selected = field.value === option.value;
-                        const isAddColorSlot = colorIndex === colorOptions.length - 1;
+                        const isAddColorSlot =
+                          colorIndex === colorOptions.length - 1;
                         return (
                           <button
                             key={option.value}
@@ -474,7 +525,11 @@ function SelectField({
               </SelectTrigger>
               <SelectContent className={selectContentClass}>
                 {options.map((option) => (
-                  <SelectItem className={selectItemClass} key={option} value={option}>
+                  <SelectItem
+                    className={selectItemClass}
+                    key={option}
+                    value={option}
+                  >
                     {option}
                   </SelectItem>
                 ))}
@@ -502,41 +557,43 @@ function FormField<TName extends FieldPath<AddCatFormData>>(
   return <Controller {...props} />;
 }
 
-function FormItem({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  return <div className={cn("min-w-0 max-w-full space-y-1.5", className)} {...props} />;
-}
-
-function FormLabel({
-  className,
-  ...props
-}: React.ComponentProps<"label">) {
+function FormItem({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <label
-      className={cn("block text-center text-xl font-semibold lg:text-left", className)}
+    <div
+      className={cn("min-w-0 max-w-full space-y-1.5", className)}
       {...props}
     />
   );
 }
 
-function FormControl({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  return <div className={cn("w-full min-w-0 max-w-full", className)} {...props} />;
+function FormLabel({ className, ...props }: React.ComponentProps<"label">) {
+  return (
+    <label
+      className={cn(
+        "block text-center text-xl font-semibold lg:text-left",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
-function FormMessage({
-  children,
-  className,
-}: React.ComponentProps<"p">) {
+function FormControl({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div className={cn("w-full min-w-0 max-w-full", className)} {...props} />
+  );
+}
+
+function FormMessage({ children, className }: React.ComponentProps<"p">) {
   if (!children) {
     return null;
   }
 
   return (
-    <p className={cn("text-center text-xs text-red-600 lg:text-left", className)}>{children}</p>
+    <p
+      className={cn("text-center text-xs text-red-600 lg:text-left", className)}
+    >
+      {children}
+    </p>
   );
 }

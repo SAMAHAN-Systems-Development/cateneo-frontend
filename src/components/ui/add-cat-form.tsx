@@ -3,14 +3,13 @@
 import * as React from "react";
 import Image from "next/image";
 import {
-  useForm,
   useWatch,
   Controller,
   FormProvider,
   type ControllerProps,
   type FieldPath,
+  type UseFormReturn,
 } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Popover as PopoverPrimitive } from "radix-ui";
 import { Calendar, Plus, Upload } from "lucide-react";
 
@@ -25,17 +24,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  addCatFormDefaultValues,
-  addCatFormSchema,
   type AddCatFormData,
 } from "@/schema/add-cat-form-schema";
 
 interface AddCatFormProps {
+  form: UseFormReturn<AddCatFormData>;
   onSubmit: (data: AddCatFormData) => void | Promise<void>;
   onCancel?: () => void;
   className?: string;
   submitLabel?: string;
-  defaultValues?: Partial<AddCatFormData>;
 }
 
 //temporary dropdown values
@@ -73,20 +70,12 @@ const selectItemClass =
   "rounded-md py-2 pr-8 pl-2 text-sm font-gaegu text-cateneo-darkbrown outline-none focus:bg-cateneo-orange/15 focus:text-cateneo-darkbrown data-[highlighted]:bg-cateneo-orange/15 data-[highlighted]:text-cateneo-darkbrown [&_svg]:text-cateneo-darkbrown";
 
 export default function AddCatForm({
+  form,
   onSubmit,
   onCancel,
   className,
   submitLabel = "Confirm",
-  defaultValues,
 }: AddCatFormProps) {
-  const form = useForm<AddCatFormData>({
-    resolver: zodResolver(addCatFormSchema),
-    defaultValues: {
-      ...addCatFormDefaultValues,
-      ...defaultValues,
-    },
-  });
-
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
 
   const imageFile = useWatch({ control: form.control, name: "image" });
@@ -118,18 +107,27 @@ export default function AddCatForm({
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(
-          "mx-auto box-border w-full max-w-sm overflow-x-hidden rounded-3xl border-2 border-cateneo-darkbrown bg-cateneo-white p-4 text-center font-gaegu text-cateneo-darkbrown sm:max-w-md md:max-w-xl md:p-6 lg:max-w-none lg:text-left",
+          "mx-auto box-border w-full max-w-[70%] overflow-x-hidden rounded-3xl border-2 border-cateneo-darkbrown bg-cateneo-white p-4 text-center font-gaegu text-cateneo-darkbrown sm:max-w-md md:max-w-xl md:p-6 lg:max-w-none lg:text-left",
           className,
         )}
       >
-        <div className="mb-4 flex items-center justify-center gap-2 border-b-2 border-cateneo-lightbrown pb-2 lg:justify-start">
-          <h2 className="text-3xl font-bold font-playpen">Add New Cat</h2>
+        <div className="mb-4 flex flex-wrap items-center justify-center gap-2 border-b-2 border-cateneo-lightbrown pb-2 lg:justify-start">
+        <Image
+            src="/images/paw.svg"
+            alt=""
+            width={32}
+            height={32}
+            className="size-6 sm:size-8 shrink-0 lg:hidden"
+            aria-hidden
+          />
+          {/* TWEAK: Made text slightly smaller on mobile to prevent clipping */}
+          <h2 className="text-1xl sm:text-3xl font-bold font-playpen">Add New Cat</h2>
           <Image
             src="/images/paw.svg"
             alt=""
             width={32}
             height={32}
-            className="size-8 shrink-0"
+            className="size-6 sm:size-8 shrink-0"
             aria-hidden
           />
         </div>
@@ -283,16 +281,16 @@ export default function AddCatForm({
           </div>
 
           <div className="flex min-w-0 max-w-full flex-col items-center space-y-4 lg:items-stretch">
-            <FormField
+          <FormField
               control={form.control}
               name="image"
               render={({ fieldState }) => (
                 <FormItem>
-                  {/* <FormLabel>Image Upload</FormLabel> */}
                   <FormControl>
+                    {/* TWEAK: Removed flex wrappers on the parent and added `mx-auto` right to the label */}
                     <label
                       htmlFor="cat-image-upload"
-                      className="relative flex h-80 w-80 cursor-pointer items-center justify-center rounded-xl border-2 border-cateneo-darkbrown bg-white"
+                      className="mx-auto relative flex aspect-square w-full max-w-80 cursor-pointer items-center justify-center rounded-xl border-2 border-cateneo-darkbrown bg-white lg:mx-0"
                     >
                       <span className="absolute right-3 top-3 inline-flex size-8 items-center justify-center rounded-full bg-cateneo-black text-cateneo-white ">
                         <Plus className="size-4" />
@@ -302,7 +300,7 @@ export default function AddCatForm({
                           <Image src={previewUrl} alt="Cat preview" fill className="object-cover" />
                         </div>
                       ) : (
-                        <div className="flex flex-col items-center text-center">
+                        <div className="flex flex-col items-center p-4 text-center">
                           <Upload className="size-8" />
                           <span className="text-sm">Click to upload cat image</span>
                         </div>
@@ -371,7 +369,8 @@ export default function AddCatForm({
               )}
             />
 
-            <div className="flex justify-center gap-6 pt-2">
+            {/* TWEAK: Added `flex-wrap` and adjusted `gap-4 sm:gap-6` in case the buttons run out of horizontal space */}
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 pt-2">
               {/* Reminder: run `npm run test` before pushing this integration. */}
               <Button
                 type="submit"
@@ -396,7 +395,7 @@ export default function AddCatForm({
   );
 }
 
-function DateOfBirthField({ form }: { form: ReturnType<typeof useForm<AddCatFormData>> }) {
+function DateOfBirthField({ form }: { form: UseFormReturn<AddCatFormData> }) {
   const selectedDate = form.watch("dateOfBirth");
   const [open, setOpen] = React.useState(false);
 
@@ -455,7 +454,7 @@ function SelectField({
   placeholder,
   options,
 }: {
-  form: ReturnType<typeof useForm<AddCatFormData>>;
+  form: UseFormReturn<AddCatFormData>;
   name: "type" | "motherCat" | "fatherCat" | "adoptionStatus" | "location";
   label: string;
   placeholder: string;

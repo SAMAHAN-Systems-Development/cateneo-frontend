@@ -78,7 +78,7 @@ export default function Navbar() {
         </li>
         <li>
           <Link
-            href="/"
+            href="/adopt-a-cat"
             className="hover:text-cateneo-orange transition-colors duration-200"
             onClick={() => setIsMenuOpen(false)}
           >
@@ -87,7 +87,7 @@ export default function Navbar() {
         </li>
         <li>
           <Link
-            href="/"
+            href="/cat-directory"
             className="hover:text-cateneo-orange transition-colors duration-200"
             onClick={() => setIsMenuOpen(false)}
           >
@@ -96,7 +96,7 @@ export default function Navbar() {
         </li>
         <li>
           <Link
-            href="/"
+            href="/faq"
             className="hover:text-cateneo-orange transition-colors duration-200"
             onClick={() => setIsMenuOpen(false)}
           >

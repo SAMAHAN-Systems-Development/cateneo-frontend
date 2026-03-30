@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { RoundedButton } from "../ui/rounded-button";
+import Link from "next/dist/client/link";
 
 export default function HomeHeroSection() {
   return (
@@ -14,7 +15,9 @@ export default function HomeHeroSection() {
           more than just fine!
         </p>
         <div className="flex justify-center lg:justify-start w-full">
-          <RoundedButton variant="accent">Meet the Cateneans</RoundedButton>
+          <Link href="/cat-directory">
+            <RoundedButton variant="accent">Meet the Cateneans</RoundedButton>
+          </Link>
         </div>
       </div>
 

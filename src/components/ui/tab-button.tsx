@@ -3,7 +3,7 @@ import { FC } from "react";
 
 const tabButtonStyles = cva(
   [
-    "font-playpen font-light",
+    "font-gaegu font-light",
     "w-full h-full",
     "flex items-center justify-center",
     "rounded-t-[40px]",

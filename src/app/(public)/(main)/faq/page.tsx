@@ -2,6 +2,12 @@ import FAQAccordion from "@/components/ui/faq-accordion";
 import { FAQAccordionData } from "@/data/FAQ-accordion-data";
 import FaqHeroSection from "@/components/sections/faq-hero-section";
 import Image from "next/image";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "FAQ",
+  description: "Frequently asked questions about Cateneo.",
+};
 
 const FaqPage = () => {
   return (

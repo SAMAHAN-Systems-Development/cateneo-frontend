@@ -13,8 +13,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cateneo App",
+  title: {
+    default: "Cateneo",
+    template: "%s · Cateneo",
+  },
   description: "Cateneo Official Website",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

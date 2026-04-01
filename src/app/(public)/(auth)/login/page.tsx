@@ -7,16 +7,22 @@ import {
   loginFormSchema,
   type loginFormData,
 } from "@/schemas/login-form-schema";
+import { useLogin } from "@/client/mutations/auth-mutations";
 
 const LoginPage = () => {
+  const { mutate, isPending, error } = useLogin();
+
   const form = useForm<loginFormData>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = (data: loginFormData) => {
-    console.log("submitted", data); // Placeholder for actual login logic
+  const onSubmit = (loginFormData: loginFormData) => {
+    mutate(loginFormData);
   };
+
+  if (isPending) return <p>Loading...</p>;
+  if (error) return <p>Login failed</p>;
 
   return (
     <div>

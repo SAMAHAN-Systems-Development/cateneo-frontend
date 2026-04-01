@@ -4,7 +4,7 @@ import Link from "next/dist/client/link";
 
 export default function HomeHeroSection() {
   return (
-    <section className="flex flex-col-reverse lg:flex-row items-center justify-between min-h-[80vh] lg:min-h-[90vh] w-full bg-cateneo-white px-4 sm:px-8 lg:px-70 py-8 relative lg:overflow-hidden">
+    <section className="flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between min-h-fit lg:min-h-[90vh] w-full bg-cateneo-white px-4 sm:px-8 lg:px-70 py-8 relative lg:overflow-hidden">
       {/* Text Section */}
       <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start justify-center mb-8 lg:mb-0 lg:pr-8 ">
         <h1 className="text-center lg:text-left text-[32px] sm:text-[64px] font-playpen text-cateneo-darkbrown leading-tight mb-6 sm:max-w-[300px] lg:max-w-none mx-auto lg:mx-0">

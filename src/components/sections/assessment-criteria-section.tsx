@@ -47,7 +47,7 @@ const AssessmentCriteriaSection = () => {
       <h2 className="font-playpen text-5xl text-cateneo-darkbrown text-center pb-10">
         Assessment Criteria
       </h2>
-      <div className="flex flex-col md:flex-row gap-5 md:gap-3 lg:gap-4 justify-center w-full max-w-5xl px-4">
+      <div className="flex flex-col md:flex-row gap-5 md:gap-3 lg:gap-4 justify-center items-center md:items-stretch w-full max-w-5xl px-4">
         <CriteriaCard
           color="darkbrown"
           icon="/images/financial-stability-icon.svg"

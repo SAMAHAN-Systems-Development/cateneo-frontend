@@ -107,7 +107,8 @@ export default function AdoptionProcessSection() {
                     className={`${segments[idx].rod}`}
                     style={{
                       width: MOB_ROD_W,
-                      height: MOB_SEGMENT_H - MOB_CAP_H - (isLast ? MOB_CAP_H : 0),
+                      // slight overlap to avoid thin white gaps between segments
+                      height: MOB_SEGMENT_H - MOB_CAP_H - (isLast ? MOB_CAP_H : 0) + 2,
                     }}
                   />
 
@@ -187,14 +188,14 @@ export default function AdoptionProcessSection() {
 
                     <div
                       className={`absolute w-[42px] left-[23px] top-0 ${segments[idx].rod}`}
-                      style={{ height: CAP_H, borderRadius: "30px 30px 0 0" }}
+                      style={{ height: CAP_H + 1, borderRadius: "30px 30px 0 0" }}
                     />
 
                     <div
                       className={`absolute w-[42px] left-[23px] ${segments[idx].rod}`}
                       style={{
-                        top: CAP_H,
-                        height: SEGMENT_H - CAP_H - (isLast ? CAP_H : 0),
+                        top: CAP_H - 1,
+                        height: SEGMENT_H - CAP_H - (isLast ? CAP_H : 0) + 2,
                       }}
                     />
 
@@ -202,8 +203,8 @@ export default function AdoptionProcessSection() {
                       <div
                         className={`absolute w-[42px] left-[23px] ${segments[idx].rod}`}
                         style={{
-                          top: SEGMENT_H - CAP_H,
-                          height: CAP_H,
+                          top: SEGMENT_H - CAP_H - 1,
+                          height: CAP_H + 1,
                           borderRadius: "0 0 30px 30px",
                         }}
                       />

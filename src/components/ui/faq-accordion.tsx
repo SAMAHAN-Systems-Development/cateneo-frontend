@@ -55,7 +55,7 @@ const variantClasses: Record<
 
 function FAQAccordion({ FaqAccordionData }: FAQAccordionProps) {
   return (
-    <div className="w-full max-w-2xl mx-auto px-3 sm:px-4">
+    <div className="w-full max-w-4xl mx-auto px-5 sm:px-6 md:px-8">
       <Accordion type="single" collapsible className="flex flex-col gap-3">
         {FaqAccordionData.map((accordion, i) => {
           const variant = VARIANT_CYCLE[i % VARIANT_CYCLE.length];

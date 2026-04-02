@@ -36,7 +36,7 @@ const DonationSection = () => {
             our campus cats.
           </p>
           <Link
-            href="https://www.facebook.com"
+            href="https://www.facebook.com/AdDUCATeneo"
             target="_blank"
             rel="noopener noreferrer"
           >

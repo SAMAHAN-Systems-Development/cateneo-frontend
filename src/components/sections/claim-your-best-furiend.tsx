@@ -6,7 +6,7 @@ const ClaimYourBestFuriend = () => {
   return (
     <section className="w-full  px-4 py-16 md:py-24">
       <div className="mx-auto w-full max-w-2xl flex flex-col items-center">
-        <h2 className="font-playpen font-bold text-cateneo-darkbrown text-center text-4xl md:text-5xl mb-4">
+        <h2 className="font-playpen font-bold text-cateneo-darkbrown text-center text-4xl md:text-5xl leading-relaxed mb-4">
           Ready to claim your new
           <br />
           best fur-iend?

@@ -191,7 +191,7 @@ function CarouselPrevious({
       variant={variant}
       size={size}
       className={cn(
-        "absolute touch-manipulation rounded-full transition-none active:translate-y-0 active:not-aria-[haspopup]:translate-y-0",
+        "absolute size-14 touch-manipulation rounded-full transition-none active:translate-y-0 active:not-aria-[haspopup]:translate-y-0",
         orientation === "horizontal"
           ? "top-1/2 -left-12 transform-[translateY(-50%)] active:transform-[translateY(-50%)]"
           : "-top-12 left-1/2 transform-[translateX(-50%)_rotate(90deg)] active:transform-[translateX(-50%)_rotate(90deg)]",
@@ -201,7 +201,7 @@ function CarouselPrevious({
       onClick={handleClick}
       {...props}
     >
-      <ChevronLeftIcon className="size-8!" />
+      <ChevronLeftIcon className="size-10!" />
       <span className="sr-only">Previous slide</span>
     </Button>
   );
@@ -227,7 +227,7 @@ function CarouselNext({
       variant={variant}
       size={size}
       className={cn(
-        "absolute touch-manipulation rounded-full transition-none active:translate-y-0 active:not-aria-[haspopup]:translate-y-0",
+        "absolute size-14 touch-manipulation rounded-full transition-none active:translate-y-0 active:not-aria-[haspopup]:translate-y-0",
         orientation === "horizontal"
           ? "top-1/2 -right-12 transform-[translateY(-50%)] active:transform-[translateY(-50%)]"
           : "-bottom-12 left-1/2 transform-[translateX(-50%)_rotate(90deg)] active:transform-[translateX(-50%)_rotate(90deg)]",
@@ -237,7 +237,7 @@ function CarouselNext({
       onClick={handleClick}
       {...props}
     >
-      <ChevronRightIcon className="size-8!" />
+      <ChevronRightIcon className="size-10!" />
       <span className="sr-only">Next slide</span>
     </Button>
   );

@@ -129,6 +129,7 @@ export default function AdoptionProcessSection() {
                       width: MOB_ROD_W,
                       height: MOB_CAP_H,
                       borderRadius: "30px 30px 0 0",
+                      ...(idx > 0 ? { marginTop: -1 } : {}),
                     }}
                   />
 
@@ -151,8 +152,12 @@ export default function AdoptionProcessSection() {
                     className={`${segments[idx].rod}`}
                     style={{
                       width: MOB_ROD_W,
+                      marginTop: -1,
                       height:
-                        MOB_SEGMENT_H - MOB_CAP_H - (isLast ? MOB_CAP_H : 0),
+                        MOB_SEGMENT_H -
+                        MOB_CAP_H -
+                        (isLast ? MOB_CAP_H : 0) +
+                        1,
                     }}
                   />
 
@@ -161,7 +166,8 @@ export default function AdoptionProcessSection() {
                       className={`${segments[idx].rod}`}
                       style={{
                         width: MOB_ROD_W,
-                        height: MOB_CAP_H,
+                        height: MOB_CAP_H + 1,
+                        marginTop: -1,
                         borderRadius: "0 0 30px 30px",
                       }}
                     />
@@ -199,11 +205,12 @@ export default function AdoptionProcessSection() {
   return (
     <div className="bg-cateneo-white w-full min-h-screen flex items-start justify-center pt-24 md:pt-28">
       <div
+        className="backface-hidden"
         style={{
           width: DESIGN_W,
           height: DESIGN_H,
           transformOrigin: "top center",
-          transform: `scale(${scale})`,
+          transform: `scale(${scale}) translateZ(0)`,
         }}
       >
         <div className="w-full flex items-start justify-center">
@@ -233,15 +240,23 @@ export default function AdoptionProcessSection() {
                     style={{ top }}
                   >
                     <div
-                      className={`absolute w-[42px] left-[23px] top-0 ${segments[idx].rod}`}
-                      style={{ height: CAP_H, borderRadius: "30px 30px 0 0" }}
+                      className={`absolute w-[42px] left-[23px] ${segments[idx].rod}`}
+                      style={{
+                        top: idx > 0 ? -1 : 0,
+                        height: CAP_H,
+                        borderRadius: "30px 30px 0 0",
+                      }}
                     />
 
                     <div
                       className={`absolute w-[42px] left-[23px] ${segments[idx].rod}`}
                       style={{
-                        top: CAP_H,
-                        height: SEGMENT_H - CAP_H - (isLast ? CAP_H : 0),
+                        top: CAP_H - 1,
+                        height:
+                          SEGMENT_H -
+                          CAP_H -
+                          (isLast ? CAP_H : 0) +
+                          1,
                       }}
                     />
 
@@ -249,8 +264,8 @@ export default function AdoptionProcessSection() {
                       <div
                         className={`absolute w-[42px] left-[23px] ${segments[idx].rod}`}
                         style={{
-                          top: SEGMENT_H - CAP_H,
-                          height: CAP_H,
+                          top: SEGMENT_H - CAP_H - 1,
+                          height: CAP_H + 1,
                           borderRadius: "0 0 30px 30px",
                         }}
                       />

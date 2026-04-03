@@ -415,7 +415,9 @@ export function ListOfAdopteesTable({
                   </TableCell>
                   <TableCell className="px-3 py-2.5">{row.email}</TableCell>
                   <TableCell className="px-3 py-2.5">{row.address}</TableCell>
-                  <TableCell className="px-3 py-2.5">{row.adoptedCat}</TableCell>
+                  <TableCell className="px-3 py-2.5">
+                    {row.adoptedCat}
+                  </TableCell>
                 </TableRow>
               ))
             )}

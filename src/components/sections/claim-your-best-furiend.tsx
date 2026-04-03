@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { RoundedButton } from "@/components/ui/rounded-button";
 
 const ClaimYourBestFuriend = () => {
@@ -26,9 +27,14 @@ const ClaimYourBestFuriend = () => {
           />
         </div>
 
-        <RoundedButton variant="primary" className="text-base md:text-lg">
-          Or click here!
-        </RoundedButton>
+        <Link
+          target="_blank"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfDsPUpwlSgTS_z29Mbmdt-QMlVo8Z0dplGRnJjWbg_sm_JAg/viewform"
+        >
+          <RoundedButton variant="primary" className="text-base md:text-lg">
+            Or click here!
+          </RoundedButton>
+        </Link>
       </div>
     </section>
   );

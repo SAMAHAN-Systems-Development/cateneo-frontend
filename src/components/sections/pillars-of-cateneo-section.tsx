@@ -28,25 +28,25 @@ const pillars = [
 const PillarsOfCateneoSection = () => {
   return (
     <section className="w-full bg-cateneo-white px-0 py-12 md:px-1 md:py-16">
-      <div className="mx-auto w-full max-w-7xl">
+      <div className="mx-auto w-full max-w-360">
         <h2 className="mb-20 text-center font-playpen text-4xl font-bold text-cateneo-darkbrown md:mb-24 md:text-6xl">
           Pillars of Cateneo
         </h2>
 
         <Carousel
           opts={{ align: "center", loop: true }}
-          className="mx-auto w-full max-w-7xl px-0 md:px-1"
+          className="mx-auto w-full max-w-360 px-0 md:px-1"
         >
           <CarouselContent className="items-center">
             {pillars.map((pillar) => (
               <CarouselItem
                 key={pillar.title}
-                className="basis-11/12 sm:basis-5/6 lg:basis-3/4"
+                className="basis-11/12 sm:basis-5/6 lg:basis-5/6"
               >
                 <CateneoPillar
                   title={pillar.title}
                   description={pillar.description}
-                  className="mx-auto h-90 max-w-none sm:h-105 md:h-120"
+                  className="mx-auto h-105 max-w-none sm:h-120 md:h-140"
                 />
               </CarouselItem>
             ))}

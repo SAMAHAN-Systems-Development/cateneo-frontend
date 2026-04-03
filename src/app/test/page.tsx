@@ -1,11 +1,11 @@
-import Footer from "../../components/ui/footer";
+import { ListOfAdopteesTable } from "@/components/ui/list-of-adoptees-table";
 
-const page = () => {
+export default function TestPage() {
   return (
-    <div>
-      <Footer />
+    <div className="min-h-screen bg-cateneo-white p-4 md:p-8">
+      <div className="mx-auto max-w-7xl">
+        <ListOfAdopteesTable />
+      </div>
     </div>
   );
-};
-
-export default page;
+}

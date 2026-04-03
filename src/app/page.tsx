@@ -1,10 +1,5 @@
-import Footer from "@/components/ui/footer";
 const Page = () => {
-  return (
-    <div>
-      <Footer />
-    </div>
-  );
+  return <div></div>;
 };
 
 export default Page;

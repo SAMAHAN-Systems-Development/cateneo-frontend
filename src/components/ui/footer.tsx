@@ -202,25 +202,6 @@ export default function Footer() {
               </div>
             </div>
           </div>
-
-          <Image
-            src="/footer-cat-string.svg"
-            alt="Footer Cateneo string"
-            width={1000}
-            height={80}
-            className="mt-30 absolute-full h-auto max-w-full lg:hidden"
-            sizes="100vw"
-          />
-
-          {/* Credit line */}
-          <div className="w-full text-center text-[14px] sm:text-[16px] md:text-[18px] lg:text-[16px] text-cateneo-lightbrown md:max-w-lg md:mx-auto lg:max-w-none lg:mx-0 lg:flex lg:justify-end lg:text-right lg:px-0 lg:mr-0 mt-4 md:mt-8 lg:mt-15 lg:-translate-x-40 lg:translate-y-28">
-            <span className="whitespace-nowrap">
-              Developed by{" "}
-              <b className="font-bold font-playpen">
-                SAMAHAN Systems Development
-              </b>
-            </span>
-          </div>
         </div>
 
         {/* Decorative paws — LG TO 2XL */}
@@ -252,9 +233,27 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Cat + string — Mobile/Tablet */}
+      <Image
+        src="/footer-cat-string.svg"
+        alt="Footer Cateneo string"
+        width={1000}
+        height={80}
+        className="h-auto w-full lg:hidden"
+        sizes="100vw"
+      />
+
+      {/* Credit line */}
+      <div className="w-full px-6 sm:px-10 md:px-16 text-center text-[14px] sm:text-[16px] md:text-[18px] lg:text-[16px] text-cateneo-lightbrown md:max-w-lg md:mx-auto lg:max-w-none lg:mx-0 lg:flex lg:justify-end lg:text-right lg:px-0 lg:mr-0 mt-4 md:mt-8 lg:mt-15 lg:-translate-x-80 lg:translate-y-28">
+        <span className="whitespace-nowrap">
+          Developed by{" "}
+          <b className="font-bold font-playpen">SAMAHAN Systems Development</b>
+        </span>
+      </div>
+
       {/* Corner / string — SM TO MD */}
-      <div className="w-screen flex justify-end overflow-x-hidden">
-        <Link href="/">
+      <div className="w-full flex justify-end">
+        <Link href="/" className="block w-full">
           <Image
             src="/footer-corner.svg"
             alt="Footer Corner"

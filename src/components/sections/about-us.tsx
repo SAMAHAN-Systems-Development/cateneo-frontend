@@ -2,7 +2,10 @@ import Image from "next/image";
 
 export default function AboutUsSection() {
   return (
-    <section className="relative w-full flex flex-col items-center justify-center px-4 py-12 bg-cateneo-white overflow-hidden">
+    <section
+      id="about-us"
+      className="relative w-full flex flex-col items-center justify-center px-4 py-12 bg-cateneo-white overflow-hidden"
+    >
       <Image
         src="/lightbrown-camo.svg"
         alt=""

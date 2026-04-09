@@ -41,7 +41,7 @@ export const loginService = async (
     password: formData.password,
   };
 
-  const res = await apiClient<AuthResponseDTO>("/api/login", {
+  const res = await apiClient<AuthResponseDTO>("/api/auth/login", {
     method: "POST",
     body: JSON.stringify(payload),
   });
@@ -52,18 +52,18 @@ export const loginService = async (
   };
 };
 
-export const signUpService = async (
+export const createUserService = async (
   formData: signUpFormData,
 ): Promise<AuthResponse> => {
   const payload = {
     firstName: formData.firstName,
     lastName: formData.lastName,
-    role: formData.role,
     email: formData.email,
     password: formData.password,
+    role: formData.role,
   };
 
-  const res = await apiClient<AuthResponseDTO>("/api/signup", {
+  const res = await apiClient<AuthResponseDTO>("/api/user/create", {
     method: "POST",
     body: JSON.stringify(payload),
   });
@@ -72,4 +72,10 @@ export const signUpService = async (
     user: mapUser(res.user),
     token: res.token,
   };
+};
+
+export const logoutService = async (): Promise<void> => {
+  await apiClient("/api/auth/logout", {
+    method: "POST",
+  });
 };

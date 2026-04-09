@@ -1,9 +1,10 @@
 import AdoptionProcessSection from "@/components/sections/adoption-process-section";
-
+import { DeleteCatModal } from "@/components/ui/delete-cat-modal";
 
 const Page = () => {
   return <div>  
-    <AdoptionProcessSection />
+    <DeleteCatModal />
+    {/* <AdoptionProcessSection /> */}
   </div>;
 };
 

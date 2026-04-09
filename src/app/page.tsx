@@ -3,8 +3,8 @@ import { DeleteCatModal } from "@/components/ui/delete-cat-modal";
 
 const Page = () => {
   return <div>  
-    <DeleteCatModal />
-    {/* <AdoptionProcessSection /> */}
+<DeleteCatModal
+/>    {/* <AdoptionProcessSection /> */}
   </div>;
 };
 

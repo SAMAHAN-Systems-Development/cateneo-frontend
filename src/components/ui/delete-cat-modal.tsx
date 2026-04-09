@@ -6,15 +6,15 @@ import { cn } from "@/lib/utils";
 
 export type DeleteCatModalProps = {
   catName?: string;
-  onConfirm: () => void;
-  onCancel: () => void;
+  onConfirm?: () => void;
+  onCancel?: () => void;
   className?: string;
 };
 
 export function DeleteCatModal({
   catName = "Miming",
-  onConfirm,
-  onCancel,
+  onConfirm = () => {},
+  onCancel = () => {},
   className,
 }: DeleteCatModalProps) {
   return (

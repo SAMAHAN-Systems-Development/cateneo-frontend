@@ -1,5 +1,14 @@
+"use client";
+
+import { useState } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { MALE_SVG, FEMALE_SVG, COLOR_MAP } from "@/lib/kittenean-card-config";
+import { Popover as PopoverPrimitive } from "radix-ui";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export type KitteneanProps = {
   imageUrl: string;
@@ -30,8 +39,9 @@ function KitteneanCard({
   personality,
   svgColor,
 }: KitteneanProps) {
+    const [medicineIsOpen, setMedicineIsOpen] = useState(false);
   return (
-    <Card className="flex w-[300px] h-[569.02px] max-h-[569.02px] bg-cateneo-white max-w-[300px] border-[2px] rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B]">
+    <Card className="flex w-[300px] h-[569.02px] max-h-[569.02px] bg-cateneo-white max-w-[300px] sm:max-w-[282px] border-[2px] rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B]">
       <CardContent className="flex flex-col gap-[27.78px] w-[100%]">
         <div className="w-full flex items-center justify-center relative ">
           <svg
@@ -54,18 +64,18 @@ function KitteneanCard({
         </div>
         <div className="font-gaegu flex flex-col gap-[3.11px] relative w-[100%]">
           <div className="flex gap-[8px] items-center h-[27px]">
-            <CardTitle className="text-[24.9px] text-cateneo-darkbrown">
+            <CardTitle className="text-[24.9px] text-cateneo-darkbrown max-w-[220px] leading-none line-clamp-1">
               {name}
             </CardTitle>
             {gender === "male" ? MALE_SVG : FEMALE_SVG}
           </div>
           <div className="flex gap-[8px] items-center h-[27px]">
             <p className="text-[17.12px] text-cateneo-lightbrown">Parent: </p>
-            <p className="text-[21.79px] text-cateneo-darkbrown">{parent}</p>
+            <p className="text-[21.79px] text-cateneo-darkbrown max-w-[220px] leading-none line-clamp-1">{parent}</p>
           </div>
           <div className="flex gap-[8px] items-center h-[27px]">
             <p className="text-[17.12px] text-cateneo-lightbrown">DOB: </p>
-            <p className="text-[21.79px] text-cateneo-darkbrown">
+            <p className="text-[21.79px] text-cateneo-darkbrown max-w-[220px] leading-none line-clamp-1">
               {dateOfBirth}
             </p>
           </div>
@@ -84,10 +94,10 @@ function KitteneanCard({
                 fill="#BF7900"
               />
             </svg>
-            <p className="text-[21.79px] text-cateneo-darkbrown">{residence}</p>
+            <p className="text-[21.79px] text-cateneo-darkbrown max-w-[220px] leading-none line-clamp-1">{residence}</p>
           </div>
           <div className="flex gap-[8px] items-center h-[27.97px]">
-            <p className="text-[21.79px] text-cateneo-lightbrown">Color: </p>
+            <p className="text-[17.12px] text-cateneo-lightbrown">Color: </p>
             {color.map((colorName, index) => (
               <svg
                 key={index}
@@ -110,30 +120,45 @@ function KitteneanCard({
             <p className="text-[17.12px] text-cateneo-lightbrown">
               Health Status:
             </p>
-            <p className="text-[21.79px] text-cateneo-darkbrown">
+            <p className="text-[21.79px] text-cateneo-darkbrown max-w-[135px] truncate">
               {healthStatus}
             </p>
           </div>
-          <div className="flex gap-[8px] items-center h-[27px]">
-            <p className="text-[21.79px] text-cateneo-darkbrown truncate">
+          <div className="flex gap-[8px] items-center h-[27px] relative">
+            <p className="text-[21.79px] text-cateneo-darkbrown truncate max-w-[220px]">
               {medicine ?? "💊 N/A"}
             </p>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.90264 0C3.53719 0 0 3.53719 0 7.90264C0 12.2681 3.53719 15.8053 7.90264 15.8053C12.2681 15.8053 15.8053 12.2681 15.8053 7.90264C15.8053 3.53719 12.2681 0 7.90264 0ZM8.62452 11.55H7.17317V6.07515H8.62452V11.55ZM7.89884 5.47866C7.46951 5.47866 7.11997 5.15191 7.11997 4.71879C7.11997 4.28566 7.47331 3.96272 7.89884 3.96272C8.33197 3.96272 8.68531 4.28566 8.68531 4.71879C8.68531 5.15191 8.33197 5.47866 7.89884 5.47866Z"
-                fill="#BF7900"
-              />
-            </svg>
+            <Popover open={medicineIsOpen} onOpenChange={setMedicineIsOpen}>
+              <PopoverTrigger asChild>
+                <button>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.90264 0C3.53719 0 0 3.53719 0 7.90264C0 12.2681 3.53719 15.8053 7.90264 15.8053C12.2681 15.8053 15.8053 12.2681 15.8053 7.90264C15.8053 3.53719 12.2681 0 7.90264 0ZM8.62452 11.55H7.17317V6.07515H8.62452V11.55ZM7.89884 5.47866C7.46951 5.47866 7.11997 5.15191 7.11997 4.71879C7.11997 4.28566 7.47331 3.96272 7.89884 3.96272C8.33197 3.96272 8.68531 4.28566 8.68531 4.71879C8.68531 5.15191 8.33197 5.47866 7.89884 5.47866Z"
+                      fill="#BF7900"
+                    />
+                  </svg>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent side="right" align="start" alignOffset={-12} sideOffset={8} className="bg-cateneo-lightbrown max-w-[207px]">
+                <PopoverPrimitive.Arrow
+                  width={12}
+                  height={8}
+                  fill="#BF7900"
+                  style={{strokeWidth: 1 }}
+                />
+                <p className="font-gaegu text-cateneo-white">LC-Vit (or LC-Vit Plus) for cats is a popular, over-the-counter multivitamin syrup designed to boost immunity, increase appetite, and treat vitamin deficiencies during stress or illness.</p>
+              </PopoverContent>
+            </Popover>
           </div>
           <div className="flex gap-[8px] items-center h-[27px]">
             <p className="text-[17.12px] text-cateneo-lightbrown">Status: </p>
-            <p className="text-[21.79px] text-cateneo-darkbrown">{status}</p>
+            <p className="text-[21.79px] text-cateneo-darkbrown max-w-[220px] truncate">{status}</p>
           </div>
           <div className="pr-[41px] w-[100%]">
             <p className="text-[17.12px] text-cateneo-lightbrown">

@@ -27,6 +27,13 @@
   .font-gaegu {
     font-family: "Gaegu", sans-serif;
   }
+
+  @media (min-width: 1024px) {
+    .footer-credit {
+      transform: translateX(clamp(-220px, calc(-100px - 7.8125vw), -180px))
+                 translateY(clamp(40px, calc(6.25vw - 24px), 72px));
+    }
+  }
 }
 
 @theme {

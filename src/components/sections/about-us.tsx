@@ -4,7 +4,8 @@ export default function AboutUsSection() {
   return (
     <section
       id="about-us"
-      className="relative w-full flex flex-col items-center justify-center px-4 py-12 bg-cateneo-white overflow-hidden"
+      className="relative w-full flex flex-col items-center justify-center px-4 py-12 bg-cateneo-white"
+      style={{ overflowX: "clip" }}
     >
       <Image
         src="/lightbrown-camo.svg"
@@ -12,7 +13,7 @@ export default function AboutUsSection() {
         width={75}
         height={601}
         priority
-        className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden md:block w-10 lg:w-14"
+        className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden md:block w-10 lg:w-14 "
       />
       <Image
         src="/brown-camo.svg"
@@ -20,7 +21,7 @@ export default function AboutUsSection() {
         width={124}
         height={769}
         priority
-        className="pointer-events-none absolute -right-5 -top-5 z-10 block w-12 md:-top-40 md:w-14 lg:w-20"
+        className="pointer-events-none absolute -right-5 -top-5 z-10 block w-12 md:-top-40 md:w-14 lg:w-20 "
       />
 
       <div className="relative z-20 w-full max-w-2xl text-center">

@@ -125,6 +125,13 @@ export default function Footer() {
                 >
                   FAQ
                 </Link>
+
+                <Link
+                  href="/meet-the-developers"
+                  className="text-[20px] lg:text-[16px] xl:text-[18px] text-cateneo-lightbrown font-gaegu font-bold hover:text-cateneo-darkbrown transition-colors block"
+                >
+                  Meet the Developers
+                </Link>
               </div>
 
               {/* Address */}

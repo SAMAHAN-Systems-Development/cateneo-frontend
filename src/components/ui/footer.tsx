@@ -109,7 +109,7 @@ export default function Footer() {
                 </h1>
                 <Link
                   href="/home#about-us"
-                  className="text-[clamp(14px,2vw,18px)] font-gaegu font-bold text-cateneo-lightbrown hover:text-cateneo-darkbrown transition-colors block"
+                  className="text-[20px] lg:text-[16px] xl:text-[18px] font-gaegu font-bold text-cateneo-lightbrown hover:text-cateneo-darkbrown transition-colors block"
                 >
                   About
                 </Link>

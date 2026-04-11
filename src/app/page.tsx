@@ -1,10 +1,10 @@
 import AdoptionProcessSection from "@/components/sections/adoption-process-section";
-import { DeleteCatModal } from "@/components/ui/delete-cat-modal";
+import Navbar from "@/components/ui/navigation-bar";
 
 const Page = () => {
   return <div>  
-<DeleteCatModal
-/>    {/* <AdoptionProcessSection /> */}
+    <Navbar />
+    {/* <AdoptionProcessSection /> */}
   </div>;
 };
 

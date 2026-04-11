@@ -1,5 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
-import { loginService, signUpService } from "../service/auth-service";
+import {
+  loginService,
+  createUserService,
+  logoutService,
+} from "../service/auth-service";
 
 export const useLogin = () => {
   return useMutation({
@@ -7,8 +11,14 @@ export const useLogin = () => {
   });
 };
 
-export const useSignUp = () => {
+export const useLogout = () => {
   return useMutation({
-    mutationFn: signUpService,
+    mutationFn: logoutService,
+  });
+};
+
+export const useCreateUser = () => {
+  return useMutation({
+    mutationFn: createUserService,
   });
 };

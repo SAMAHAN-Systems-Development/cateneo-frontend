@@ -4,6 +4,7 @@ export default function PurrfectMatchSection() {
   return (
     <section className="w-full h-auto flex flex-row items-center justify-between py-8 bg-cateneo-white px-0">
       <div className="hidden md:flex flex-col justify-between h-full pl-0">
+        {/* DESKTOP LEFT PAWS */}
         <Image
           src="/paws.svg"
           alt="Paws icon"
@@ -13,6 +14,7 @@ export default function PurrfectMatchSection() {
         />
       </div>
 
+      {/* MOBILE LEFT PAWS */}
       <div className="flex flex-col justify-between h-full pl-0 md:hidden">
         <Image
           src="/mobile-paws.svg"

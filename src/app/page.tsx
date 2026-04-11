@@ -1,7 +1,5 @@
-import AddNewAdopteeForm from "@/components/ui/add-new-adoptee-form";
-
 const Page = () => {
-  return <AddNewAdopteeForm />;
+  return <div></div>;
 };
 
 export default Page;

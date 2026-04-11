@@ -17,8 +17,8 @@ export default function Navbar() {
           className="hover:opacity-90 transition-opacity duration-200 flex items-center gap-2"
         >
           <Image
-            src="/cateneo-navbar-logo.svg"
-            alt="Cateneo logo"
+            src="/cateneo-navbar-icon.png"
+            alt="Cateneo icon"
             width={55}
             height={55}
             priority
@@ -58,7 +58,7 @@ export default function Navbar() {
             className="hover:opacity-90 transition-opacity duration-200"
           >
             <Image
-              src="/cateneo-navbar-logo.svg"
+              src="/cateneo-navbar-icon.png"
               alt="Cateneo logo"
               width={55}
               height={55}

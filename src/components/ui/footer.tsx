@@ -253,7 +253,7 @@ export default function Footer() {
       />
 
       {/* Credit line */}
-      <div className="w-full px-6 sm:px-10 md:px-16 text-center text-[14px] sm:text-[16px] md:text-[18px] lg:text-[16px] text-cateneo-lightbrown md:max-w-lg md:mx-auto lg:max-w-none lg:mx-0 lg:flex lg:justify-end lg:text-right lg:px-0 lg:mr-0 mt-4 md:mt-8 lg:mt-15 lg:-translate-x-80 lg:translate-y-28">
+      <div className="w-full px-6 sm:px-10 md:px-16 text-center text-[14px] sm:text-[16px] md:text-[18px] lg:text-[16px] text-cateneo-lightbrown md:max-w-lg md:mx-auto lg:max-w-none lg:mx-0 lg:flex lg:justify-end lg:text-right lg:px-0 lg:mr-0 mt-4 md:mt-8 lg:mt-15 footer-credit">
         <span className="whitespace-nowrap">
           Developed by{" "}
           <b className="font-bold font-playpen">SAMAHAN Systems Development</b>

@@ -1,10 +1,7 @@
-import AdoptionProcessSection from "@/components/sections/adoption-process-section";
-
+import AddNewAdopteeForm from "@/components/ui/add-new-adoptee-form";
 
 const Page = () => {
-  return <div>  
-    <AdoptionProcessSection />
-  </div>;
+  return <AddNewAdopteeForm />;
 };
 
 export default Page;

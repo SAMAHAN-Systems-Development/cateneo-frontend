@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import LoginForm from "@/components/ui/login-form";
 import {
@@ -10,23 +11,29 @@ import {
 import { useLogin } from "@/client/mutations/auth-mutations";
 
 const LoginPage = () => {
-  const { mutate, isPending, error } = useLogin();
+  const { mutateAsync, error, reset } = useLogin();
+  const router = useRouter();
 
   const form = useForm<loginFormData>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = (loginFormData: loginFormData) => {
-    mutate(loginFormData);
+  const onSubmit = async (loginFormData: loginFormData) => {
+    reset();
+    try {
+      await mutateAsync(loginFormData);
+      router.push("/dashboard");
+    } catch {
+      // Error state is handled by react-query and displayed in the form.
+    }
   };
 
-  if (isPending) return <p>Loading...</p>;
-  if (error) return <p>Login failed</p>;
+  const errorMessage = error instanceof Error ? error.message : null;
 
   return (
     <div>
-      <LoginForm form={form} onSubmit={onSubmit} />
+      <LoginForm form={form} onSubmit={onSubmit} errorMessage={errorMessage} />
     </div>
   );
 };

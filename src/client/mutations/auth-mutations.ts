@@ -1,19 +1,27 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   loginService,
   createUserService,
   logoutService,
 } from "../service/auth-service";
+import { loginFormData } from "@/schemas/login-form-schema";
 
 export const useLogin = () => {
   return useMutation({
-    mutationFn: loginService,
+    mutationKey: ["login"],
+    mutationFn: (formData: loginFormData) => loginService(formData),
   });
 };
 
 export const useLogout = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: logoutService,
+    onSuccess: () => {
+      queryClient.setQueryData(["currentUser"], { user: null });
+      queryClient.removeQueries({ queryKey: ["currentUser"] });
+    },
   });
 };
 

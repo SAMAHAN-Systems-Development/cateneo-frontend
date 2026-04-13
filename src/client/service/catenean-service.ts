@@ -13,9 +13,21 @@ interface Catenean {
   createdAt: Date;
 }
 
+type CateneanListResponse =
+  | Catenean[]
+  | {
+      data?: Catenean[];
+      items?: Catenean[];
+      results?: Catenean[];
+    };
+
 export interface CateneanDTO {
   status?: string;
-  classification?: string;
+  classification?:
+    | "CATenean"
+    | "KITTENean"
+    | "Rescued_CATenean"
+    | "Rescued_KITTENean";
   type?: string;
   sex?: string;
   name?: string;
@@ -41,6 +53,46 @@ export interface CreateCatDTO {
   vitamins?: string[];
   vaccines?: string[];
 }
+
+export const getAllCateneans = async (
+  filters?: CateneanDTO,
+): Promise<Catenean[]> => {
+  const queryParams = new URLSearchParams();
+
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        queryParams.set(key, String(value));
+      }
+    });
+  }
+
+  const endpoint = queryParams.toString()
+    ? `/api/public/cats?${queryParams.toString()}`
+    : "/api/public/cats";
+
+  const result = await apiClient<CateneanListResponse>(endpoint, {
+    method: "GET",
+  });
+
+  if (Array.isArray(result)) {
+    return result;
+  }
+
+  if (Array.isArray(result?.data)) {
+    return result.data;
+  }
+
+  if (Array.isArray(result?.items)) {
+    return result.items;
+  }
+
+  if (Array.isArray(result?.results)) {
+    return result.results;
+  }
+
+  return [];
+};
 
 export const getCateneanById = async (id: number): Promise<Catenean> => {
   const result = await apiClient<Catenean>(`/api/public/cats/${id}`, {

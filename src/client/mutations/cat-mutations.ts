@@ -7,6 +7,7 @@ import {
   adminAdoptCat,
   adminDeleteCat,
   adminRevertAdoption,
+  getAllCateneans,
 } from "../service/catenean-service";
 import { CateneanDTO } from "../service/catenean-service";
 

@@ -1,12 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { MALE_SVG, FEMALE_SVG, COLOR_MAP } from "@/lib/kittenean-card-config";
 
 export type CatProps = {
@@ -19,6 +13,7 @@ export type CatProps = {
   medicine: string | null;
   personality: string;
   svgColor: "white" | "darkbrown" | "lightbrown" | "orange" | "black"; // Single color only
+  onEdit?: () => void;
 };
 
 function CateneanCard({
@@ -31,39 +26,28 @@ function CateneanCard({
   medicine,
   personality,
   svgColor,
+  onEdit,
 }: CatProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
     <Card className="flex w-[300px] h-[482px] max-h-[482px] max-w-[300px] border-[2px] bg-cateneo-white rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B]">
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
-          <button
-            className="absolute top-4 right-4 p-2 rounded-full hover:bg-cateneo-lightbrown/10 transition-colors z-10"
-            aria-label="Card options"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="5" cy="12" r="2" fill="#83491B" />
-              <circle cx="12" cy="12" r="2" fill="#83491B" />
-              <circle cx="19" cy="12" r="2" fill="#83491B" />
-            </svg>
-          </button>
-        </PopoverTrigger>
-        <PopoverContent className="w-40 p-0 bg-cateneo-white border border-cateneo-lightbrown/20">
-          <button
-            onClick={() => setIsOpen(false)}
-            className="w-full px-4 py-2 text-left font-gaegu text-sm text-cateneo-darkbrown hover:bg-cateneo-lightbrown/10 transition-colors"
-          >
-            Edit
-          </button>
-        </PopoverContent>
-      </Popover>
+      <button
+        type="button"
+        onClick={onEdit}
+        className="absolute top-4 right-4 p-2 rounded-full hover:bg-cateneo-lightbrown/10 transition-colors z-10"
+        aria-label="Edit card"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="5" cy="12" r="2" fill="#83491B" />
+          <circle cx="12" cy="12" r="2" fill="#83491B" />
+          <circle cx="19" cy="12" r="2" fill="#83491B" />
+        </svg>
+      </button>
       <CardContent className="flex flex-col gap-[27.78px]">
         <div className="w-full flex items-center justify-center relative ">
           <svg

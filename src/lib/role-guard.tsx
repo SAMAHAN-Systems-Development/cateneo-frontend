@@ -1,0 +1,98 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api-client";
+
+type Role = "ADMIN" | "SUPERADMIN" | "VOLUNTEER";
+
+type CurrentUserCache = {
+  user: {
+    role: string;
+  } | null;
+};
+
+interface RoleGuardProps {
+  allowedRoles: Role[];
+  children: React.ReactNode;
+  redirectTo?: string;
+}
+
+const RoleGuard = ({
+  allowedRoles,
+  children,
+  redirectTo = "/login",
+}: RoleGuardProps) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const currentUser = queryClient.getQueryData<CurrentUserCache>([
+    "currentUser",
+  ]);
+  const [resolvedRole, setResolvedRole] = useState<string | undefined>(
+    currentUser?.user?.role,
+  );
+  const [isChecking, setIsChecking] = useState<boolean>(!currentUser?.user);
+
+  const normalizeRole = (value: string) =>
+    value.replace(/([a-z])([A-Z])/g, "$1_$2").toUpperCase();
+
+  useEffect(() => {
+    const roleFromCache = currentUser?.user?.role;
+    if (roleFromCache) {
+      setResolvedRole(roleFromCache);
+      setIsChecking(false);
+      return;
+    }
+
+    let disposed = false;
+
+    const hydrateCurrentUser = async () => {
+      try {
+        const me = await apiClient<{ role: string }>("/api/admin/users/me", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (disposed) return;
+
+        setResolvedRole(me.role);
+        queryClient.setQueryData(["currentUser"], {
+          user: { role: me.role },
+        });
+      } catch {
+        if (disposed) return;
+        setResolvedRole(undefined);
+      } finally {
+        if (!disposed) {
+          setIsChecking(false);
+        }
+      }
+    };
+
+    hydrateCurrentUser();
+
+    return () => {
+      disposed = true;
+    };
+  }, [currentUser?.user?.role, queryClient]);
+
+  const normalizedRole = resolvedRole ? normalizeRole(resolvedRole) : undefined;
+  const isAllowed = Boolean(
+    normalizedRole && allowedRoles.includes(normalizedRole as Role),
+  );
+
+  useEffect(() => {
+    if (!isChecking && !isAllowed) {
+      router.replace(redirectTo);
+    }
+  }, [isAllowed, isChecking, redirectTo, router]);
+
+  if (isChecking || !isAllowed) {
+    return null;
+  }
+
+  return <>{children}</>;
+};
+
+export default RoleGuard;

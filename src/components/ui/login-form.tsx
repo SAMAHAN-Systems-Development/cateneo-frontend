@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 
 interface LoginFormProps {
   form: UseFormReturn<loginFormData>;
-  onSubmit: (data: loginFormData) => void;
+  onSubmit: (data: loginFormData) => Promise<void>;
+  errorMessage?: string | null;
 }
 
-const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
+const LoginForm = ({ form, onSubmit, errorMessage }: LoginFormProps) => {
   const {
     register,
     handleSubmit,
@@ -26,6 +27,10 @@ const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-4 sm:space-y-5 font-gaegu"
         >
+          {errorMessage && (
+            <p className="text-red-600 text-sm text-center">{errorMessage}</p>
+          )}
+
           <div className="relative">
             <div className="flex items-center border-2 border-cateneo-darkbrown rounded-full px-4 sm:px-5 py-2.5 sm:py-3">
               <span className="text-cateneo-darkbrown mr-2 sm:mr-3 text-lg sm:text-xl">
@@ -76,7 +81,7 @@ const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
         <p className="text-center text-cateneo-darkbrown mt-4 sm:mt-6 font-gaegu text-sm sm:text-base">
           Don&apos;t have an account?{" "}
           <a
-            href="/signup"
+            href="/sign-up"
             className="text-cateneo-darkbrown hover:underline font-semibold"
           >
             Sign Up

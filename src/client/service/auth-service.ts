@@ -16,13 +16,17 @@ type UserDTO = {
 };
 
 interface AuthResponseDTO {
-  user: UserDTO;
-  token: string;
+  user?: UserDTO;
+  id?: string;
+  role?: string;
+  firstName?: string;
+  lastName?: string;
+  token?: string;
 }
 
 interface AuthResponse {
   user: AuthUser;
-  token: string;
+  token?: string;
 }
 
 const mapUser = (payload: UserDTO): AuthUser => {
@@ -37,18 +41,25 @@ export const loginService = async (
   formData: loginFormData,
 ): Promise<AuthResponse> => {
   const payload = {
-    email: formData.email,
+    email: formData.email.trim(),
     password: formData.password,
   };
 
   const res = await apiClient<AuthResponseDTO>("/api/auth/login", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: payload,
+    credentials: "include",
   });
 
+  const userPayload: UserDTO = res.user ?? {
+    id: res.id ?? "",
+    role: res.role ?? "",
+    firstName: res.firstName ?? "",
+    lastName: res.lastName ?? "",
+  };
+
   return {
-    user: mapUser(res.user),
-    token: res.token,
+    user: mapUser(userPayload),
   };
 };
 
@@ -56,20 +67,28 @@ export const createUserService = async (
   formData: signUpFormData,
 ): Promise<AuthResponse> => {
   const payload = {
-    firstName: formData.firstName,
-    lastName: formData.lastName,
-    email: formData.email,
+    firstName: formData.firstName.trim(),
+    lastName: formData.lastName.trim(),
+    email: formData.email.trim(),
     password: formData.password,
     role: formData.role,
   };
 
   const res = await apiClient<AuthResponseDTO>("/api/user/create", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: payload,
+    credentials: "include",
   });
 
   return {
-    user: mapUser(res.user),
+    user: mapUser(
+      res.user ?? {
+        id: res.id ?? "",
+        role: res.role ?? "",
+        firstName: res.firstName ?? "",
+        lastName: res.lastName ?? "",
+      },
+    ),
     token: res.token,
   };
 };
@@ -77,5 +96,6 @@ export const createUserService = async (
 export const logoutService = async (): Promise<void> => {
   await apiClient("/api/auth/logout", {
     method: "POST",
+    credentials: "include",
   });
 };

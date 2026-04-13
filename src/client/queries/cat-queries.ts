@@ -1,11 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import {
+  CateneanDTO,
   getAdminCatById,
   getAdminCats,
+  getAllCateneans,
   getCateneanById,
   getEligibleFathers,
   getEligibleMothers,
 } from "../service/catenean-service";
+
+export const useGetAllCats = (filters?: CateneanDTO) => {
+  return useQuery({
+    queryKey: ["getAllCats", filters],
+    queryFn: () => getAllCateneans(filters),
+  });
+};
 
 export const useGetAdminCats = () => {
   return useQuery({

@@ -5,28 +5,77 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import TabButton from "../ui/tab-button";
 import { Input } from "../ui/input";
+import EditCatForm, { type EditCatInitialData } from "../ui/edit-cat-form";
+
+type EditableCard = {
+  id?: string | number;
+  name: string;
+  sex?: string;
+  classification?: string;
+  dob?: string;
+  status?: string;
+  currentLocation?: string;
+  vitamins?: string[];
+  healthStatus?: string[];
+  personality?: string;
+  colors?: string[];
+  imageUrl?: string;
+};
 
 export type DashboardTabConfig = {
   id: string;
   label: string;
   content:
     | ReactNode
-    | ((args: { searchQuery: string; tabId: string }) => ReactNode);
+    | ((args: {
+        searchQuery: string;
+        tabId: string;
+        onEditCard: (card: EditableCard) => void;
+      }) => ReactNode);
 };
 
 type DashboardSectionProps = {
   tabs: DashboardTabConfig[];
   title?: string;
   searchPlaceholder?: string;
+  activeTabId?: string;
+  onTabChange?: (tabId: string) => void;
 };
 
 const Dashboard = ({
   tabs,
   title = "Admin Dashboard",
   searchPlaceholder = "Search for Cat",
+  activeTabId: controlledActiveTabId,
+  onTabChange,
 }: DashboardSectionProps) => {
-  const [activeTabId, setActiveTabId] = useState<string>(tabs[0]?.id ?? "");
+  const [internalActiveTabId, setInternalActiveTabId] = useState<string>(
+    tabs[0]?.id ?? "",
+  );
   const [searchQuery, setSearchQuery] = useState("");
+  const [editedCard, setEditedCard] = useState<EditableCard | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const activeTabId = controlledActiveTabId ?? internalActiveTabId;
+
+  const handleTabChange = (tabId: string) => {
+    if (onTabChange) {
+      onTabChange(tabId);
+      return;
+    }
+
+    setInternalActiveTabId(tabId);
+  };
+
+  const handleOpenEditModal = (card: EditableCard) => {
+    setEditedCard(card);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditedCard(null);
+  };
 
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
 
@@ -60,7 +109,7 @@ const Dashboard = ({
                   title={tab.label}
                   color="orange"
                   style={isActive ? "filledDark" : "invertedDark"}
-                  tabChange={() => setActiveTabId(tab.id)}
+                  tabChange={() => handleTabChange(tab.id)}
                   className="h-11! px-4 text-sm sm:text-base"
                 />
               );
@@ -95,9 +144,35 @@ const Dashboard = ({
 
         <div className="mt-4">
           {typeof activeTab?.content === "function"
-            ? activeTab.content({ searchQuery, tabId: activeTab.id })
+            ? activeTab.content({
+                searchQuery,
+                tabId: activeTab.id,
+                onEditCard: handleOpenEditModal,
+              })
             : activeTab?.content}
         </div>
+
+        {isEditModalOpen && editedCard && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+            role="dialog"
+            aria-modal="true"
+            onClick={handleCloseEditModal}
+          >
+            <div
+              className="w-full max-w-5xl"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EditCatForm
+                cat={editedCard as EditCatInitialData}
+                onSubmit={async () => {
+                  handleCloseEditModal();
+                }}
+                onCancel={handleCloseEditModal}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

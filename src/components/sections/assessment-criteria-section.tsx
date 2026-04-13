@@ -22,8 +22,7 @@ const CriteriaCard = ({
 }: CriteriaCardProps) => {
   return (
     <div
-      className={`${colorMap[color]} rounded-2xl px-4 py-6 md:px-5 md:py-5 w-full sm:max-w-70.75 md:max-w-none md:w-full lg:w-65
-        lg:h-97.5 flex flex-row md:flex-col items-center gap-4 md:gap-2 overflow-hidden`}
+      className={`${colorMap[color]} rounded-2xl px-4 py-6 md:px-5 md:py-5 w-full sm:max-w-70.75 md:max-w-none md:w-full lg:w-65 flex flex-row md:flex-col items-center gap-4 md:gap-2 overflow-hidden`}
     >
       <div className="w-20 h-20 md:w-18 md:h-18 bg-white rounded-full flex items-center justify-center shrink-0">
         <Image src={icon} alt={title} width={44} height={44} className="" />
@@ -43,7 +42,7 @@ const CriteriaCard = ({
 
 const AssessmentCriteriaSection = () => {
   return (
-    <section className="flex flex-col items-center py-16 px-4">
+    <section className="flex flex-col items-center pt-0 pb-16 px-4">
       <h2 className="font-playpen text-5xl text-cateneo-darkbrown text-center pb-10">
         Assessment Criteria
       </h2>

@@ -5,6 +5,7 @@ import Dashboard, {
   DashboardTabConfig,
 } from "@/components/sections/dashboard-section";
 import CateneanCard, { CatProps } from "@/components/ui/catenean-card";
+import KitteneanCard from "@/components/ui/kittenean-card";
 import { useGetAllCats } from "@/client/queries/cat-queries";
 import { CateneanDTO } from "@/client/service/catenean-service";
 
@@ -34,6 +35,17 @@ const toIsoDateString = (value?: string | Date) => {
   if (!value) return undefined;
   if (typeof value === "string") return value;
   return value.toISOString();
+};
+
+const toReadableDate = (value?: string | Date) => {
+  if (!value) return "N/A";
+  const date = typeof value === "string" ? new Date(value) : value;
+  if (Number.isNaN(date.getTime())) return "N/A";
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 };
 
 type RawCat = {
@@ -187,27 +199,20 @@ const renderKitteneans = (
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
       {filteredKittens.map((kitten) => (
-        <CateneanCard
+        <KitteneanCard
           key={kitten.catName}
-          {...kitten}
-          onEdit={() =>
-            onEditCard({
-              id: kitten.rawCat.id,
-              name: kitten.rawCat.name,
-              sex: kitten.rawCat.sex,
-              classification: kitten.rawCat.classification,
-              dob: toIsoDateString(kitten.rawCat.dob),
-              status: kitten.rawCat.status,
-              currentLocation: kitten.rawCat.currentLocation,
-              vitamins: kitten.rawCat.vitamins,
-              healthStatus: kitten.rawCat.reproductiveStatus
-                ? [kitten.rawCat.reproductiveStatus]
-                : [],
-              personality: kitten.rawCat.personality,
-              colors: kitten.rawCat.colors,
-              imageUrl: kitten.rawCat.imageUrl,
-            })
-          }
+          imageUrl={kitten.imageUrl}
+          name={kitten.catName}
+          gender={kitten.sex}
+          parent="N/A"
+          dateOfBirth={toReadableDate(kitten.rawCat.dob)}
+          medicine={kitten.medicine}
+          residence={kitten.location}
+          color={kitten.color}
+          healthStatus={kitten.healthStatus}
+          status={kitten.rawCat.status || "N/A"}
+          personality={kitten.personality}
+          svgColor={kitten.svgColor}
         />
       ))}
     </div>

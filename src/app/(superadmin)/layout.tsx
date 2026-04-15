@@ -1,4 +1,4 @@
-import RoleGuard from "@/lib/role-guard";
+import AdminNavigationBar from "@/components/ui/admin-navigation-bar";
 
 export default function SuperAdminLayout({
   children,
@@ -6,11 +6,10 @@ export default function SuperAdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <RoleGuard allowedRoles={["SUPERADMIN"]} redirectTo="/login">
-      <div className="relative min-h-screen overflow-x-hidden bg-cateneo-white">
-        {/* Page content */}
-        <div className="relative">{children}</div>
-      </div>
-    </RoleGuard>
+    <div className="relative min-h-screen overflow-x-hidden bg-cateneo-white">
+      <AdminNavigationBar />
+      {/* Page content */}
+      <div className="relative">{children}</div>
+    </div>
   );
 }

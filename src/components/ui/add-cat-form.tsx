@@ -31,6 +31,7 @@ interface AddCatFormProps {
   onCancel?: () => void;
   className?: string;
   submitLabel?: string;
+  title?: string;
 }
 
 //temporary dropdown values
@@ -73,6 +74,7 @@ export default function AddCatForm({
   onCancel,
   className,
   submitLabel = "Confirm",
+  title = "Add New Cat",
 }: AddCatFormProps) {
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
 
@@ -117,7 +119,7 @@ export default function AddCatForm({
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(
-          "mx-auto box-border w-full max-w-[70%] overflow-x-hidden rounded-3xl border-2 border-cateneo-darkbrown bg-cateneo-white p-4 text-center font-gaegu text-cateneo-darkbrown sm:max-w-md md:max-w-xl md:p-6 lg:max-w-none lg:text-left",
+          "mx-auto box-border w-full max-w-[70%] overflow-x-hidden rounded-3xl bg-cateneo-white p-4 text-center font-gaegu text-cateneo-darkbrown sm:max-w-md md:max-w-xl md:p-6 lg:max-w-none lg:text-left",
           className,
         )}
       >
@@ -132,7 +134,7 @@ export default function AddCatForm({
           />
           {/* TWEAK: Made text slightly smaller on mobile to prevent clipping */}
           <h2 className="text-1xl sm:text-3xl font-bold font-playpen">
-            Add New Cat
+            {title}
           </h2>
           <Image
             src="/images/paw.svg"

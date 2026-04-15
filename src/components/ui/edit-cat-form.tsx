@@ -91,6 +91,7 @@ export default function EditCatForm({
       onSubmit={onSubmit}
       onCancel={onCancel}
       className={className}
+      title="Edit New Cat"
       submitLabel="Save Changes"
     />
   );

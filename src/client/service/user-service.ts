@@ -2,21 +2,36 @@ import { apiClient } from "@/lib/api-client";
 
 interface User {
   id: string;
-  firstName: String;
-  lastName: String;
-  email: String;
-  password: String;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
   role: "ADMIN" | "SUPERADMIN" | "VOLUNTEER";
+  createdAt?: string;
 }
 
 interface UpdateUserDTO {
-  firstName?: String;
-  lastName?: String;
+  firstName?: string;
+  lastName?: string;
 }
 
 interface UpdateUserByAdminDTO extends UpdateUserDTO {
   role: string;
 }
+
+export interface PaginationQueryDTO {
+  page?: number;
+  limit?: number;
+}
+
+type UserListResponse =
+  | User[]
+  | {
+      data?: User[];
+      items?: User[];
+      results?: User[];
+      users?: User[];
+    };
 
 export const getMyProfile = async (): Promise<User> => {
   const result = await apiClient<User>(`/api/admin/users/me`, {
@@ -31,7 +46,7 @@ export const updateMyProfile = async (
   userData: UpdateUserDTO,
 ): Promise<User> => {
   const result = await apiClient<User>(`/api/admin/users/me`, {
-    method: "PUT",
+    method: "PATCH",
     body: JSON.stringify(userData),
     credentials: "include",
   });
@@ -57,12 +72,50 @@ export const updateMyPassword = async (
 
 // --- SuperAdmin endpoints ---
 
-export const findAllUsers = async (): Promise<User[]> => {
-  const result = await apiClient<User[]>(`/api/admin/users`, {
+export const findAllUsers = async (
+  pagination: PaginationQueryDTO = {},
+): Promise<User[]> => {
+  const query = new URLSearchParams();
+
+  if (pagination.page !== undefined) {
+    query.set("page", String(pagination.page));
+  }
+
+  if (pagination.limit !== undefined) {
+    query.set("limit", String(pagination.limit));
+  }
+
+  const queryString = query.toString();
+  const path = queryString
+    ? `/api/admin/users?${queryString}`
+    : `/api/admin/users`;
+
+  const result = await apiClient<UserListResponse>(path, {
     method: "GET",
     credentials: "include",
   });
-  return result;
+
+  if (Array.isArray(result)) {
+    return result;
+  }
+
+  if (Array.isArray(result?.data)) {
+    return result.data;
+  }
+
+  if (Array.isArray(result?.items)) {
+    return result.items;
+  }
+
+  if (Array.isArray(result?.results)) {
+    return result.results;
+  }
+
+  if (Array.isArray(result?.users)) {
+    return result.users;
+  }
+
+  return [];
 };
 
 export const findUserById = async (id: string): Promise<User> => {

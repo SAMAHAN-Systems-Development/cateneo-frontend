@@ -257,19 +257,15 @@ const Page = () => {
     },
   ];
 
-  if (isLoading) {
-    return (
-      <p className="font-gaegu text-2xl text-cateneo-darkbrown">
-        Loading cateneans...
-      </p>
-    );
-  }
-
   if (isError) {
     return (
-      <p className="font-gaegu text-2xl text-red-600">
-        Failed to load cateneans.
-      </p>
+      <div className="px-3 py-4 sm:px-4 sm:py-5">
+        <div className="mx-auto w-full max-w-7xl rounded-3xl border-2 border-red-200 bg-red-50 px-6 py-10">
+          <p className="font-gaegu text-2xl text-red-600">
+            Failed to load cateneans.
+          </p>
+        </div>
+      </div>
     );
   }
 
@@ -278,6 +274,7 @@ const Page = () => {
       tabs={dashboardTabs}
       activeTabId={activeTabId}
       onTabChange={setActiveTabId}
+      isLoading={isLoading}
     />
   );
 };

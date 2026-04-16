@@ -1,7 +1,7 @@
 "use client";
 
 import { Controller, type UseFormReturn } from "react-hook-form";
-import { type signUpFormData } from "@/schemas/sign-up-form-schema";
+import { type signUpFormData } from "@/schemas/create-an-account-form-schema";
 import { Input } from "@/components/ui/input";
 import { RoundedButton } from "@/components/ui/rounded-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,7 +22,7 @@ interface SignUpFormProps {
   onSubmit: (data: signUpFormData) => void | Promise<void>;
 }
 
-const SignUpForm = ({ form, onSubmit }: SignUpFormProps) => {
+const CreateAnAccountForm = ({ form, onSubmit }: SignUpFormProps) => {
   const { control, register, handleSubmit, formState } = form;
   const { errors, isSubmitting } = formState;
 
@@ -188,4 +188,4 @@ const SignUpForm = ({ form, onSubmit }: SignUpFormProps) => {
   );
 };
 
-export default SignUpForm;
+export default CreateAnAccountForm;

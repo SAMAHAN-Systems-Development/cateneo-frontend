@@ -1,6 +1,6 @@
 import { apiClient } from "@/lib/api-client";
 import { loginFormData } from "@/schemas/login-form-schema";
-import { signUpFormData } from "@/schemas/sign-up-form-schema";
+import { signUpFormData } from "@/schemas/create-an-account-form-schema";
 
 export interface AuthUser {
   id: string;

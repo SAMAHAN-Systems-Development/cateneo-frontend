@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import {
+  UpdateCatDTO,
   adminCreateCat,
   adminUpdateCat,
   adminUpdateCatStatus,
@@ -19,7 +20,7 @@ export const useAdminCreateCat = () => {
 
 export const useAdminUpdateCat = () => {
   return useMutation({
-    mutationFn: ({ id, formData }: { id: number; formData: CateneanDTO }) =>
+    mutationFn: ({ id, formData }: { id: number; formData: UpdateCatDTO }) =>
       adminUpdateCat(id, formData),
   });
 };

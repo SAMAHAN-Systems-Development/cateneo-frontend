@@ -2,20 +2,21 @@
 
 import * as React from "react";
 import Image from "next/image";
-import {
-  useWatch,
-  Controller,
-  FormProvider,
-  type ControllerProps,
-  type FieldPath,
-  type UseFormReturn,
-} from "react-hook-form";
+import { useWatch, type UseFormReturn } from "react-hook-form";
 import { Popover as PopoverPrimitive } from "radix-ui";
 import { Calendar, Plus, Upload } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -38,15 +39,23 @@ interface AddCatFormProps {
 const typeOptions = ["Kittenean", "Persian", "Siamese", "Maine Coon"];
 const parentOptions = ["Kitteean", "Snowpaw", "Ambertail", "Whisker"];
 const statusOptions = ["Lorem Ipsum", "Available", "Pending", "Adopted"];
-const locationOptions = ["Lorem Ipsum", "Manila", "Cebu", "Davao"];
-const vitaminOptions = ["Nematocide", "LC Vit"];
-const healthOptions = ["Anti-Rabies", "Spayed", "Neutered"];
+const locationOptions = [
+  "MEZZANINE_FLOOR",
+  "RODRIGUEZ_HALL",
+  "ROXAS_BENCHES",
+  "DEL_ROSARIO_GAZEBO",
+  "JUBILEE_BUILDING",
+  "CENTRAL_CONVENIENCE",
+];
+const vitaminOptions = ["Nematocide", "LCVit"];
+const healthOptions = ["AntiRabies"];
 const colorOptions = [
-  { value: "orange", label: "Orange" },
-  { value: "brown", label: "Brown" },
-  { value: "white", label: "White" },
-  { value: "gray", label: "Gray" },
-  { value: "mixed", label: "Mixed" },
+  { value: "Black", label: "Black" },
+  { value: "White", label: "White" },
+  { value: "Gray", label: "Gray" },
+  { value: "Orange", label: "Orange" },
+  { value: "DarkBrown", label: "DarkBrown" },
+  { value: "LightBrown", label: "LightBrown" },
 ];
 
 const chipClass =
@@ -225,7 +234,7 @@ export default function AddCatForm({
               form={form}
               name="location"
               label="Location"
-              placeholder="Lorem Ipsum"
+              placeholder="Select location"
               options={locationOptions}
             />
 
@@ -267,7 +276,7 @@ export default function AddCatForm({
               name="healthStatus"
               render={({ fieldState }) => (
                 <FormItem className="md:col-span-1">
-                  <FormLabel>Health Status</FormLabel>
+                  <FormLabel>Vaccines</FormLabel>
                   <FormControl>
                     <div className="flex flex-wrap justify-left gap-2 lg:justify-start">
                       {healthOptions.map((option) => {
@@ -310,7 +319,7 @@ export default function AddCatForm({
                       rows={3}
                       className={cn(
                         fieldControlClass,
-                        "h-auto min-h-16 resize-y overflow-y-auto py-2 leading-snug [overflow-wrap:anywhere]",
+                        "h-auto min-h-16 resize-y overflow-y-auto py-2 leading-snug wrap-anywhere",
                       )}
                     />
                   </FormControl>
@@ -542,60 +551,5 @@ function SelectField({
         </FormItem>
       )}
     />
-  );
-}
-
-type AddCatFormProviderProps = React.ComponentProps<
-  typeof FormProvider<AddCatFormData>
->;
-
-function Form({ children, ...props }: AddCatFormProviderProps) {
-  return <FormProvider {...props}>{children}</FormProvider>;
-}
-
-function FormField<TName extends FieldPath<AddCatFormData>>(
-  props: ControllerProps<AddCatFormData, TName>,
-) {
-  return <Controller {...props} />;
-}
-
-function FormItem({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn("min-w-0 max-w-full space-y-1.5", className)}
-      {...props}
-    />
-  );
-}
-
-function FormLabel({ className, ...props }: React.ComponentProps<"label">) {
-  return (
-    <label
-      className={cn(
-        "block text-center text-xl font-semibold lg:text-left",
-        className,
-      )}
-      {...props}
-    />
-  );
-}
-
-function FormControl({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div className={cn("w-full min-w-0 max-w-full", className)} {...props} />
-  );
-}
-
-function FormMessage({ children, className }: React.ComponentProps<"p">) {
-  if (!children) {
-    return null;
-  }
-
-  return (
-    <p
-      className={cn("text-center text-xs text-red-600 lg:text-left", className)}
-    >
-      {children}
-    </p>
   );
 }

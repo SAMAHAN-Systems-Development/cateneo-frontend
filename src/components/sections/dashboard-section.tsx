@@ -40,6 +40,7 @@ type DashboardSectionProps = {
   searchPlaceholder?: string;
   activeTabId?: string;
   onTabChange?: (tabId: string) => void;
+  isLoading?: boolean;
 };
 
 const Dashboard = ({
@@ -48,6 +49,7 @@ const Dashboard = ({
   searchPlaceholder = "Search for Cat",
   activeTabId: controlledActiveTabId,
   onTabChange,
+  isLoading = false,
 }: DashboardSectionProps) => {
   const [internalActiveTabId, setInternalActiveTabId] = useState<string>(
     tabs[0]?.id ?? "",
@@ -124,7 +126,7 @@ const Dashboard = ({
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder={searchPlaceholder}
-              className="h-12 rounded-full border-2 border-cateneo-lightbrown bg-cateneo-white pl-4 pr-11 font-gaegu !text-2xl text-cateneo-darkbrown placeholder:text-cateneo-darkbrown focus-visible:border-cateneo-darkbrown !font-bold focus-visible:ring-0"
+              className="h-12 rounded-full border-2 border-cateneo-lightbrown bg-cateneo-white pl-4 pr-11 font-gaegu text-2xl! text-cateneo-darkbrown placeholder:text-cateneo-darkbrown focus-visible:border-cateneo-darkbrown font-bold! focus-visible:ring-0"
             />
             <svg
               aria-hidden="true"
@@ -143,13 +145,21 @@ const Dashboard = ({
         </div>
 
         <div className="mt-4">
-          {typeof activeTab?.content === "function"
-            ? activeTab.content({
-                searchQuery,
-                tabId: activeTab.id,
-                onEditCard: handleOpenEditModal,
-              })
-            : activeTab?.content}
+          {isLoading ? (
+            <div className="flex min-h-80 items-center justify-center rounded-3xl  bg-cateneo-white/80 px-6 py-10 text-center">
+              <p className="font-gaegu text-2xl text-cateneo-darkbrown">
+                Loading cateneans...
+              </p>
+            </div>
+          ) : typeof activeTab?.content === "function" ? (
+            activeTab.content({
+              searchQuery,
+              tabId: activeTab.id,
+              onEditCard: handleOpenEditModal,
+            })
+          ) : (
+            activeTab?.content
+          )}
         </div>
 
         {isEditModalOpen && editedCard && (

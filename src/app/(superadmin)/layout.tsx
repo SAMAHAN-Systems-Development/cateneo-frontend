@@ -1,4 +1,4 @@
-import AdminNavigationBar from "@/components/ui/admin-navigation-bar";
+import SuperAdminNavigationBar from "@/components/ui/superadmin-navigation-bar";
 
 export default function SuperAdminLayout({
   children,
@@ -7,7 +7,7 @@ export default function SuperAdminLayout({
 }) {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-cateneo-white">
-      <AdminNavigationBar />
+      <SuperAdminNavigationBar />
       {/* Page content */}
       <div className="relative">{children}</div>
     </div>

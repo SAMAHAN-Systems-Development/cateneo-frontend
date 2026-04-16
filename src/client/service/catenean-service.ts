@@ -35,23 +35,40 @@ export interface CateneanDTO {
   currentLocation?: string;
 }
 
-export interface CreateCatDTO {
+export type Sex = "Male" | "Female";
+export type ReproductiveStatus = string;
+export type CatColor = string;
+export type CatClassification =
+  | "CATenean"
+  | "KITTENean"
+  | "Rescued_CATenean"
+  | "Rescued_KITTENean";
+export type CatStatus = string;
+export type CatLocation = string;
+export type Vitamin = string;
+export type Vaccine = string;
+
+export interface CreateNewCatDTO {
   name: string;
-  sex: string;
+  sex: Sex;
   dob: string;
   dateRescued?: string;
   dateDeceased?: string;
-  reproductiveStatus?: string;
+  reproductiveStatus?: ReproductiveStatus;
   personality: string;
-  colors: string[];
-  classification: string;
-  status: string;
+  colors: CatColor[];
+  classification: CatClassification;
+  status: CatStatus;
   imageUrl?: string;
   motherId?: number;
   fatherId?: number;
-  currentLocation: string;
-  vitamins?: string[];
-  vaccines?: string[];
+  currentLocation: CatLocation;
+  vitamins?: Vitamin[];
+  vaccines?: Vaccine[];
+}
+
+export interface UpdateCatDTO extends Partial<CreateNewCatDTO> {
+  currentLocation?: CatLocation;
 }
 
 export const getAllCateneans = async (
@@ -114,7 +131,7 @@ export const getAdminCats = (): Promise<Catenean[]> => {
  */
 
 export const adminCreateCat = async (
-  formData: CreateCatDTO,
+  formData: CreateNewCatDTO,
 ): Promise<Catenean> => {
   const payload = {
     name: formData.name,
@@ -137,6 +154,7 @@ export const adminCreateCat = async (
   const result = await apiClient<Catenean>("/api/admin/cats/create", {
     method: "POST",
     body: JSON.stringify(payload),
+    credentials: "include",
   });
   return result;
 };
@@ -188,15 +206,25 @@ export const getAdminCatById = async (id: number): Promise<Catenean> => {
 
 export const adminUpdateCat = async (
   id: number,
-  formData: CateneanDTO,
+  formData: UpdateCatDTO,
 ): Promise<Catenean> => {
   const payload = {
     name: formData.name,
     sex: formData.sex,
-    classification: formData.classification,
+    dob: formData.dob,
+    dateRescued: formData.dateRescued,
+    dateDeceased: formData.dateDeceased,
     reproductiveStatus: formData.reproductiveStatus,
+    colors: formData.colors,
+    classification: formData.classification,
     status: formData.status,
+    imageUrl: formData.imageUrl,
+    motherId: formData.motherId,
+    fatherId: formData.fatherId,
     currentLocation: formData.currentLocation,
+    vitamins: formData.vitamins,
+    vaccines: formData.vaccines,
+    personality: formData.personality,
   };
   const result = await apiClient<Catenean>(`/api/admin/cats/${id}`, {
     method: "PATCH",

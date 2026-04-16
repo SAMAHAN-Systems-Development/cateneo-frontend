@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type DropdownKey = "management" | "adoptions";
 
@@ -19,6 +20,18 @@ const managementItems: DropdownItem[] = [
 const adoptionItems: DropdownItem[] = [
   { label: "List of Adoptees", href: "/list-of-adoptees" },
 ];
+
+const normalizePath = (path: string) => {
+  if (!path) return "/";
+  if (path.length > 1 && path.endsWith("/")) return path.slice(0, -1);
+  return path;
+};
+
+const isPathActive = (pathname: string, href: string) => {
+  const current = normalizePath(pathname);
+  const target = normalizePath(href);
+  return current === target || current.startsWith(`${target}/`);
+};
 
 const ChevronDown = ({ className = "" }: { className?: string }) => (
   <svg
@@ -42,6 +55,7 @@ function DesktopDropdown({
   label,
   menuKey,
   items,
+  pathname,
   openDropdown,
   onToggle,
   onClose,
@@ -49,17 +63,19 @@ function DesktopDropdown({
   label: string;
   menuKey: DropdownKey;
   items: DropdownItem[];
+  pathname: string;
   openDropdown: DropdownKey | null;
   onToggle: (key: DropdownKey) => void;
   onClose: () => void;
 }) {
   const isOpen = openDropdown === menuKey;
+  const isActive = items.some((item) => isPathActive(pathname, item.href));
 
   return (
     <li className="relative">
       <button
         type="button"
-        className="inline-flex items-center gap-1 font-gaegu text-2xl text-cateneo-black transition-colors hover:text-cateneo-orange"
+        className={`inline-flex items-center gap-1 font-gaegu text-2xl transition-colors ${isActive ? "text-cateneo-orange" : "text-cateneo-black hover:text-cateneo-orange"}`}
         onClick={() => onToggle(menuKey)}
         aria-haspopup="menu"
         aria-expanded={isOpen}
@@ -80,7 +96,7 @@ function DesktopDropdown({
               key={item.label}
               href={item.href}
               role="menuitem"
-              className="block rounded-xl px-3 py-2 font-gaegu text-xl text-cateneo-black transition-colors hover:bg-cateneo-orange/10 hover:text-cateneo-orange"
+              className={`block rounded-xl px-3 py-2 font-gaegu text-xl transition-colors hover:bg-cateneo-orange/10 hover:text-cateneo-orange ${isPathActive(pathname, item.href) ? "text-cateneo-orange" : "text-cateneo-black"}`}
               onClick={onClose}
             >
               {item.label}
@@ -92,9 +108,21 @@ function DesktopDropdown({
   );
 }
 
-export default function AdminNavigationBar() {
+export default function SuperAdminNavigationBar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<DropdownKey | null>(null);
+  const pathname = usePathname();
+
+  const isHomeActive =
+    isPathActive(pathname, "/dashboard") ||
+    isPathActive(pathname, "/dashboard");
+  const isProfileActive = isPathActive(pathname, "/profile");
+  const isManagementActive = managementItems.some((item) =>
+    isPathActive(pathname, item.href),
+  );
+  const isAdoptionsActive = adoptionItems.some((item) =>
+    isPathActive(pathname, item.href),
+  );
 
   const toggleDropdown = (key: DropdownKey) => {
     setOpenDropdown((current) => (current === key ? null : key));
@@ -109,7 +137,7 @@ export default function AdminNavigationBar() {
     <header className="relative z-50 w-full bg-cateneo-white px-3 pt-4 pb-2 md:px-5 md:pt-5 md:pb-2">
       <nav className="mx-auto flex w-full max-w-7xl items-center gap-2">
         <Link
-          href="/superadmin/dashboard"
+          href="/dashboard"
           className="shrink-0"
           aria-label="Go to admin dashboard"
           onClick={closeMenus}
@@ -128,15 +156,15 @@ export default function AdminNavigationBar() {
             <li>
               <Link
                 href="/dashboard"
-                className="font-gaegu text-2xl text-cateneo-orange transition-colors hover:text-cateneo-orange"
+                className={`font-gaegu text-2xl transition-colors hover:text-cateneo-orange ${isHomeActive ? "text-cateneo-orange" : "text-cateneo-black"}`}
               >
                 Home
               </Link>
             </li>
             <li>
               <Link
-                href="/superadmin/profile"
-                className="font-gaegu text-2xl text-cateneo-black transition-colors hover:text-cateneo-orange"
+                href="/profile"
+                className={`font-gaegu text-2xl transition-colors hover:text-cateneo-orange ${isProfileActive ? "text-cateneo-orange" : "text-cateneo-black"}`}
               >
                 Profile
               </Link>
@@ -146,6 +174,7 @@ export default function AdminNavigationBar() {
               label="Management"
               menuKey="management"
               items={managementItems}
+              pathname={pathname}
               openDropdown={openDropdown}
               onToggle={toggleDropdown}
               onClose={() => setOpenDropdown(null)}
@@ -155,6 +184,7 @@ export default function AdminNavigationBar() {
               label="Adoptions"
               menuKey="adoptions"
               items={adoptionItems}
+              pathname={pathname}
               openDropdown={openDropdown}
               onToggle={toggleDropdown}
               onClose={() => setOpenDropdown(null)}
@@ -163,8 +193,8 @@ export default function AdminNavigationBar() {
         </div>
 
         <Link
-          href="/superadmin/create-account"
-          className="ml-auto hidden rounded-full bg-cateneo-lightbrown px-6 py-2 font-gaegu text-2xl text-cateneo-white transition-opacity hover:opacity-90 md:inline-flex"
+          href="/create-account"
+          className={`ml-auto hidden rounded-full pl-8 pr-6 py-2 font-gaegu text-2xl text-cateneo-white transition-opacity hover:opacity-90 md:inline-flex bg-cateneo-lightbrown`}
         >
           Create Account
         </Link>
@@ -198,12 +228,16 @@ export default function AdminNavigationBar() {
           <div className="flex flex-col gap-2.5 font-gaegu text-2xl text-cateneo-black">
             <Link
               href="/dashboard"
-              className="text-cateneo-orange"
+              className={isHomeActive ? "text-cateneo-orange" : undefined}
               onClick={closeMenus}
             >
               Home
             </Link>
-            <Link href="/superadmin/profile" onClick={closeMenus}>
+            <Link
+              href="/profile"
+              className={isProfileActive ? "text-cateneo-orange" : undefined}
+              onClick={closeMenus}
+            >
               Profile
             </Link>
 
@@ -223,7 +257,7 @@ export default function AdminNavigationBar() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className="text-xl"
+                    className={`text-xl ${isPathActive(pathname, item.href) ? "text-cateneo-orange" : "text-cateneo-black"}`}
                     onClick={closeMenus}
                   >
                     {item.label}
@@ -248,7 +282,7 @@ export default function AdminNavigationBar() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className="text-xl"
+                    className={`text-xl ${isPathActive(pathname, item.href) ? "text-cateneo-orange" : "text-cateneo-black"}`}
                     onClick={closeMenus}
                   >
                     {item.label}
@@ -258,8 +292,8 @@ export default function AdminNavigationBar() {
             )}
 
             <Link
-              href="/superadmin/create-account"
-              className="mt-2 inline-flex w-fit rounded-full bg-cateneo-lightbrown px-6 py-2 text-cateneo-white"
+              href="/create-account"
+              className={`mt-2 inline-flex w-fit rounded-full pl-8 pr-6 py-2 text-cateneo-white bg-cateneo-orange`}
               onClick={closeMenus}
             >
               Create Account

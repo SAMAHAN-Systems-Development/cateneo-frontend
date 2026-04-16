@@ -7,7 +7,7 @@ import Image from "next/image";
 import {
   addNewAdopteeFormSchema,
   AddNewAdopteeFormValues,
-} from "@/schemas/sign-up-form-schema";
+} from "@/schemas/create-an-account-form-schema";
 import {
   Form,
   FormControl,

@@ -34,4 +34,5 @@ export const COLOR_MAP = {
   lightbrown: "#BF7900",
   orange: "#E3981B",
   black: "#3A3A3A",
+  gray: "#808080",
 };

@@ -26,7 +26,7 @@ export const editCatFormSchema = z.object({
     .min(1, { message: "Personality is required" })
     .max(500, { message: "Personality must be 500 characters or less" }),
   image: z.instanceof(File).nullable().optional(),
-  color: z.string().min(1, { message: "Color is required" }),
+  color: z.array(z.string()).min(1, { message: "Color is required" }),
 });
 
 export type EditCatFormData = z.infer<typeof editCatFormSchema>;
@@ -45,5 +45,5 @@ export const editCatFormDefaultValues: EditCatFormData = {
   healthStatus: [],
   personality: "",
   image: null,
-  color: "",
+  color: [],
 };

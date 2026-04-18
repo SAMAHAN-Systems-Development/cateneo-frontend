@@ -5,6 +5,7 @@ import {
   logoutService,
 } from "../service/auth-service";
 import { loginFormData } from "@/schemas/login-form-schema";
+import { signUpFormData } from "@/schemas/create-an-account-form-schema";
 
 export const useLogin = () => {
   return useMutation({

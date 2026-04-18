@@ -6,10 +6,19 @@ import Image from "next/image";
 import ChangePasswordForm from "@/components/ui/change-password-form";
 import EditProfileForm from "@/components/ui/edit-profile-form";
 import { cn } from "@/lib/utils";
+import type { ChangePasswordSubmitData } from "@/schemas/change-password-form-schema";
 
 type ActiveTab = "account" | "security";
 
-export default function EditProfileSection() {
+type EditProfileSectionProps = {
+  onChangePasswordSubmit?: (
+    values: ChangePasswordSubmitData,
+  ) => void | Promise<void>;
+};
+
+export default function EditProfileSection({
+  onChangePasswordSubmit,
+}: EditProfileSectionProps) {
   const [activeTab, setActiveTab] = React.useState<ActiveTab>("account");
 
   const isAccountTab = activeTab === "account";
@@ -64,7 +73,10 @@ export default function EditProfileSection() {
               {isAccountTab ? (
                 <EditProfileForm />
               ) : (
-                <ChangePasswordForm onCancel={() => setActiveTab("account")} />
+                <ChangePasswordForm
+                  onSubmit={onChangePasswordSubmit}
+                  onCancel={() => setActiveTab("account")}
+                />
               )}
             </div>
           </div>

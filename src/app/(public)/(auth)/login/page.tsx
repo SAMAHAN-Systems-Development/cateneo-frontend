@@ -23,7 +23,7 @@ const LoginPage = () => {
     reset();
     try {
       await mutateAsync(loginFormData);
-      router.push("/dashboard");
+      router.push("/dashboard/cateneans");
     } catch {
       // Error state is handled by react-query and displayed in the form.
     }

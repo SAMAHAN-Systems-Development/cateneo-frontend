@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
 /* ── Local primitives (same behavior as shadcn table / dropdown-menu) ── */
@@ -168,53 +169,6 @@ export interface Adoptee {
   adoptedCat: string;
 }
 
-const DESIGN_NAMES = [
-  "Shanaiah Dawn Cava",
-  "Andrew Jacob Lomanta",
-  "Sarah Haw",
-  "Daniel Gallego",
-  "Kauri Lorraine Flores",
-] as const;
-
-function createMockAdoptees(): Adoptee[] {
-  const body: Adoptee = {
-    name: "Body",
-    age: "Body",
-    contactNumber: "Body",
-    email: "Body",
-    address: "Body",
-    adoptedCat: "Body",
-  };
-
-  const rows: Adoptee[] = [];
-  for (let i = 0; i < 100; i++) {
-    if (i === 0) {
-      rows.push({
-        name: DESIGN_NAMES[0],
-        age: "Body",
-        contactNumber: "091234567890",
-        email: "Body",
-        address: "Body",
-        adoptedCat: "Body",
-      });
-    } else if (i < 5) {
-      rows.push({
-        name: DESIGN_NAMES[i],
-        age: "Body",
-        contactNumber: "Body",
-        email: "Body",
-        address: "Body",
-        adoptedCat: "Body",
-      });
-    } else {
-      rows.push({ ...body });
-    }
-  }
-  return rows;
-}
-
-export const MOCK_ADOPTEES: Adoptee[] = createMockAdoptees();
-
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 
 function getVisiblePages(
@@ -234,53 +188,32 @@ function formatPageLabel(n: number) {
 }
 
 export interface ListOfAdopteesTableProps {
-  adoptees?: Adoptee[];
+  adoptees: Adoptee[];
   className?: string;
   onFilterClick?: () => void;
+  search: string;
+  onSearchChange: (value: string) => void;
+  itemsPerPage: number;
+  onItemsPerPageChange: (value: number) => void;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  isLoading?: boolean;
 }
 
 export function ListOfAdopteesTable({
-  adoptees = MOCK_ADOPTEES,
+  adoptees,
   className,
   onFilterClick,
+  search,
+  onSearchChange,
+  itemsPerPage,
+  onItemsPerPageChange,
+  currentPage,
+  totalPages,
+  onPageChange,
+  isLoading = false,
 }: ListOfAdopteesTableProps) {
-  const [search, setSearch] = React.useState("");
-  const [itemsPerPage, setItemsPerPage] = React.useState(10);
-  const [currentPage, setCurrentPage] = React.useState(1);
-
-  const filtered = React.useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return adoptees;
-    return adoptees.filter((row) => {
-      const hay = [
-        row.name,
-        String(row.age),
-        row.contactNumber,
-        row.email,
-        row.address,
-        row.adoptedCat,
-      ]
-        .join(" ")
-        .toLowerCase();
-      return hay.includes(q);
-    });
-  }, [adoptees, search]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [search, itemsPerPage]);
-
-  React.useEffect(() => {
-    setCurrentPage((p) => Math.min(p, totalPages));
-  }, [totalPages]);
-
-  const pageRows = React.useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filtered.slice(start, start + itemsPerPage);
-  }, [filtered, currentPage, itemsPerPage]);
-
   const visiblePages = React.useMemo(
     () => getVisiblePages(currentPage, totalPages),
     [currentPage, totalPages],
@@ -303,7 +236,7 @@ export function ListOfAdopteesTable({
             <span className="text-sm font-medium">Showing</span>
             <Select
               value={String(itemsPerPage)}
-              onValueChange={(v) => setItemsPerPage(Number(v))}
+              onValueChange={(v) => onItemsPerPageChange(Number(v))}
             >
               <SelectTrigger className="font-playpen h-9 w-[4.5rem] rounded-full border-cateneo-darkbrown/30 bg-[#EEDCBE] px-3 text-sm font-medium text-cateneo-darkbrown shadow-none focus:ring-cateneo-darkbrown/20 [&_svg]:text-cateneo-darkbrown/80">
                 <SelectValue />
@@ -353,7 +286,7 @@ export function ListOfAdopteesTable({
             <Input
               placeholder="Search"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => onSearchChange(e.target.value)}
               className="h-9 w-full rounded-full border-cateneo-darkbrown/40 bg-cateneo-white pl-9 pr-3 text-cateneo-darkbrown placeholder:text-cateneo-darkbrown/50 focus-visible:border-cateneo-darkbrown focus-visible:ring-cateneo-darkbrown/20"
             />
           </div>
@@ -396,14 +329,23 @@ export function ListOfAdopteesTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {pageRows.length === 0 ? (
+            {isLoading ? (
+              <TableRow className="border-0 hover:bg-transparent">
+                <TableCell colSpan={6} className="py-8">
+                  <div className="flex items-center justify-center gap-2 text-cateneo-darkbrown">
+                    <Spinner className="size-5" />
+                    <span>Loading adoptees...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : adoptees.length === 0 ? (
               <TableRow className="border-0 hover:bg-transparent">
                 <TableCell colSpan={6} className="py-8 text-center">
                   No adoptees match your search.
                 </TableCell>
               </TableRow>
             ) : (
-              pageRows.map((row, idx) => (
+              adoptees.map((row, idx) => (
                 <TableRow
                   key={`${row.name}-${row.contactNumber}-${idx}`}
                   className="border-0 hover:bg-cateneo-orange/5"
@@ -431,7 +373,7 @@ export function ListOfAdopteesTable({
           variant="ghost"
           className="h-9 shrink-0 gap-1 rounded-full px-2 font-playpen text-cateneo-black hover:bg-cateneo-orange/10"
           disabled={currentPage <= 1}
-          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         >
           <ChevronLeft className="size-4" aria-hidden />
           Previous
@@ -462,7 +404,7 @@ export function ListOfAdopteesTable({
                     ? "font-bold text-cateneo-black"
                     : "text-cateneo-black/70 hover:bg-cateneo-orange/10",
                 )}
-                onClick={() => setCurrentPage(item)}
+                onClick={() => onPageChange(item)}
                 aria-current={item === currentPage ? "page" : undefined}
               >
                 {formatPageLabel(item)}
@@ -476,7 +418,7 @@ export function ListOfAdopteesTable({
           variant="ghost"
           className="h-9 shrink-0 gap-1 rounded-full px-2 font-playpen text-cateneo-black hover:bg-cateneo-orange/10"
           disabled={currentPage >= totalPages}
-          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
         >
           Next
           <ChevronRight className="size-4" aria-hidden />

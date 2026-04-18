@@ -7,15 +7,17 @@ interface User {
   email: string;
   password: string;
   role: "ADMIN" | "SUPERADMIN" | "VOLUNTEER";
+  is_active?: boolean;
   createdAt?: string;
 }
 
 interface UpdateUserDTO {
   firstName?: string;
   lastName?: string;
+  is_active?: boolean;
 }
 
-interface UpdateUserByAdminDTO extends UpdateUserDTO {
+export interface UpdateUserByAdminDTO extends UpdateUserDTO {
   role: string;
 }
 
@@ -131,16 +133,35 @@ export const updateUserByAdmin = async (
   userData: UpdateUserByAdminDTO,
 ): Promise<User> => {
   const result = await apiClient<User>(`/api/admin/users/${id}`, {
-    method: "PUT",
+    method: "PATCH",
     body: JSON.stringify(userData),
     credentials: "include",
   });
   return result;
 };
 
+export const changeUserPasswordService = async (formData: {
+  currentPassword: string;
+  newPassword: string;
+}): Promise<void> => {
+  await apiClient(`/api/admin/users/me/password`, {
+    method: "PATCH",
+    body: JSON.stringify(formData),
+    credentials: "include",
+  });
+};
+
 export const softDeleteUser = async (id: string): Promise<User> => {
   const result = await apiClient<User>(`/api/admin/users/${id}`, {
-    method: "PUT",
+    method: "PATCH",
+    credentials: "include",
+  });
+  return result;
+};
+
+export const reactivateUser = async (id: string): Promise<User> => {
+  const result = await apiClient<User>(`/api/admin/users/${id}/reactivate`, {
+    method: "PATCH",
     credentials: "include",
   });
   return result;

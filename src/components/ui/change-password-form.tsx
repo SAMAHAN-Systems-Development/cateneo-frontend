@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import {
   changePasswordFormSchema,
   type ChangePasswordFormData,
+  type ChangePasswordSubmitData,
 } from "@/schemas/change-password-form-schema";
 import {
   Form,
@@ -19,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { RoundedButton } from "@/components/ui/rounded-button";
 
 type ChangePasswordFormProps = {
-  onSubmit?: (values: ChangePasswordFormData) => void | Promise<void>;
+  onSubmit?: (values: ChangePasswordSubmitData) => void | Promise<void>;
   onCancel?: () => void;
 };
 
@@ -33,13 +34,17 @@ export default function ChangePasswordForm({
   const form = useForm<ChangePasswordFormData>({
     resolver: zodResolver(changePasswordFormSchema),
     defaultValues: {
-      password: "",
-      confirmPassword: "",
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
     },
   });
 
   const handleSubmit = async (values: ChangePasswordFormData) => {
-    await onSubmit?.(values);
+    await onSubmit?.({
+      currentPassword: values.currentPassword,
+      confirmNewPassword: values.confirmNewPassword,
+    });
     form.reset();
   };
 
@@ -60,11 +65,11 @@ export default function ChangePasswordForm({
       >
         <FormField
           control={form.control}
-          name="password"
+          name="currentPassword"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-playpen text-sm font-semibold text-cateneo-darkbrown">
-                Password
+                Current Password
               </FormLabel>
               <FormControl>
                 <Input
@@ -81,11 +86,32 @@ export default function ChangePasswordForm({
 
         <FormField
           control={form.control}
-          name="confirmPassword"
+          name="newPassword"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-playpen text-sm font-semibold text-cateneo-darkbrown">
-                Confirm Password
+                New Password
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Lorem Ipsum"
+                  className={inputClass}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className="font-gaegu text-sm" />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="confirmNewPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-playpen text-sm font-semibold text-cateneo-darkbrown">
+                Confirm New Password
               </FormLabel>
               <FormControl>
                 <Input

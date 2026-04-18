@@ -3,7 +3,6 @@ import {
   CateneanDTO,
   getAdminCatById,
   getAdminCats,
-  getAllCateneans,
   getCateneanById,
   getEligibleFathers,
   getEligibleMothers,
@@ -12,14 +11,14 @@ import {
 export const useGetAllCats = (filters?: CateneanDTO) => {
   return useQuery({
     queryKey: ["getAllCats", filters],
-    queryFn: () => getAllCateneans(filters),
+    queryFn: () => getAdminCats(filters),
   });
 };
 
 export const useGetAdminCats = () => {
   return useQuery({
     queryKey: ["admin-cats"],
-    queryFn: getAdminCats,
+    queryFn: () => getAdminCats(),
   });
 };
 

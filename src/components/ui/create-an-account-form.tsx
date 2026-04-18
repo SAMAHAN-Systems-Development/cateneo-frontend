@@ -27,10 +27,10 @@ const CreateAnAccountForm = ({ form, onSubmit }: SignUpFormProps) => {
   const { errors, isSubmitting } = formState;
 
   return (
-    <div className="flex items-center justify-center w-full px-1 py-1 md:px-2 md:py-2">
-      <Card className="sm:w-full w-2/3 max-w-md bg-amber-50 border-2 sm:border-3 md:border-4 border-cateneo-darkbrown rounded-2xl sm:rounded-3xl shadow-lg sm:px-10 py-8">
-        <CardHeader className="items-center text-center">
-          <div className="w-full flex justify-center mb-2 sm:mb-3 sm:hidden">
+    <div className="flex items-center justify-center w-full h-full p-0 m-0">
+      <Card className="w-full h-full bg-amber-50 border-2 border-cateneo-darkbrown rounded-2xl shadow-lg p-0 flex flex-col justify-center">
+        <CardHeader className="items-center text-center p-0 pt-6 pb-2">
+          <div className="w-full flex justify-center mb-2">
             <Image
               src="/Group-17.svg"
               alt="SignUp Cat"
@@ -39,15 +39,16 @@ const CreateAnAccountForm = ({ form, onSubmit }: SignUpFormProps) => {
               priority
             />
           </div>
-          <CardTitle className="text-2xl sm:text-3xl md:text-4xl font-bold text-cateneo-darkbrown font-playpen">
-            Hello!
+          <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-cateneo-darkbrown font-playpen">
+            Create An Account
           </CardTitle>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="flex-1 flex flex-col justify-center">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-4 sm:space-y-5 font-gaegu flex flex-col items-center text-center"
+            className="space-y-4 font-gaegu flex flex-col items-center text-center w-full"
+            style={{ minHeight: 0 }}
           >
             <div className="relative w-full">
               <div className="flex items-center border-2 border-cateneo-darkbrown rounded-full px-4 sm:px-5 py-2.5 sm:py-3">
@@ -101,12 +102,6 @@ const CreateAnAccountForm = ({ form, onSubmit }: SignUpFormProps) => {
                         <SelectValue placeholder="Role" />
                       </SelectTrigger>
                       <SelectContent className="min-w-(--radix-select-trigger-width) rounded-3xl border-3 border-cateneo-darkbrown bg-cateneo-white p-3 shadow-none">
-                        <SelectItem
-                          value="admin"
-                          className="font-gaegu text-2xl text-cateneo-darkbrown py-3 px-3 pr-3 focus:bg-transparent focus:text-cateneo-darkbrown [&_svg]:hidden"
-                        >
-                          Admin
-                        </SelectItem>
                         <SelectItem
                           value="volunteer"
                           className="font-gaegu text-2xl text-cateneo-darkbrown py-3 px-3 pr-3 focus:bg-transparent focus:text-cateneo-darkbrown [&_svg]:hidden"
@@ -173,15 +168,7 @@ const CreateAnAccountForm = ({ form, onSubmit }: SignUpFormProps) => {
             </RoundedButton>
           </form>
 
-          <p className="text-center text-amber-900 mt-4 sm:mt-6 font-gaegu text-sm sm:text-base">
-            Already have an account?{" "}
-            <a
-              href="/login"
-              className="text-darkbrown hover:underline font-semibold  border-cateneo-darkbrown"
-            >
-              Sign In
-            </a>
-          </p>
+          {/* Removed sign-in link */}
         </CardContent>
       </Card>
     </div>

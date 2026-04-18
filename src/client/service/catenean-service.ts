@@ -11,6 +11,11 @@ interface Catenean {
   imageUrl: string;
   reproductiveStatus: string;
   createdAt: Date;
+  currentLocation?: string;
+  location?: string;
+  current_location?: string;
+  currentlocation?: string;
+  residence?: string;
 }
 
 type CateneanListResponse =
@@ -119,10 +124,45 @@ export const getCateneanById = async (id: number): Promise<Catenean> => {
   return result;
 };
 
-export const getAdminCats = (): Promise<Catenean[]> => {
-  return apiClient<Catenean[]>("/api/admin/cats", {
+export const getAdminCats = async (
+  filters?: CateneanDTO,
+): Promise<Catenean[]> => {
+  const queryParams = new URLSearchParams();
+
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        queryParams.set(key, String(value));
+      }
+    });
+  }
+
+  const endpoint = queryParams.toString()
+    ? `/api/admin/cats?${queryParams.toString()}`
+    : "/api/admin/cats";
+
+  const result = await apiClient<CateneanListResponse>(endpoint, {
     method: "GET",
+    credentials: "include",
   });
+
+  if (Array.isArray(result)) {
+    return result;
+  }
+
+  if (Array.isArray(result?.data)) {
+    return result.data;
+  }
+
+  if (Array.isArray(result?.items)) {
+    return result.items;
+  }
+
+  if (Array.isArray(result?.results)) {
+    return result.results;
+  }
+
+  return [];
 };
 
 /**

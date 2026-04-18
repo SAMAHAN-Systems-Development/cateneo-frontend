@@ -35,7 +35,10 @@ const RoleGuard = ({
   const [isChecking, setIsChecking] = useState<boolean>(!currentUser?.user);
 
   const normalizeRole = (value: string) =>
-    value.replace(/([a-z])([A-Z])/g, "$1_$2").toUpperCase();
+    value
+      .replace(/([a-z])([A-Z])/g, "$1_$2")
+      .replace(/[\s_-]/g, "")
+      .toUpperCase();
 
   useEffect(() => {
     const roleFromCache = currentUser?.user?.role;
@@ -78,8 +81,11 @@ const RoleGuard = ({
   }, [currentUser?.user?.role, queryClient]);
 
   const normalizedRole = resolvedRole ? normalizeRole(resolvedRole) : undefined;
+  const normalizedAllowedRoles = allowedRoles.map((role) =>
+    normalizeRole(role),
+  );
   const isAllowed = Boolean(
-    normalizedRole && allowedRoles.includes(normalizedRole as Role),
+    normalizedRole && normalizedAllowedRoles.includes(normalizedRole),
   );
 
   useEffect(() => {

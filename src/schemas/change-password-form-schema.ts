@@ -2,7 +2,8 @@ import * as z from "zod";
 
 export const changePasswordFormSchema = z
   .object({
-    password: z
+    currentPassword: z.string().min(1, "Current password is required"),
+    newPassword: z
       .string()
       .min(8, "Password must be at least 8 characters")
       .regex(/[A-Z]/, "Must contain at least one uppercase letter")
@@ -10,11 +11,16 @@ export const changePasswordFormSchema = z
         /[!@#$%^&*(),.?:{}|<>]/,
         "Must contain at least one special character",
       ),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
+    confirmNewPassword: z.string().min(1, "Please confirm your new password"),
   })
-  .refine((values) => values.password === values.confirmPassword, {
+  .refine((values) => values.newPassword === values.confirmNewPassword, {
     message: "Passwords do not match",
-    path: ["confirmPassword"],
+    path: ["confirmNewPassword"],
   });
 
 export type ChangePasswordFormData = z.infer<typeof changePasswordFormSchema>;
+
+export type ChangePasswordSubmitData = {
+  currentPassword: string;
+  confirmNewPassword: string;
+};

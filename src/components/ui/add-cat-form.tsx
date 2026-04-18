@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CatColorIcon } from "@/components/ui/cat-color-icon";
 import { type AddCatFormData } from "@/schemas/add-cat-form-schema";
 
 interface AddCatFormProps {
@@ -36,7 +37,12 @@ interface AddCatFormProps {
 }
 
 //temporary dropdown values
-const typeOptions = ["Kittenean", "Persian", "Siamese", "Maine Coon"];
+const typeOptions = [
+  "CATenean",
+  "KITTENean",
+  "Rescued_CATenean",
+  "Rescued_KITTENean",
+];
 const parentOptions = ["Kitteean", "Snowpaw", "Ambertail", "Whisker"];
 const statusOptions = ["Lorem Ipsum", "Available", "Pending", "Adopted"];
 const locationOptions = [
@@ -48,15 +54,25 @@ const locationOptions = [
   "CENTRAL_CONVENIENCE",
 ];
 const vitaminOptions = ["Nematocide", "LCVit"];
-const healthOptions = ["AntiRabies"];
+const healthOptions = ["Spayed", "Neutered"];
+const vaccineOptions = ["Anti-Rabies"];
 const colorOptions = [
   { value: "Black", label: "Black" },
   { value: "White", label: "White" },
   { value: "Gray", label: "Gray" },
   { value: "Orange", label: "Orange" },
-  { value: "DarkBrown", label: "DarkBrown" },
-  { value: "LightBrown", label: "LightBrown" },
+  { value: "DarkBrown", label: "Dark Brown" },
+  { value: "LightBrown", label: "Light Brown" },
 ];
+
+const colorFillMap: Record<string, string> = {
+  Black: "#1F1F1F",
+  White: "#F1EDE2",
+  Gray: "#8A8A8A",
+  Orange: "#E3981B",
+  DarkBrown: "#83491B",
+  LightBrown: "#BF7900",
+};
 
 const chipClass =
   "inline-flex h-8 min-h-8 items-center justify-center rounded-full border-2 border-cateneo-darkbrown px-2.5 text-sm font-gaegu font-medium text-cateneo-darkbrown transition-colors";
@@ -96,6 +112,10 @@ export default function AddCatForm({
     control: form.control,
     name: "healthStatus",
   });
+  const selectedVaccines = useWatch({
+    control: form.control,
+    name: "vaccines",
+  });
 
   React.useEffect(() => {
     if (!imageFile) {
@@ -110,7 +130,7 @@ export default function AddCatForm({
   }, [imageFile]);
 
   const toggleArrayValue = (
-    field: "vitamins" | "healthStatus",
+    field: "vitamins" | "healthStatus" | "vaccines",
     value: string,
   ) => {
     const current = form.getValues(field);
@@ -205,7 +225,7 @@ export default function AddCatForm({
               form={form}
               name="type"
               label="Type"
-              placeholder="Kittenean"
+              placeholder="CATenean"
               options={typeOptions}
             />
             <DateOfBirthField form={form} />
@@ -276,18 +296,54 @@ export default function AddCatForm({
               name="healthStatus"
               render={({ fieldState }) => (
                 <FormItem className="md:col-span-1">
-                  <FormLabel>Vaccines</FormLabel>
+                  <FormLabel>Health Status</FormLabel>
                   <FormControl>
                     <div className="flex flex-wrap justify-left gap-2 lg:justify-start">
                       {healthOptions.map((option) => {
-                        const active = selectedHealthStatuses.includes(option);
+                        const active = selectedHealthStatuses[0] === option;
                         return (
                           <button
                             key={option}
                             type="button"
                             onClick={() =>
-                              toggleArrayValue("healthStatus", option)
+                              form.setValue("healthStatus", [option], {
+                                shouldValidate: true,
+                                shouldDirty: true,
+                              })
                             }
+                            className={cn(
+                              chipClass,
+                              active
+                                ? "bg-cateneo-orange text-cateneo-white"
+                                : "bg-cateneo-white text-cateneo-darkbrown hover:bg-cateneo-orange/20",
+                            )}
+                          >
+                            {option}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </FormControl>
+                  <FormMessage>{fieldState.error?.message}</FormMessage>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="vaccines"
+              render={({ fieldState }) => (
+                <FormItem className="md:col-span-1">
+                  <FormLabel>Vaccines</FormLabel>
+                  <FormControl>
+                    <div className="flex flex-wrap justify-left gap-2 lg:justify-start">
+                      {vaccineOptions.map((option) => {
+                        const active = selectedVaccines.includes(option);
+                        return (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => toggleArrayValue("vaccines", option)}
                             className={cn(
                               chipClass,
                               active
@@ -392,15 +448,20 @@ export default function AddCatForm({
                         Color:
                       </FormLabel>
 
-                      {colorOptions.map((option, colorIndex) => {
-                        const selected = field.value === option.value;
-                        const isAddColorSlot =
-                          colorIndex === colorOptions.length - 1;
+                      {colorOptions.map((option) => {
+                        const selected = field.value.includes(option.value);
                         return (
                           <button
                             key={option.value}
                             type="button"
-                            onClick={() => field.onChange(option.value)}
+                            onClick={() => {
+                              const nextValues = selected
+                                ? field.value.filter(
+                                    (value) => value !== option.value,
+                                  )
+                                : [...field.value, option.value];
+                              field.onChange(nextValues);
+                            }}
                             className={cn(
                               "inline-flex size-9 shrink-0 items-center justify-center rounded-full transition-colors",
                               selected
@@ -409,17 +470,9 @@ export default function AddCatForm({
                             )}
                             aria-label={option.label}
                           >
-                            <Image
-                              src={
-                                isAddColorSlot
-                                  ? "/images/addcathead.svg"
-                                  : "/images/cathead.svg"
-                              }
-                              alt=""
-                              width={28}
-                              height={23}
-                              className="pointer-events-none size-7 object-contain"
-                              aria-hidden
+                            <CatColorIcon
+                              fill={colorFillMap[option.value] ?? "#83491B"}
+                              className="pointer-events-none size-7 shrink-0 object-contain"
                             />
                           </button>
                         );

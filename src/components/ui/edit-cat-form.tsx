@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CatColorIcon } from "@/components/ui/cat-color-icon";
 import {
   editCatFormDefaultValues,
   editCatFormSchema,
@@ -41,6 +42,10 @@ export type EditCatInitialData = {
   dateOfDeath?: string;
   status?: string;
   currentLocation?: string;
+  motherCat?: string;
+  fatherCat?: string;
+  motherId?: number | string;
+  fatherId?: number | string;
   vitamins?: string[];
   healthStatus?: string[];
   personality?: string;
@@ -55,19 +60,41 @@ interface EditCatFormProps {
   className?: string;
 }
 
-const typeOptions = ["Kittenean", "Persian", "Siamese", "Maine Coon"];
+const typeOptions = [
+  "CATenean",
+  "KITTENean",
+  "Rescued_CATenean",
+  "Rescued_KITTENean",
+];
 const parentOptions = ["Kitteean", "Snowpaw", "Ambertail", "Whisker"];
 const statusOptions = ["Lorem Ipsum", "Available", "Pending", "Adopted"];
-const locationOptions = ["Lorem Ipsum", "Manila", "Cebu", "Davao"];
-const vitaminOptions = ["Nematocide", "LC Vit"];
-const healthOptions = ["Anti-Rabies", "Spayed", "Neutered"];
-const colorOptions = [
-  { value: "orange", label: "Orange" },
-  { value: "brown", label: "Brown" },
-  { value: "white", label: "White" },
-  { value: "gray", label: "Gray" },
-  { value: "mixed", label: "Mixed" },
+const locationOptions = [
+  "MEZZANINE_FLOOR",
+  "RODRIGUEZ_HALL",
+  "ROXAS_BENCHES",
+  "DEL_ROSARIO_GAZEBO",
+  "JUBILEE_BUILDING",
+  "CENTRAL_CONVENIENCE",
 ];
+const vitaminOptions = ["Nematocide", "LCVit"];
+const healthOptions = ["Spayed", "Neutered"];
+const colorOptions = [
+  { value: "Black", label: "Black" },
+  { value: "White", label: "White" },
+  { value: "Gray", label: "Gray" },
+  { value: "Orange", label: "Orange" },
+  { value: "DarkBrown", label: "Dark Brown" },
+  { value: "LightBrown", label: "Light Brown" },
+];
+
+const colorFillMap: Record<string, string> = {
+  Black: "#1F1F1F",
+  White: "#F1EDE2",
+  Gray: "#8A8A8A",
+  Orange: "#E3981B",
+  DarkBrown: "#83491B",
+  LightBrown: "#BF7900",
+};
 
 const chipClass =
   "inline-flex h-8 min-h-8 items-center justify-center rounded-full border-2 border-cateneo-darkbrown px-2.5 text-sm font-gaegu font-medium text-cateneo-darkbrown transition-colors";
@@ -94,9 +121,18 @@ const dateButtonClass = cn(
 
 const toDateInput = (value?: string) => {
   if (!value) return "";
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return value;
+  }
+
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
-  return date.toISOString().slice(0, 10);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 };
 
 const toSexValue = (value?: string): "Male" | "Female" =>
@@ -105,30 +141,85 @@ const toSexValue = (value?: string): "Male" | "Female" =>
 const toTypeValue = (classification?: string) => {
   if (!classification) return "";
 
-  if (classification.includes("KITTENean")) return "Kittenean";
-  if (classification.includes("CATenean")) return "Catenean";
+  return typeOptions.includes(classification) ? classification : "";
+};
 
-  return classification;
+const withSelectedOptions = (
+  options: string[],
+  selected?: string | string[],
+) => {
+  const selectedValues = Array.isArray(selected)
+    ? selected.filter(Boolean)
+    : selected
+      ? [selected]
+      : [];
+
+  return Array.from(new Set([...options, ...selectedValues]));
+};
+
+const normalizeColorValue = (color: string) => {
+  const normalized = color.trim().toLowerCase();
+
+  if (normalized === "black") return "Black";
+  if (normalized === "white") return "White";
+  if (
+    normalized === "gray" ||
+    normalized === "grey" ||
+    normalized === "mixed"
+  ) {
+    return "Gray";
+  }
+  if (normalized === "orange") return "Orange";
+  if (normalized === "darkbrown" || normalized === "dark_brown") {
+    return "DarkBrown";
+  }
+  if (normalized === "lightbrown" || normalized === "light_brown") {
+    return "LightBrown";
+  }
+
+  return color;
+};
+
+const normalizeVitaminValue = (vitamin: string) => {
+  const normalized = vitamin.trim().toLowerCase();
+
+  if (normalized === "nematocide") return "Nematocide";
+  if (normalized === "lcvit" || normalized === "lc vit") return "LCVit";
+
+  return vitamin;
+};
+
+const toSelectString = (value?: string | number | null) => {
+  if (value === undefined || value === null) return "";
+  return String(value);
 };
 
 const mapInitialCatToFormValues = (
   cat: EditCatInitialData,
 ): EditCatFormData => {
+  const rawDateOfDeath = cat.dateOfDeath ?? cat.dod;
+  const rawMotherCat = cat.motherCat ?? cat.motherId;
+  const rawFatherCat = cat.fatherCat ?? cat.fatherId;
+
   return {
     ...editCatFormDefaultValues,
     name: cat.name ?? "",
     sex: toSexValue(cat.sex),
     type: toTypeValue(cat.classification),
     dateOfBirth: toDateInput(cat.dob),
-    dateOfDeath: toDateInput(cat.dateOfDeath ?? cat.dod),
-    motherCat: "",
-    fatherCat: "",
+    dateOfDeath: toDateInput(rawDateOfDeath),
+    motherCat: toSelectString(rawMotherCat),
+    fatherCat: toSelectString(rawFatherCat),
     adoptionStatus: cat.status ?? "",
     location: cat.currentLocation ?? "",
-    vitamins: Array.isArray(cat.vitamins) ? cat.vitamins : [],
+    vitamins: Array.isArray(cat.vitamins)
+      ? cat.vitamins.map((vitamin) => normalizeVitaminValue(vitamin))
+      : [],
     healthStatus: Array.isArray(cat.healthStatus) ? cat.healthStatus : [],
     personality: cat.personality ?? "",
-    color: cat.colors?.[0]?.toLowerCase() ?? "",
+    color: Array.isArray(cat.colors)
+      ? cat.colors.map((color) => normalizeColorValue(color))
+      : [],
     image: null,
   };
 };
@@ -149,6 +240,51 @@ export default function EditCatForm({
   }, [cat, form]);
 
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+  const initialValues = React.useMemo(
+    () => mapInitialCatToFormValues(cat),
+    [cat],
+  );
+  const typeSelectOptions = React.useMemo(
+    () => withSelectedOptions(typeOptions, initialValues.type),
+    [initialValues.type],
+  );
+  const adoptionStatusSelectOptions = React.useMemo(
+    () => withSelectedOptions(statusOptions, initialValues.adoptionStatus),
+    [initialValues.adoptionStatus],
+  );
+  const locationSelectOptions = React.useMemo(
+    () => withSelectedOptions(locationOptions, initialValues.location),
+    [initialValues.location],
+  );
+  const motherSelectOptions = React.useMemo(
+    () => withSelectedOptions(parentOptions, initialValues.motherCat),
+    [initialValues.motherCat],
+  );
+  const fatherSelectOptions = React.useMemo(
+    () => withSelectedOptions(parentOptions, initialValues.fatherCat),
+    [initialValues.fatherCat],
+  );
+  const vitaminChipOptions = React.useMemo(
+    () => withSelectedOptions(vitaminOptions, initialValues.vitamins),
+    [initialValues.vitamins],
+  );
+  const healthChipOptions = React.useMemo(
+    () => withSelectedOptions(healthOptions, initialValues.healthStatus),
+    [initialValues.healthStatus],
+  );
+  const colorSelectOptions = React.useMemo(() => {
+    const additionalValues = initialValues.color.filter(
+      (value) => !colorOptions.some((option) => option.value === value),
+    );
+
+    return [
+      ...colorOptions,
+      ...additionalValues.map((value) => ({
+        value,
+        label: value,
+      })),
+    ];
+  }, [initialValues.color]);
 
   const imageFile = useWatch({ control: form.control, name: "image" });
   const selectedVitamins = useWatch({
@@ -267,8 +403,8 @@ export default function EditCatForm({
               form={form}
               name="type"
               label="Type"
-              placeholder="Kittenean"
-              options={typeOptions}
+              placeholder="CATenean"
+              options={typeSelectOptions}
             />
 
             <DatePickerField
@@ -287,28 +423,28 @@ export default function EditCatForm({
               name="motherCat"
               label="Mother Cat"
               placeholder="Kitteean"
-              options={parentOptions}
+              options={motherSelectOptions}
             />
             <SelectField
               form={form}
               name="fatherCat"
               label="Father Cat"
               placeholder="Kitteean"
-              options={parentOptions}
+              options={fatherSelectOptions}
             />
             <SelectField
               form={form}
               name="adoptionStatus"
               label="Adoption Status"
               placeholder="Lorem Ipsum"
-              options={statusOptions}
+              options={adoptionStatusSelectOptions}
             />
             <SelectField
               form={form}
               name="location"
               label="Location"
               placeholder="Lorem Ipsum"
-              options={locationOptions}
+              options={locationSelectOptions}
             />
 
             <FormField
@@ -319,7 +455,7 @@ export default function EditCatForm({
                   <FormLabel>Vitamins</FormLabel>
                   <FormControl>
                     <div className="flex flex-wrap gap-2">
-                      {vitaminOptions.map((option) => {
+                      {vitaminChipOptions.map((option) => {
                         const active = selectedVitamins.includes(option);
                         return (
                           <button
@@ -352,14 +488,17 @@ export default function EditCatForm({
                   <FormLabel>Health Status</FormLabel>
                   <FormControl>
                     <div className="flex flex-wrap justify-left gap-2 lg:justify-start">
-                      {healthOptions.map((option) => {
-                        const active = selectedHealthStatuses.includes(option);
+                      {healthChipOptions.map((option) => {
+                        const active = selectedHealthStatuses[0] === option;
                         return (
                           <button
                             key={option}
                             type="button"
                             onClick={() =>
-                              toggleArrayValue("healthStatus", option)
+                              form.setValue("healthStatus", [option], {
+                                shouldValidate: true,
+                                shouldDirty: true,
+                              })
                             }
                             className={cn(
                               chipClass,
@@ -464,15 +603,20 @@ export default function EditCatForm({
                         Color:
                       </FormLabel>
 
-                      {colorOptions.map((option, colorIndex) => {
-                        const selected = field.value === option.value;
-                        const isAddColorSlot =
-                          colorIndex === colorOptions.length - 1;
+                      {colorSelectOptions.map((option) => {
+                        const selected = field.value.includes(option.value);
                         return (
                           <button
                             key={option.value}
                             type="button"
-                            onClick={() => field.onChange(option.value)}
+                            onClick={() => {
+                              const nextValues = selected
+                                ? field.value.filter(
+                                    (value) => value !== option.value,
+                                  )
+                                : [...field.value, option.value];
+                              field.onChange(nextValues);
+                            }}
                             className={cn(
                               "inline-flex size-9 shrink-0 items-center justify-center rounded-full transition-colors",
                               selected
@@ -481,17 +625,9 @@ export default function EditCatForm({
                             )}
                             aria-label={option.label}
                           >
-                            <Image
-                              src={
-                                isAddColorSlot
-                                  ? "/images/addcathead.svg"
-                                  : "/images/cathead.svg"
-                              }
-                              alt=""
-                              width={28}
-                              height={23}
-                              className="pointer-events-none size-7 object-contain"
-                              aria-hidden
+                            <CatColorIcon
+                              fill={colorFillMap[option.value] ?? "#83491B"}
+                              className="pointer-events-none size-7 shrink-0 object-contain"
                             />
                           </button>
                         );

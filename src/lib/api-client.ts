@@ -6,6 +6,51 @@ interface ApiRequestOptions extends RequestInit {
 }
 
 const getResponseCache = new Map<string, unknown>();
+let isRefreshing = false;
+let refreshPromise: Promise<boolean> | null = null;
+
+/**
+ * Refreshes the access token using the refresh token from HttpOnly cookie
+ */
+async function refreshAccessToken(): Promise<boolean> {
+  if (isRefreshing && refreshPromise) {
+    return refreshPromise;
+  }
+
+  isRefreshing = true;
+  refreshPromise = (async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/refresh-token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Include cookies in the request
+      });
+
+      if (res.ok) {
+        return true;
+      } else {
+        // Redirect to login if refresh fails
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
+        }
+        return false;
+      }
+    } catch (error) {
+      console.error("Token refresh failed:", error);
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+      return false;
+    } finally {
+      isRefreshing = false;
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
+}
 
 export async function apiClient<TResponse>(
   path: string,
@@ -31,8 +76,45 @@ export async function apiClient<TResponse>(
     body: requestBody,
     ...cacheControl,
     ...rest,
+    credentials: "include", // Include cookies (for access token)
   });
 
+  // Handle 401 Unauthorized - attempt token refresh and retry
+  if (res.status === 401 && !path.includes("/auth/")) {
+    const tokenRefreshed = await refreshAccessToken();
+
+    if (tokenRefreshed) {
+      // Retry the original request with the new token
+      const retryRes = await fetch(`${API_BASE_URL}${path}`, {
+        headers: {
+          "Content-Type": "application/json",
+          ...(headers ?? {}),
+        },
+        body: requestBody,
+        ...cacheControl,
+        ...rest,
+        credentials: "include",
+      });
+
+      // Process the retry response
+      return processResponse<TResponse>(retryRes, isGetRequest, cacheKey, path);
+    } else {
+      throw new Error("Token refresh failed");
+    }
+  }
+
+  return processResponse<TResponse>(res, isGetRequest, cacheKey, path);
+}
+
+/**
+ * Process the HTTP response and return the parsed data
+ */
+async function processResponse<TResponse>(
+  res: Response,
+  isGetRequest: boolean,
+  cacheKey: string,
+  path: string,
+): Promise<TResponse> {
   // Reuse cached GET payload for 304 responses.
   if (res.status === 304) {
     if (isGetRequest && getResponseCache.has(cacheKey)) {

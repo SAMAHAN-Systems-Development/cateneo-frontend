@@ -14,16 +14,21 @@ export const addCatFormSchema = z.object({
   fatherCat: requiredSelect("Father cat"),
   adoptionStatus: requiredSelect("Status"),
   location: requiredSelect("Location"),
-  vitamins: z.array(z.string()).min(1, { message: "Select at least one vitamin" }),
+  vitamins: z
+    .array(z.string())
+    .min(1, { message: "Select at least one vitamin" }),
   healthStatus: z
     .array(z.string())
     .min(1, { message: "Select at least one health status" }),
+  vaccines: z
+    .array(z.string())
+    .min(1, { message: "Select at least one vaccine" }),
   personality: z
     .string()
     .min(1, { message: "Personality is required" })
     .max(500, { message: "Personality must be 500 characters or less" }),
   image: z.instanceof(File).nullable().optional(),
-  color: z.string().min(1, { message: "Color is required" }),
+  color: z.array(z.string()).min(1, { message: "Color is required" }),
 });
 
 export type AddCatFormData = z.infer<typeof addCatFormSchema>;
@@ -39,7 +44,8 @@ export const addCatFormDefaultValues: AddCatFormData = {
   location: "",
   vitamins: [],
   healthStatus: [],
+  vaccines: [],
   personality: "",
   image: null,
-  color: "",
+  color: [],
 };

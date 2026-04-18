@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { useAdminCreateCat } from "@/client/mutations/cat-mutations";
 import AddCatForm from "@/components/ui/add-cat-form";
+import RoleGuard from "@/lib/role-guard";
 import type {
   CatClassification,
   CatColor,
@@ -25,17 +26,16 @@ const toOptionalNumber = (value: string) => {
 };
 
 const toClassification = (value: string): CatClassification => {
-  const normalized = value.trim().toLowerCase();
+  const allowedClassifications: CatClassification[] = [
+    "CATenean",
+    "KITTENean",
+    "Rescued_CATenean",
+    "Rescued_KITTENean",
+  ];
 
-  if (normalized.includes("rescued") && normalized.includes("kitten")) {
-    return "Rescued_KITTENean";
-  }
-  if (normalized.includes("rescued") && normalized.includes("cat")) {
-    return "Rescued_CATenean";
-  }
-  if (normalized.includes("kitten")) return "KITTENean";
-
-  return "CATenean";
+  return allowedClassifications.includes(value as CatClassification)
+    ? (value as CatClassification)
+    : "CATenean";
 };
 
 const ALLOWED_COLORS = [
@@ -67,7 +67,26 @@ const isOneOf = <T extends readonly string[]>(
 };
 
 const toCatColor = (value: string): CatColor => {
-  return isOneOf(value, ALLOWED_COLORS) ? value : "Black";
+  const normalized = value.trim().toLowerCase();
+
+  if (normalized === "black") return "Black";
+  if (normalized === "white") return "White";
+  if (
+    normalized === "gray" ||
+    normalized === "grey" ||
+    normalized === "mixed"
+  ) {
+    return "Gray";
+  }
+  if (normalized === "orange") return "Orange";
+  if (normalized === "darkbrown" || normalized === "dark_brown") {
+    return "DarkBrown";
+  }
+  if (normalized === "lightbrown" || normalized === "light_brown") {
+    return "LightBrown";
+  }
+
+  return "Black";
 };
 
 const toCatLocation = (value: string): CatLocation => {
@@ -86,6 +105,10 @@ const toVaccines = (values: string[]): Vaccine[] => {
   );
 };
 
+const toReproductiveStatus = (values: string[]) => {
+  return values.find((value) => value.trim().length > 0) ?? undefined;
+};
+
 const Page = () => {
   const createCatMutation = useAdminCreateCat();
 
@@ -100,14 +123,15 @@ const Page = () => {
       sex: data.sex,
       dob: data.dateOfBirth,
       personality: data.personality,
-      colors: [toCatColor(data.color)],
+      colors: data.color.map(toCatColor),
       classification: toClassification(data.type),
       status: data.adoptionStatus,
+      reproductiveStatus: toReproductiveStatus(data.healthStatus),
       motherId: toOptionalNumber(data.motherCat),
       fatherId: toOptionalNumber(data.fatherCat),
       currentLocation: toCatLocation(data.location),
       vitamins: toVitamins(data.vitamins),
-      vaccines: toVaccines(data.healthStatus),
+      vaccines: toVaccines(data.vaccines),
       imageUrl: undefined,
     };
 
@@ -120,16 +144,18 @@ const Page = () => {
   };
 
   return (
-    <main className="px-3 py-6 md:px-5">
-      <div className="mx-auto w-full max-w-7xl">
-        <AddCatForm
-          form={form}
-          onSubmit={handleSubmit}
-          onCancel={handleCancel}
-          className="w-full max-w-none sm:max-w-none md:max-w-none lg:max-w-none"
-        />
-      </div>
-    </main>
+    <RoleGuard allowedRoles={["SUPERADMIN"]} redirectTo="/dashboard/cateneans">
+      <main className="px-3 py-6 md:px-5">
+        <div className="mx-auto w-full max-w-7xl">
+          <AddCatForm
+            form={form}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+            className="w-full max-w-none sm:max-w-none md:max-w-none lg:max-w-none"
+          />
+        </div>
+      </main>
+    </RoleGuard>
   );
 };
 

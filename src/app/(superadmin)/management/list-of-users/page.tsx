@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { useReactivateUser } from "@/client/mutations/user-mutations";
 import { useFindAllUsers } from "@/client/queries/user-queries";
 import {
   ListOfUsersTable,
@@ -27,7 +28,13 @@ const normalizeRole = (value?: string) => {
   return value;
 };
 
+const normalizeIsBlocked = (isActive?: boolean) => {
+  if (isActive === undefined) return "-";
+  return isActive ? "No" : "Yes";
+};
+
 const Page = () => {
+  const { mutateAsync: reactivateUser } = useReactivateUser();
   const { data, isLoading, isError, error } = useFindAllUsers({
     page: 1,
     limit: 10,
@@ -45,12 +52,19 @@ const Page = () => {
         .trim();
 
       return {
+        id: user.id,
         name: fullName || "-",
         role: normalizeRole(user.role),
+        roleValue: user.role,
+        isBlocked: normalizeIsBlocked(user.is_active),
         joinedAt: formatJoinedAt(user.createdAt),
       };
     });
   }, [usersData]);
+
+  const handleReactivateUser = async (user: UserTableRow) => {
+    await reactivateUser(user.id);
+  };
 
   return (
     <div className="w-full px-3 pb-6 md:px-5 md:pb-8">
@@ -61,7 +75,11 @@ const Page = () => {
             {error instanceof Error ? error.message : "Unknown error"}
           </p>
         ) : null}
-        <ListOfUsersTable users={isLoading ? [] : users} />
+        <ListOfUsersTable
+          users={isLoading ? [] : users}
+          isLoading={isLoading}
+          onReactivateUser={handleReactivateUser}
+        />
       </div>
     </div>
   );

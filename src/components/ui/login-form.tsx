@@ -77,16 +77,6 @@ const LoginForm = ({ form, onSubmit, errorMessage }: LoginFormProps) => {
             {isSubmitting ? "Logging in..." : "Log In"}
           </button>
         </form>
-
-        <p className="text-center text-cateneo-darkbrown mt-4 sm:mt-6 font-gaegu text-sm sm:text-base">
-          Don&apos;t have an account?{" "}
-          <a
-            href="/sign-up"
-            className="text-cateneo-darkbrown hover:underline font-semibold"
-          >
-            Sign Up
-          </a>
-        </p>
       </div>
     </div>
   );

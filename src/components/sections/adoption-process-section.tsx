@@ -34,7 +34,7 @@ const steps = [
   {
     number: 1,
     title: "Application",
-    description: "Fill out the official CATeneo Adoption Form",
+    description: "Fill out the official CATeneo Adoption Form.",
   },
   {
     number: 2,
@@ -58,7 +58,7 @@ const steps = [
     number: 5,
     title: "Trial Period",
     description:
-      "2–4 week adjustment period to ensure a perfect match. Volunteers may visit or call to check in.",
+      "2-4 week adjustment period to ensure a perfect match. Volunteers may visit or call to check in.",
   },
 ];
 
@@ -101,8 +101,8 @@ export default function AdoptionProcessSection() {
     const totalHeight = steps.length * (MOB_SEGMENT_H - MOB_CAP_H) + MOB_CAP_H;
 
     return (
-      <div className="min-h-screen w-full bg-cateneo-white flex flex-col items-center px-4 pt-24 pb-8 md:pt-28">
-        <h2 className="font-playpen font-bold text-cateneo-darkbrown text-center text-[38px] leading-[1.2] mb-36">
+      <div className=" w-full bg-cateneo-white flex flex-col items-center px-4 pt-0 pb-25">
+        <h2 className="font-playpen font-bold text-cateneo-darkbrown text-center text-[38px] leading-[1.2] mb-10">
           The Adoption
           <br />
           Process
@@ -203,7 +203,7 @@ export default function AdoptionProcessSection() {
 
   // ── DESKTOP ──
   return (
-    <div className="bg-cateneo-white w-full min-h-screen flex items-start justify-center pt-24 md:pt-28">
+    <div className="bg-cateneo-white w-full flex items-start justify-center pt-10">
       <div
         className="backface-hidden"
         style={{

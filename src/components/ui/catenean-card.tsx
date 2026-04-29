@@ -61,7 +61,7 @@ function CateneanCard({
 
   return (
     <Card
-      className="flex bg-cateneo-white border-[2px] rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B] max-[640px]:max-h-[273.75px]"
+      className="flex bg-cateneo-white border-[2px] rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B] max-[640px]:max-h-[175.5px]"
       style={{
         width: responsiveClamp(282, 297.36),
         height: responsiveClamp(350.75, 569),
@@ -160,10 +160,9 @@ function CateneanCard({
         </PopoverContent>
       </Popover>
       <CardContent
-        className="flex flex-col w-[100%]"
-        style={{ gap: responsiveClamp(18.72, 27.78) }}
+        className="flex flex-col w-[100%] max-[640px]:flex-row max-[640px]:flex-wrap"
       >
-        <div className="w-full flex items-center justify-center relative ">
+        <div className="w-full flex items-center justify-center relative max-[640px]:w-[40%]">
           <svg
             style={{
               width: responsiveClamp(100, 216),
@@ -193,18 +192,18 @@ function CateneanCard({
           />
         </div>
         <div
-          className="font-gaegu flex flex-col relative w-[100%] max-[640px]:flex-wrap max-[640px]:flex-row"
+          className="font-gaegu flex flex-col relative w-[100%] max-[640px]:flex-wrap max-[640px]:flex-row max-[640px]:w-[60%] max-[640px]:pl-[5px]"
           style={{ gap: responsiveClamp(2.25, 3.11) }}
         >
           <div
-            className="flex items-center max-[640px]:order-1 max-[640px]:w-1/2"
+            className="flex items-center max-[640px]:order-1 max-[640px]:w-[80%]"
             style={{
               height: responsiveClamp(15.5, 27),
               gap: responsiveClamp(5.84, 8),
             }}
           >
             <CardTitle
-              className="text-[24.9px] text-cateneo-darkbrown max-w-[220px] leading-none line-clamp-1"
+              className="text-[24.9px] text-cateneo-darkbrown max-w-[80%] leading-none line-clamp-1 "
               style={{ fontSize: responsiveClamp(13.5, 24.9) }}
             >
               {catName}
@@ -212,7 +211,7 @@ function CateneanCard({
             {genderIcon}
           </div>
           <div
-            className="flex items-center pl-[4px] max-[640px]:order-3 max-[640px]:w-[50%]"
+            className="flex items-center pl-[4px] max-[640px]:order-3 max-[640px]:w-[100%]"
             style={{
               height: responsiveClamp(15.5, 27),
               gap: responsiveClamp(5.84, 8),
@@ -242,7 +241,7 @@ function CateneanCard({
             </p>
           </div>
           <div
-            className="flex items-center max-[640px]:order-5 max-[640px]:w-[50%]"
+            className="flex items-center max-[640px]:order-5 max-[640px]:w-[100%]"
             style={{
               height: responsiveClamp(16, 27.97),
               gap: responsiveClamp(5.84, 8),
@@ -355,7 +354,8 @@ function CateneanCard({
               </PopoverContent>
             </Popover>
           </div>
-          <div className="pr-[41px] w-[100%] max-[640px]:order-9">
+        </div>
+        <div className="pr-[41px] font-gaegu w-[100%] max-[640px]:order-9">
             <p
               className="text-[17.12px] text-cateneo-lightbrown"
               style={{ fontSize: responsiveClamp(12, 17.12) }}
@@ -370,7 +370,6 @@ function CateneanCard({
               {personality}
             </p>{" "}
           </div>
-        </div>
       </CardContent>
       <svg
         className="absolute bottom-[15.74px] right-[13.24px]"

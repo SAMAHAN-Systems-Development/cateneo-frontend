@@ -207,7 +207,7 @@ function KitteneanCard({
             }}
           >
             <CardTitle
-              className="text-[24.9px] text-cateneo-darkbrown max-w-[220px] leading-none line-clamp-1"
+              className="text-[24.9px] text-cateneo-darkbrown max-w-[85%] leading-none line-clamp-1"
               style={{ fontSize: responsiveClamp(13.5, 24.9) }}
             >
               {name}

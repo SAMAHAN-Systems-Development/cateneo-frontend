@@ -64,7 +64,7 @@ function CateneanCard({
       className="flex bg-cateneo-white border-[2px] rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B] max-[640px]:max-h-[175.5px]"
       style={{
         width: responsiveClamp(282, 297.36),
-        height: responsiveClamp(350.75, 569),
+        height: responsiveClamp(290, 482),
       }}
     >
       <Popover open={actionsIsOpen} onOpenChange={setActionsIsOpen}>
@@ -167,6 +167,7 @@ function CateneanCard({
             style={{
               width: responsiveClamp(100, 216),
               height: responsiveClamp(74.28, 176),
+              marginBottom: responsiveClamp(5, 28)
             }}
             width="216"
             height="176"
@@ -274,7 +275,7 @@ function CateneanCard({
             ))}
           </div>
           <div
-            className="flex min-w-0 items-center max-[640px]:order-7 max-[640px]:w-[90%]"
+            className="flex min-w-0 items-center max-[640px]:order-7 max-[640px]:w-[100%]"
             style={{
               height: responsiveClamp(15.5, 27),
               gap: responsiveClamp(5.84, 8),

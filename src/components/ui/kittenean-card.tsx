@@ -27,6 +27,27 @@ export type KitteneanProps = {
   onDelete?: () => void;
 };
 
+// Vitamin lookup dictionary for the popover descriptions
+const VITAMIN_DICTIONARY: Record<string, string> = {
+  "LC-Vit": "LC-Vit (or LC-Vit Plus) for cats is a popular, over-the-counter multivitamin syrup designed to boost immunity, increase appetite, and treat vitamin deficiencies during stress or illness.",
+  "Nutri-Plus Gel": "Nutri-Plus Gel is a fast-acting energy supplement and nutritional support for growing, active, or recovering cats.",
+  // Add any other specific vitamins QA expects here
+};
+
+const getMedicineDescriptions = (medicineString: string | null): string[] => {
+  if (!medicineString) return ["No medicine assigned."];
+
+  const matches: string[] = [];
+  Object.entries(VITAMIN_DICTIONARY).forEach(([key, description]) => {
+    if (medicineString.toLowerCase().includes(key.toLowerCase())) {
+      matches.push(description);
+    }
+  });
+
+  // Fallback to displaying the raw string if no dictionary keys match
+  return matches.length > 0 ? matches : [medicineString];
+};
+
 const responsiveClamp = (min: number, max: number) =>
   `clamp(${min}px, calc(${min}px + ${max - min} * ((100vw - 640px) / 384)), ${max}px)`;
 
@@ -177,7 +198,6 @@ function KitteneanCard({
             viewBox="0 0 216 176"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            // className=""
           >
             <path
               d="M24.3869 145.301C23.0377 142.433 22.2522 142.055 19.2636 142.414C15.2561 142.905 11.2713 143.351 7.30936 143.754C4.47449 144.056 2.35688 142.527 2.1861 140.149C2.01533 137.772 3.41568 135.753 6.37009 135.413C9.6319 135.036 12.8937 134.715 16.1384 134.356C16.1115 132.978 15.5913 131.668 14.6918 130.713C13.7923 129.758 12.5869 129.236 11.3396 129.261C8.98295 128.978 6.64333 128.676 4.30371 128.356C1.38346 127.922 -0.307213 125.997 0.000181936 123.562C0.307577 121.128 2.47642 119.788 5.41375 120.015L10.9298 120.656C10.4916 118.663 10.1778 116.64 9.99053 114.599C9.64638 109.929 9.60072 105.237 9.85391 100.56C10.6565 91.2188 11.6812 81.8781 13.0986 72.5939C14.6327 62.9587 16.9183 53.4883 19.9296 44.2885C22.9159 34.1671 27.2004 24.5714 32.6524 15.7943C35.8256 11.1149 39.2471 6.64735 42.8989 2.41532C45.1873 -0.301998 47.8172 -0.622792 51.1132 0.9057C55.2932 2.95142 59.0438 5.9328 62.1282 9.66151C68.481 16.7945 74.6289 24.0784 80.7085 31.4189C81.2499 32.1571 81.975 32.7041 82.7943 32.9924C83.6136 33.2808 84.4914 33.298 85.3194 33.0418C96.6723 31.0236 108.208 30.5672 119.662 31.6831C123.505 32.0417 127.33 32.6266 131.138 33.2305C131.669 33.3673 132.223 33.3314 132.736 33.1271C133.248 32.9228 133.696 32.5589 134.024 32.0794C139.916 25.0219 145.74 17.9078 151.87 11.0202C154.672 8.09299 157.656 5.38782 160.802 2.92482C162.033 1.98974 163.371 1.24086 164.781 0.698127C165.985 0.0548031 167.341 -0.154669 168.659 0.0992499C169.976 0.353169 171.189 1.05767 172.124 2.1134C178.026 8.12953 182.989 15.1812 186.811 22.9839C193.618 36.9034 198.483 51.8792 201.242 67.4045C203.688 79.7781 205.174 92.36 205.682 105.013C205.953 109.934 205.544 114.872 204.469 119.656C204.44 119.989 204.44 120.324 204.469 120.656C206.416 120.43 208.226 120.204 210.036 120.015C212.957 119.732 214.955 121.053 215.331 123.487C215.706 125.921 214.05 127.922 211.181 128.337C208.67 128.695 206.16 129.11 203.632 129.299C202.873 129.211 202.109 129.407 201.462 129.855C200.815 130.303 200.322 130.977 200.063 131.771C199.725 132.616 199.337 133.436 198.902 134.224C200.917 134.488 202.693 134.753 204.486 134.96C205.972 135.13 207.475 135.224 208.978 135.394C211.966 135.734 213.623 137.621 213.298 140.244C212.974 142.867 210.89 144.018 208.038 143.773C204.076 143.357 200.092 142.911 196.084 142.433C193.061 142.055 192.412 142.433 190.961 145.301L196.392 147.301C198.697 148.188 199.807 149.66 199.807 151.528C199.67 154.491 196.631 156.397 193.642 155.302C190.654 154.208 188.058 153.264 185.291 152.17C184.86 151.956 184.384 151.88 183.916 151.95C183.449 152.02 183.008 152.233 182.644 152.566C170.929 161.869 157.352 167.662 142.597 171.436C125.723 175.496 108.373 176.573 91.1941 174.625C73.1602 172.738 56.1852 167.757 40.935 158.303C38.1513 156.585 35.5214 154.529 32.9256 152.642C32.5367 152.297 32.0686 152.08 31.5738 152.013C31.0791 151.946 30.5774 152.033 30.1249 152.264C27.4779 153.34 24.7967 154.34 22.0985 155.302C21.0178 155.813 19.8045 155.864 18.6917 155.446C17.579 155.028 16.6453 154.17 16.0701 153.038C15.0967 150.83 16.1897 148.528 18.7513 147.509C20.4932 146.697 22.4742 146.018 24.3869 145.301Z"
@@ -345,6 +365,12 @@ function KitteneanCard({
               gap: responsiveClamp(5.84, 8),
             }}
           >
+                        <p
+              className="shrink-0 text-[17.12px] text-cateneo-lightbrown max-[640px]:w-[75px]"
+              style={{ fontSize: responsiveClamp(12, 17.12) }}
+            >
+              Medicines:
+            </p>
             <p
               className="text-[21.79px] text-cateneo-darkbrown truncate max-w-[220px]"
               style={{ fontSize: responsiveClamp(13.5, 21.79) }}
@@ -377,7 +403,7 @@ function KitteneanCard({
                 align="start"
                 alignOffset={-12}
                 sideOffset={8}
-                className="bg-cateneo-lightbrown"
+                className="bg-cateneo-lightbrown flex flex-col gap-2"
                 style={{ width: responsiveClamp(172, 207) }}
               >
                 <PopoverPrimitive.Arrow
@@ -386,15 +412,15 @@ function KitteneanCard({
                   fill="#BF7900"
                   style={{ strokeWidth: 1 }}
                 />
-                <p
-                  className="font-gaegu text-cateneo-white"
-                  style={{ fontSize: responsiveClamp(13.5, 16) }}
-                >
-                  LC-Vit (or LC-Vit Plus) for cats is a popular,
-                  over-the-counter multivitamin syrup designed to boost
-                  immunity, increase appetite, and treat vitamin deficiencies
-                  during stress or illness.
-                </p>
+                {getMedicineDescriptions(medicine).map((desc, idx) => (
+                  <p
+                    key={idx}
+                    className="font-gaegu text-cateneo-white leading-tight"
+                    style={{ fontSize: responsiveClamp(13.5, 16) }}
+                  >
+                    {desc}
+                  </p>
+                ))}
               </PopoverContent>
             </Popover>
           </div>

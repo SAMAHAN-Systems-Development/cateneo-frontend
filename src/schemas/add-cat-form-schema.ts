@@ -20,7 +20,7 @@ export const addCatFormSchema = z.object({
   healthStatus: z
     .array(z.string())
     .min(1, { message: "Select at least one health status" }),
-  vaccines: z.array(z.string()).default([]),
+  vaccines: z.array(z.string()).catch([]).optional().default([]),
   personality: z
     .string()
     .min(1, { message: "Personality is required" })

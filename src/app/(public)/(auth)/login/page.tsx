@@ -29,7 +29,7 @@ const LoginPage = () => {
     }
   };
 
-  const errorMessage = error instanceof Error ? error.message : null;
+  const errorMessage = error ? "Invalid email or password." : null;
 
   return (
     <div>

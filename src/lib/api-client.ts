@@ -97,13 +97,13 @@ export async function apiClient<TResponse>(
       });
 
       // Process the retry response
-      return processResponse<TResponse>(retryRes, isGetRequest, cacheKey, path);
+      return processResponse<TResponse>(retryRes, isGetRequest, cacheKey);
     } else {
       throw new Error("Token refresh failed");
     }
   }
 
-  return processResponse<TResponse>(res, isGetRequest, cacheKey, path);
+  return processResponse<TResponse>(res, isGetRequest, cacheKey);
 }
 
 /**
@@ -113,7 +113,6 @@ async function processResponse<TResponse>(
   res: Response,
   isGetRequest: boolean,
   cacheKey: string,
-  path: string,
 ): Promise<TResponse> {
   // Reuse cached GET payload for 304 responses.
   if (res.status === 304) {
@@ -126,7 +125,15 @@ async function processResponse<TResponse>(
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(text || `Request failed with status ${res.status}`);
+    try {
+      const json = JSON.parse(text);
+      throw new Error(json.message || `Request failed with status ${res.status}`);
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        throw new Error(text || `Request failed with status ${res.status}`);
+      }
+      throw e;
+    }
   }
 
   if (res.status === 204) {

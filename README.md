@@ -87,7 +87,6 @@ $ e.g feat/21--add-hero-section
 
 ``` bash
 $ npm run dev
-$ Runs of http://localhost:5173/
 ```
 
 ## Project Folder Structure

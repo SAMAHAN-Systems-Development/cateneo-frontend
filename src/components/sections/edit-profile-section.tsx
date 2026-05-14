@@ -33,7 +33,7 @@ export default function EditProfileSection({
           <Image src="/cat-paw.svg" alt="Paw icon" width={20} height={20} />
         </div>
 
-        <div className="grid gap-6 md:grid-cols-[220px_1fr] md:gap-8">
+        <div className="grid w-full min-w-0 gap-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8">
           <aside className="space-y-3">
             <button
               type="button"
@@ -64,12 +64,12 @@ export default function EditProfileSection({
             </button>
           </aside>
 
-          <div>
+          <div className="min-w-0">
             <h2 className="font-playpen text-2xl font-bold text-cateneo-black">
               {isAccountTab ? "Edit Profile" : "Change Password"}
             </h2>
 
-            <div className="mt-3">
+            <div className="mt-3 w-full">
               {isAccountTab ? (
                 <EditProfileForm />
               ) : (

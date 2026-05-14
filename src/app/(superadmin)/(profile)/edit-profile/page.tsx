@@ -17,7 +17,7 @@ const Page = () => {
   };
 
   return (
-    <div className="pt-8 md:pt-12">
+    <div className="w-full pt-8 md:pt-12">
       <EditProfileSection onChangePasswordSubmit={handleChangePasswordSubmit} />
     </div>
   );

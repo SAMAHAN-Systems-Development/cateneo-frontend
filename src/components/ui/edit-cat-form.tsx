@@ -7,6 +7,10 @@ import { Popover as PopoverPrimitive } from "radix-ui";
 import { type UseFormReturn, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import {
+  useGetEligbleFathers,
+  useGetEligbleMothers,
+} from "@/client/queries/cat-queries";
 import { cn } from "@/lib/utils";
 import { normalizeCatStatus } from "@/lib/cat-form-mappers";
 import { Button } from "@/components/ui/button";
@@ -67,7 +71,6 @@ const typeOptions = [
   "Rescued_CATenean",
   "Rescued_KITTENean",
 ];
-const parentOptions = ["Kitteean", "Snowpaw", "Ambertail", "Whisker"];
 const statusOptions = [
   "Available",
   "Adoption_Pending",
@@ -127,6 +130,16 @@ const dateButtonClass = cn(
   "flex min-w-0 max-w-full items-center justify-between gap-2 overflow-hidden",
 );
 
+type SelectOption = {
+  value: string;
+  label: string;
+};
+
+type ParentCatOption = {
+  id: number;
+  name?: string;
+};
+
 const toDateInput = (value?: string) => {
   if (!value) return "";
 
@@ -163,6 +176,26 @@ const withSelectedOptions = (
       : [];
 
   return Array.from(new Set([...options, ...selectedValues]));
+};
+
+const withSelectedParentOptions = (
+  parents: ParentCatOption[] | undefined,
+  selected?: string,
+  currentCatId?: number,
+): SelectOption[] => {
+  const parentOptions =
+    parents
+      ?.filter((parent) => parent.id !== currentCatId)
+      .map((parent) => ({
+        value: String(parent.id),
+        label: parent.name ?? `Cat #${parent.id}`,
+      })) ?? [];
+
+  if (!selected || parentOptions.some((option) => option.value === selected)) {
+    return parentOptions;
+  }
+
+  return [{ value: selected, label: selected }, ...parentOptions];
 };
 
 const normalizeColorValue = (color: string) => {
@@ -242,6 +275,8 @@ export default function EditCatForm({
     resolver: zodResolver(editCatFormSchema),
     defaultValues: mapInitialCatToFormValues(cat),
   });
+  const { data: eligibleMothers } = useGetEligbleMothers();
+  const { data: eligibleFathers } = useGetEligbleFathers();
 
   React.useEffect(() => {
     form.reset(mapInitialCatToFormValues(cat));
@@ -265,12 +300,22 @@ export default function EditCatForm({
     [initialValues.location],
   );
   const motherSelectOptions = React.useMemo(
-    () => withSelectedOptions(parentOptions, initialValues.motherCat),
-    [initialValues.motherCat],
+    () =>
+      withSelectedParentOptions(
+        eligibleMothers,
+        initialValues.motherCat,
+        cat.id,
+      ),
+    [cat.id, eligibleMothers, initialValues.motherCat],
   );
   const fatherSelectOptions = React.useMemo(
-    () => withSelectedOptions(parentOptions, initialValues.fatherCat),
-    [initialValues.fatherCat],
+    () =>
+      withSelectedParentOptions(
+        eligibleFathers,
+        initialValues.fatherCat,
+        cat.id,
+      ),
+    [cat.id, eligibleFathers, initialValues.fatherCat],
   );
   const vitaminChipOptions = React.useMemo(
     () => withSelectedOptions(vitaminOptions, initialValues.vitamins),
@@ -295,6 +340,10 @@ export default function EditCatForm({
   }, [initialValues.color]);
 
   const imageFile = useWatch({ control: form.control, name: "image" });
+  const selectedSex = useWatch({
+    control: form.control,
+    name: "sex",
+  });
   const selectedAdoptionStatus = useWatch({
     control: form.control,
     name: "adoptionStatus",
@@ -332,6 +381,20 @@ export default function EditCatForm({
       shouldValidate: true,
     });
   }, [form, showDateOfDeath]);
+
+  React.useEffect(() => {
+    const expectedHealthStatus =
+      selectedSex === "Female" ? "Spayed" : "Neutered";
+
+    if (form.getValues("healthStatus")[0] === expectedHealthStatus) {
+      return;
+    }
+
+    form.setValue("healthStatus", [expectedHealthStatus], {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  }, [form, selectedSex]);
 
   const toggleArrayValue = (
     field: "vitamins" | "healthStatus",
@@ -755,7 +818,7 @@ function SelectField({
   name: "type" | "motherCat" | "fatherCat" | "adoptionStatus" | "location";
   label: string;
   placeholder: string;
-  options: string[];
+  options: Array<string | SelectOption>;
 }) {
   return (
     <FormField
@@ -770,15 +833,22 @@ function SelectField({
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
               <SelectContent className={selectContentClass}>
-                {options.map((option) => (
-                  <SelectItem
-                    className={selectItemClass}
-                    key={option}
-                    value={option}
-                  >
-                    {option}
-                  </SelectItem>
-                ))}
+                {options.map((option) => {
+                  const value =
+                    typeof option === "string" ? option : option.value;
+                  const optionLabel =
+                    typeof option === "string" ? option : option.label;
+
+                  return (
+                    <SelectItem
+                      className={selectItemClass}
+                      key={value}
+                      value={value}
+                    >
+                      {optionLabel}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </FormControl>

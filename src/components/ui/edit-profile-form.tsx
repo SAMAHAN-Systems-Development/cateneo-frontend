@@ -101,7 +101,7 @@ export default function EditProfileForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="max-w-2xl space-y-4"
+        className="w-full space-y-4"
       >
         <div className="grid gap-4 md:grid-cols-2">
           <FormField

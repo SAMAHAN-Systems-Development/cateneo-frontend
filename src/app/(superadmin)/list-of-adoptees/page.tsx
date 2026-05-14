@@ -84,7 +84,7 @@ const Page = () => {
   const totalPages = isSearching ? 1 : (data?.meta.totalPages ?? 1);
 
   return (
-    <main className="px-3 py-6 md:px-5">
+    <main className="w-full px-3 py-6 md:px-5">
       <div className="mx-auto w-full max-w-7xl">
         {isError ? (
           <p className="mb-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">

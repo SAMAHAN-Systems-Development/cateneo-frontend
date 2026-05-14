@@ -27,7 +27,10 @@ const toStableFilters = (filtersKey: string) => {
 
 export const useGetAllCats = (filters?: CateneanDTO) => {
   const filtersKey = getStableFiltersKey(filters);
-  const stableFilters = useMemo(() => toStableFilters(filtersKey), [filtersKey]);
+  const stableFilters = useMemo(
+    () => toStableFilters(filtersKey),
+    [filtersKey],
+  );
   const queryKey = useMemo(
     () => ["getAllCats", stableFilters] as const,
     [stableFilters],

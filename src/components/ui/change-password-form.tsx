@@ -61,7 +61,7 @@ export default function ChangePasswordForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="max-w-md space-y-4"
+        className="w-full space-y-4"
       >
         <FormField
           control={form.control}

@@ -125,13 +125,32 @@ export const normalizeCatStatus = (status?: string) => {
   return status ?? "";
 };
 
-const toParentString = (value?: ParentReference): string | undefined => {
+const toParentIdString = (value?: ParentReference): string | undefined => {
   if (value === undefined || value === null) return undefined;
-  if (typeof value === "string" || typeof value === "number") {
-    return String(value);
+  if (typeof value === "number") return String(value);
+  if (typeof value === "string") return value;
+
+  return toParentIdString(value.id) ?? value.name ?? value.catName;
+};
+
+const toOptionalNumber = (value: string) => {
+  if (!value.trim()) return undefined;
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+};
+
+const toReproductiveStatusForSex = (
+  sex: EditCatFormData["sex"],
+  healthStatus: string[],
+) => {
+  const selectedStatus = healthStatus[0];
+
+  if (sex === "Female") {
+    return selectedStatus === "Spayed" ? selectedStatus : "Spayed";
   }
 
-  return value.name ?? value.catName ?? toParentString(value.id);
+  return selectedStatus === "Neutered" ? selectedStatus : "Neutered";
 };
 
 const toStringArray = (value?: RawListInput) => {
@@ -163,9 +182,9 @@ export const mapRawCatToEditInitialData = (
     cat.current_location ??
     cat.residence;
   const rawMotherCat =
-    toParentString(cat.motherCat ?? cat.mother) ?? cat.motherId;
+    toParentIdString(cat.motherCat ?? cat.mother) ?? cat.motherId;
   const rawFatherCat =
-    toParentString(cat.fatherCat ?? cat.father) ?? cat.fatherId;
+    toParentIdString(cat.fatherCat ?? cat.father) ?? cat.fatherId;
   const rawVitaminValues = toStringArray(cat.vitamins);
   const rawVitaminFallbackValues = toStringArray(cat.vitamin);
   const rawVaccineFallbackValues = toStringArray(cat.vaccines);
@@ -225,11 +244,16 @@ export const mapEditFormDataToUpdateCatDTO = (
     sex: formData.sex,
     dob: formData.dateOfBirth,
     dateDeceased: formData.dateOfDeath || undefined,
-    reproductiveStatus: formData.healthStatus[0],
+    reproductiveStatus: toReproductiveStatusForSex(
+      formData.sex,
+      formData.healthStatus,
+    ),
     personality: formData.personality,
     colors: mappedColors.length > 0 ? mappedColors : ["Black"],
     classification: toClassification(formData.type),
     status: normalizeCatStatus(formData.adoptionStatus),
+    motherId: toOptionalNumber(formData.motherCat),
+    fatherId: toOptionalNumber(formData.fatherCat),
     currentLocation: formData.location,
     vitamins: mappedVitamins,
   };

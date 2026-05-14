@@ -9,7 +9,7 @@ export default function SuperAdminLayout({
     <div className="relative min-h-screen overflow-x-hidden bg-cateneo-white">
       <SuperAdminNavigationBar />
       {/* Page content */}
-      <div className="flex justify-center">{children}</div>
+      <div className="flex w-full justify-center">{children}</div>
     </div>
   );
 }

@@ -33,7 +33,7 @@ const Page = () => {
   };
 
   return (
-    <div className="pt-8 md:pt-22">
+    <div className="w-full pt-8 md:pt-22">
       <UserProfileSection
         userName={fullName || "-"}
         roleLabel={toRoleLabel(profile?.role)}

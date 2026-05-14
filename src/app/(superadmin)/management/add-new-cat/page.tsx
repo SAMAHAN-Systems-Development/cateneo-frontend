@@ -38,15 +38,6 @@ const toClassification = (value: string): CatClassification => {
     : "CATenean";
 };
 
-const ALLOWED_COLORS = [
-  "Black",
-  "White",
-  "Gray",
-  "Orange",
-  "DarkBrown",
-  "LightBrown",
-] as const;
-
 const ALLOWED_LOCATIONS = [
   "MEZZANINE_FLOOR",
   "RODRIGUEZ_HALL",
@@ -145,8 +136,8 @@ const Page = () => {
 
   return (
     <RoleGuard allowedRoles={["SUPERADMIN"]} redirectTo="/dashboard/cateneans">
-      <main className="px-3 py-6 md:px-5">
-        <div className="mx-auto w-full max-w-7xl">
+      <main className="w-full px-3 py-6 md:px-5">
+        <div className="mx-auto w-full max-w-7xl min-w-0">
           <AddCatForm
             form={form}
             onSubmit={handleSubmit}

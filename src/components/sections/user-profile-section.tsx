@@ -37,7 +37,7 @@ export default function UserProfileSection({
         />
       </div>
 
-        <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 md:py-4">
+        <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 md:py-4">
           <div className="flex flex-col gap-7 items-center md:flex-row md:items-center md:gap-10">
           {/* Avatar */}
           <div className="relative shrink-0 md:-translate-y-1/2">

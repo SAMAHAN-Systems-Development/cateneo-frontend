@@ -83,6 +83,13 @@ $ [type]/[ticket number]--[your branch name]
 $ e.g feat/21--add-hero-section
 ```
 
+7. Run the server
+
+``` bash
+$ npm run dev
+$ Runs of http://localhost:5173/
+```
+
 ## Project Folder Structure
 
 ```bash
@@ -115,22 +122,3 @@ cateneo-frontend/
 `-- vitest.config.ts        # Vitest test configuration
 ```
 
-## Running Application
-
-1. Pull from the main for updates
-
-```bash
-$ git pull origin main
-```
-
-2. Install the libraries with this command:
-
-```bash
-$ npm i
-```
-
-3. Run the Server with this command:
-
-```bash
-$ npm run dev
-```

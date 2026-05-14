@@ -1,6 +1,5 @@
 "use client";
 
-
 import { cloneElement, useState } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { MALE_SVG, FEMALE_SVG, COLOR_MAP } from "@/lib/kittenean-card-config";
@@ -16,18 +15,35 @@ export type CatProps = {
   sex: "male" | "female";
   catName: string;
   location: string;
-  color: ("white" | "darkbrown" | "lightbrown" | "orange" | "black" | "gray")[]; // Array of colors
+  color: ("white" | "darkbrown" | "lightbrown" | "orange" | "black" | "gray")[];
   healthStatus: string;
   medicine: string | null;
   personality: string;
-  svgColor: "white" | "darkbrown" | "lightbrown" | "orange" | "black" | "gray"; // Single color only
+  svgColor: "white" | "darkbrown" | "lightbrown" | "orange" | "black" | "gray";
   onEdit?: () => void;
   onDelete?: () => void;
 };
 
+const VITAMIN_DICTIONARY: Record<string, string> = {
+  "LC-Vit":
+    "LC-Vit (or LC-Vit Plus) for cats is a popular, over-the-counter multivitamin syrup designed to boost immunity, increase appetite, and treat vitamin deficiencies during stress or illness.",
+  "Nutri-Plus Gel":
+    "Nutri-Plus Gel is a fast-acting energy supplement and nutritional support for growing, active, or recovering cats.",
+};
+
+const getMedicineDescriptions = (medicineString: string | null): string[] => {
+  if (!medicineString) return ["No medicine assigned."];
+  const matches: string[] = [];
+  Object.entries(VITAMIN_DICTIONARY).forEach(([key, description]) => {
+    if (medicineString.toLowerCase().includes(key.toLowerCase())) {
+      matches.push(description);
+    }
+  });
+  return matches.length > 0 ? matches : [medicineString];
+};
+
 const responsiveClamp = (min: number, max: number) =>
   `clamp(${min}px, calc(${min}px + ${max - min} * ((100vw - 640px) / 384)), ${max}px)`;
-
 
 function CateneanCard({
   imageUrl,
@@ -44,20 +60,21 @@ function CateneanCard({
 }: CatProps) {
   const [medicineIsOpen, setMedicineIsOpen] = useState(false);
   const [actionsIsOpen, setActionsIsOpen] = useState(false);
-   const genderIcon =
-      sex === "male"
-        ? cloneElement(MALE_SVG, {
-            style: {
-              width: responsiveClamp(10, 16),
-              height: responsiveClamp(15, 24),
-            },
-          })
-        : cloneElement(FEMALE_SVG, {
-            style: {
-              width: responsiveClamp(10, 16),
-              height: responsiveClamp(15, 24),
-            },
-          });
+
+  const genderIcon =
+    sex === "male"
+      ? cloneElement(MALE_SVG, {
+          style: {
+            width: responsiveClamp(10, 16),
+            height: responsiveClamp(15, 24),
+          },
+        })
+      : cloneElement(FEMALE_SVG, {
+          style: {
+            width: responsiveClamp(10, 16),
+            height: responsiveClamp(15, 24),
+          },
+        });
 
   return (
     <Card
@@ -67,6 +84,7 @@ function CateneanCard({
         height: responsiveClamp(290, 482),
       }}
     >
+      {/* ── Actions popover ── */}
       <Popover open={actionsIsOpen} onOpenChange={setActionsIsOpen}>
         <PopoverTrigger asChild>
           <button
@@ -159,22 +177,21 @@ function CateneanCard({
           </button>
         </PopoverContent>
       </Popover>
-      <CardContent
-        className="flex flex-col w-[100%] max-[640px]:flex-row max-[640px]:flex-wrap"
-      >
+
+      <CardContent className="flex flex-col w-[100%] max-[640px]:flex-row max-[640px]:flex-wrap">
+        {/* ── Cat SVG + photo ── */}
         <div className="w-full flex items-center justify-center relative max-[640px]:w-[40%]">
           <svg
             style={{
               width: responsiveClamp(100, 216),
               height: responsiveClamp(74.28, 176),
-              marginBottom: responsiveClamp(5, 28)
+              marginBottom: responsiveClamp(5, 28),
             }}
             width="216"
             height="176"
             viewBox="0 0 216 176"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            // className=""
           >
             <path
               d="M24.3869 145.301C23.0377 142.433 22.2522 142.055 19.2636 142.414C15.2561 142.905 11.2713 143.351 7.30936 143.754C4.47449 144.056 2.35688 142.527 2.1861 140.149C2.01533 137.772 3.41568 135.753 6.37009 135.413C9.6319 135.036 12.8937 134.715 16.1384 134.356C16.1115 132.978 15.5913 131.668 14.6918 130.713C13.7923 129.758 12.5869 129.236 11.3396 129.261C8.98295 128.978 6.64333 128.676 4.30371 128.356C1.38346 127.922 -0.307213 125.997 0.000181936 123.562C0.307577 121.128 2.47642 119.788 5.41375 120.015L10.9298 120.656C10.4916 118.663 10.1778 116.64 9.99053 114.599C9.64638 109.929 9.60072 105.237 9.85391 100.56C10.6565 91.2188 11.6812 81.8781 13.0986 72.5939C14.6327 62.9587 16.9183 53.4883 19.9296 44.2885C22.9159 34.1671 27.2004 24.5714 32.6524 15.7943C35.8256 11.1149 39.2471 6.64735 42.8989 2.41532C45.1873 -0.301998 47.8172 -0.622792 51.1132 0.9057C55.2932 2.95142 59.0438 5.9328 62.1282 9.66151C68.481 16.7945 74.6289 24.0784 80.7085 31.4189C81.2499 32.1571 81.975 32.7041 82.7943 32.9924C83.6136 33.2808 84.4914 33.298 85.3194 33.0418C96.6723 31.0236 108.208 30.5672 119.662 31.6831C123.505 32.0417 127.33 32.6266 131.138 33.2305C131.669 33.3673 132.223 33.3314 132.736 33.1271C133.248 32.9228 133.696 32.5589 134.024 32.0794C139.916 25.0219 145.74 17.9078 151.87 11.0202C154.672 8.09299 157.656 5.38782 160.802 2.92482C162.033 1.98974 163.371 1.24086 164.781 0.698127C165.985 0.0548031 167.341 -0.154669 168.659 0.0992499C169.976 0.353169 171.189 1.05767 172.124 2.1134C178.026 8.12953 182.989 15.1812 186.811 22.9839C193.618 36.9034 198.483 51.8792 201.242 67.4045C203.688 79.7781 205.174 92.36 205.682 105.013C205.953 109.934 205.544 114.872 204.469 119.656C204.44 119.989 204.44 120.324 204.469 120.656C206.416 120.43 208.226 120.204 210.036 120.015C212.957 119.732 214.955 121.053 215.331 123.487C215.706 125.921 214.05 127.922 211.181 128.337C208.67 128.695 206.16 129.11 203.632 129.299C202.873 129.211 202.109 129.407 201.462 129.855C200.815 130.303 200.322 130.977 200.063 131.771C199.725 132.616 199.337 133.436 198.902 134.224C200.917 134.488 202.693 134.753 204.486 134.96C205.972 135.13 207.475 135.224 208.978 135.394C211.966 135.734 213.623 137.621 213.298 140.244C212.974 142.867 210.89 144.018 208.038 143.773C204.076 143.357 200.092 142.911 196.084 142.433C193.061 142.055 192.412 142.433 190.961 145.301L196.392 147.301C198.697 148.188 199.807 149.66 199.807 151.528C199.67 154.491 196.631 156.397 193.642 155.302C190.654 154.208 188.058 153.264 185.291 152.17C184.86 151.956 184.384 151.88 183.916 151.95C183.449 152.02 183.008 152.233 182.644 152.566C170.929 161.869 157.352 167.662 142.597 171.436C125.723 175.496 108.373 176.573 91.1941 174.625C73.1602 172.738 56.1852 167.757 40.935 158.303C38.1513 156.585 35.5214 154.529 32.9256 152.642C32.5367 152.297 32.0686 152.08 31.5738 152.013C31.0791 151.946 30.5774 152.033 30.1249 152.264C27.4779 153.34 24.7967 154.34 22.0985 155.302C21.0178 155.813 19.8045 155.864 18.6917 155.446C17.579 155.028 16.6453 154.17 16.0701 153.038C15.0967 150.83 16.1897 148.528 18.7513 147.509C20.4932 146.697 22.4742 146.018 24.3869 145.301Z"
@@ -192,31 +209,30 @@ function CateneanCard({
             alt="image of a cat"
           />
         </div>
+
+        {/* ── Info rows ── */}
         <div
           className="font-gaegu flex flex-col relative w-[100%] max-[640px]:flex-wrap max-[640px]:flex-row max-[640px]:w-[60%] max-[640px]:pl-[5px]"
           style={{ gap: responsiveClamp(2.25, 3.11) }}
         >
+          {/* Name + gender */}
           <div
             className="flex items-center max-[640px]:order-1 max-[640px]:w-[80%]"
-            style={{
-              height: responsiveClamp(15.5, 27),
-              gap: responsiveClamp(5.84, 8),
-            }}
+            style={{ height: responsiveClamp(15.5, 27), gap: responsiveClamp(5.84, 8) }}
           >
             <CardTitle
-              className="text-[24.9px] text-cateneo-darkbrown max-w-[80%] leading-none line-clamp-1 "
+              className="text-[24.9px] text-cateneo-darkbrown max-w-[80%] leading-none line-clamp-1"
               style={{ fontSize: responsiveClamp(13.5, 24.9) }}
             >
               {catName}
             </CardTitle>
             {genderIcon}
           </div>
+
+          {/* Location */}
           <div
             className="flex items-center pl-[4px] max-[640px]:order-3 max-[640px]:w-[100%]"
-            style={{
-              height: responsiveClamp(15.5, 27),
-              gap: responsiveClamp(5.84, 8),
-            }}
+            style={{ height: responsiveClamp(15.5, 27), gap: responsiveClamp(5.84, 8) }}
           >
             <svg
               viewBox="0 0 19 23"
@@ -241,12 +257,11 @@ function CateneanCard({
               {location}
             </p>
           </div>
+
+          {/* Color */}
           <div
             className="flex items-center max-[640px]:order-5 max-[640px]:w-[100%]"
-            style={{
-              height: responsiveClamp(16, 27.97),
-              gap: responsiveClamp(5.84, 8),
-            }}
+            style={{ height: responsiveClamp(16, 27.97), gap: responsiveClamp(5.84, 8) }}
           >
             <p
               className="text-[17.12px] text-cateneo-lightbrown"
@@ -274,12 +289,11 @@ function CateneanCard({
               </svg>
             ))}
           </div>
+
+          {/* Health status */}
           <div
             className="flex min-w-0 items-center max-[640px]:order-7 max-[640px]:w-[100%]"
-            style={{
-              height: responsiveClamp(15.5, 27),
-              gap: responsiveClamp(5.84, 8),
-            }}
+            style={{ height: responsiveClamp(15.5, 27), gap: responsiveClamp(5.84, 8) }}
           >
             <p
               className="shrink-0 text-[17.12px] text-cateneo-lightbrown max-[640px]:w-[75px]"
@@ -295,13 +309,18 @@ function CateneanCard({
               {healthStatus}
             </p>
           </div>
+
+          {/* Medicines */}
           <div
             className="flex items-center relative max-[640px]:order-8 max-[640px]:w-[90%]"
-            style={{
-              height: responsiveClamp(15.5, 27),
-              gap: responsiveClamp(5.84, 8),
-            }}
+            style={{ height: responsiveClamp(15.5, 27), gap: responsiveClamp(5.84, 8) }}
           >
+            <p
+              className="shrink-0 text-[17.12px] text-cateneo-lightbrown"
+              style={{ fontSize: responsiveClamp(12, 17.12) }}
+            >
+              Medicines:
+            </p>
             <p
               className="text-[21.79px] text-cateneo-darkbrown truncate max-w-[220px]"
               style={{ fontSize: responsiveClamp(13.5, 21.79) }}
@@ -334,7 +353,7 @@ function CateneanCard({
                 align="start"
                 alignOffset={-12}
                 sideOffset={8}
-                className="bg-cateneo-lightbrown"
+                className="bg-cateneo-lightbrown flex flex-col gap-2"
                 style={{ width: responsiveClamp(172, 207) }}
               >
                 <PopoverPrimitive.Arrow
@@ -343,35 +362,39 @@ function CateneanCard({
                   fill="#BF7900"
                   style={{ strokeWidth: 1 }}
                 />
-                <p
-                  className="font-gaegu text-cateneo-white"
-                  style={{ fontSize: responsiveClamp(13.5, 16) }}
-                >
-                  LC-Vit (or LC-Vit Plus) for cats is a popular,
-                  over-the-counter multivitamin syrup designed to boost
-                  immunity, increase appetite, and treat vitamin deficiencies
-                  during stress or illness.
-                </p>
+                {getMedicineDescriptions(medicine).map((desc, idx) => (
+                  <p
+                    key={idx}
+                    className="font-gaegu text-cateneo-white leading-tight"
+                    style={{ fontSize: responsiveClamp(13.5, 16) }}
+                  >
+                    {desc}
+                  </p>
+                ))}
               </PopoverContent>
             </Popover>
           </div>
         </div>
+
+        {/* Personality — full width below both columns */}
         <div className="pr-[41px] font-gaegu w-[100%] max-[640px]:order-9">
-            <p
-              className="text-[17.12px] text-cateneo-lightbrown"
-              style={{ fontSize: responsiveClamp(12, 17.12) }}
-            >
-              Personality:
-            </p>
-            <p
-              className="text-[21.79px] text-cateneo-darkbrown leading-none line-clamp-2 cursor-help break-words"
-              style={{ fontSize: responsiveClamp(13.5, 21.79) }}
-              title={personality}
-            >
-              {personality}
-            </p>{" "}
-          </div>
+          <p
+            className="text-[17.12px] text-cateneo-lightbrown"
+            style={{ fontSize: responsiveClamp(12, 17.12) }}
+          >
+            Personality:
+          </p>
+          <p
+            className="text-[21.79px] text-cateneo-darkbrown leading-none line-clamp-2 cursor-help break-words"
+            style={{ fontSize: responsiveClamp(13.5, 21.79) }}
+            title={personality}
+          >
+            {personality}
+          </p>
+        </div>
       </CardContent>
+
+      {/* ── Paw print decoration ── */}
       <svg
         className="absolute bottom-[15.74px] right-[13.24px]"
         width="42"
@@ -384,34 +407,13 @@ function CateneanCard({
           height: responsiveClamp(36, 38.5),
         }}
       >
-        <path
-          d="M9.36617 19.4304C11.5416 19.0999 12.9778 16.7278 12.574 14.132C12.1702 11.5363 10.0794 9.70001 7.90394 10.0305C5.72852 10.361 4.29233 12.7331 4.69611 15.3289C5.0999 17.9246 7.19076 19.7609 9.36617 19.4304Z"
-          fill="#83491B"
-        />
-        <path
-          d="M18.699 13.2058C21.0875 13.1576 22.9712 10.8088 22.9064 7.95977C22.8415 5.11068 20.8526 2.84012 18.4641 2.88832C16.0756 2.93651 14.1919 5.28522 14.2568 8.1343C14.3216 10.9834 16.3105 13.254 18.699 13.2058Z"
-          fill="#83491B"
-        />
-        <path
-          d="M34.9014 13.4824C36.2783 10.9876 35.6966 8.03312 33.6022 6.88334C31.5078 5.73355 28.6938 6.8239 27.3169 9.3187C25.9401 11.8135 26.5217 14.768 28.6161 15.9178C30.7105 17.0676 33.5245 15.9772 34.9014 13.4824Z"
-          fill="#83491B"
-        />
-        <path
-          d="M37.2359 24.2518C38.9924 22.2977 39.0853 19.5266 37.4435 18.0623C35.8017 16.598 33.0468 16.9951 31.2904 18.9491C29.5339 20.9032 29.441 23.6743 31.0828 25.1386C32.7246 26.6029 35.4795 26.2059 37.2359 24.2518Z"
-          fill="#83491B"
-        />
-        <path
-          d="M19.6842 29.5281C22.9276 30.3972 26.258 28.4851 27.1229 25.2573C27.9878 22.0295 26.0596 18.7083 22.8162 17.8392C19.5728 16.9701 16.2424 18.8823 15.3775 22.1101C14.5126 25.3379 16.4408 28.6591 19.6842 29.5281Z"
-          fill="#83491B"
-        />
-        <path
-          d="M13.3137 34.5046C16.9897 35.4896 20.6708 33.6714 21.5357 30.4436C22.4006 27.2158 20.1217 23.8007 16.4457 22.8157C12.7697 21.8307 9.08857 23.6489 8.22368 26.8767C7.35879 30.1045 9.63765 33.5196 13.3137 34.5046Z"
-          fill="#83491B"
-        />
-        <path
-          d="M23.1027 37.1277C26.7787 38.1127 30.4598 36.2945 31.3247 33.0667C32.1896 29.8389 29.9108 26.4237 26.2348 25.4387C22.5588 24.4538 18.8776 26.2719 18.0127 29.4997C17.1479 32.7276 19.4267 36.1427 23.1027 37.1277Z"
-          fill="#83491B"
-        />
+        <path d="M9.36617 19.4304C11.5416 19.0999 12.9778 16.7278 12.574 14.132C12.1702 11.5363 10.0794 9.70001 7.90394 10.0305C5.72852 10.361 4.29233 12.7331 4.69611 15.3289C5.0999 17.9246 7.19076 19.7609 9.36617 19.4304Z" fill="#83491B" />
+        <path d="M18.699 13.2058C21.0875 13.1576 22.9712 10.8088 22.9064 7.95977C22.8415 5.11068 20.8526 2.84012 18.4641 2.88832C16.0756 2.93651 14.1919 5.28522 14.2568 8.1343C14.3216 10.9834 16.3105 13.254 18.699 13.2058Z" fill="#83491B" />
+        <path d="M34.9014 13.4824C36.2783 10.9876 35.6966 8.03312 33.6022 6.88334C31.5078 5.73355 28.6938 6.8239 27.3169 9.3187C25.9401 11.8135 26.5217 14.768 28.6161 15.9178C30.7105 17.0676 33.5245 15.9772 34.9014 13.4824Z" fill="#83491B" />
+        <path d="M37.2359 24.2518C38.9924 22.2977 39.0853 19.5266 37.4435 18.0623C35.8017 16.598 33.0468 16.9951 31.2904 18.9491C29.5339 20.9032 29.441 23.6743 31.0828 25.1386C32.7246 26.6029 35.4795 26.2059 37.2359 24.2518Z" fill="#83491B" />
+        <path d="M19.6842 29.5281C22.9276 30.3972 26.258 28.4851 27.1229 25.2573C27.9878 22.0295 26.0596 18.7083 22.8162 17.8392C19.5728 16.9701 16.2424 18.8823 15.3775 22.1101C14.5126 25.3379 16.4408 28.6591 19.6842 29.5281Z" fill="#83491B" />
+        <path d="M13.3137 34.5046C16.9897 35.4896 20.6708 33.6714 21.5357 30.4436C22.4006 27.2158 20.1217 23.8007 16.4457 22.8157C12.7697 21.8307 9.08857 23.6489 8.22368 26.8767C7.35879 30.1045 9.63765 33.5196 13.3137 34.5046Z" fill="#83491B" />
+        <path d="M23.1027 37.1277C26.7787 38.1127 30.4598 36.2945 31.3247 33.0667C32.1896 29.8389 29.9108 26.4237 26.2348 25.4387C22.5588 24.4538 18.8776 26.2719 18.0127 29.4997C17.1479 32.7276 19.4267 36.1427 23.1027 37.1277Z" fill="#83491B" />
       </svg>
     </Card>
   );

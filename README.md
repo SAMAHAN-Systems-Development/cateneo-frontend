@@ -56,6 +56,38 @@ $ [type]/[ticket number]--[your branch name]
 $ e.g feat/21--add-hero-section
 ```
 
+## Project Folder Structure
+
+```bash
+cateneo-frontend/
+|-- public/                 # Static assets such as images, fonts, SVGs, and page media
+|-- src/
+|   |-- app/                # Next.js App Router pages, layouts, route groups, and providers
+|   |   |-- (public)/       # Public-facing website routes
+|   |   |-- (superadmin)/   # Superadmin dashboard routes
+|   |   |-- (volunteer)/    # Volunteer dashboard routes
+|   |   `-- test/           # Test/demo route pages
+|   |-- client/             # API service functions, React Query queries, and mutations
+|   |   |-- mutations/      # Client-side mutation hooks
+|   |   |-- queries/        # Client-side query hooks
+|   |   `-- service/        # API request functions and DTO types
+|   |-- components/         # Reusable UI and page section components
+|   |   |-- sections/       # Larger page sections
+|   |   `-- ui/             # Shared UI components
+|   |-- data/               # Static local data used by components/pages
+|   |-- lib/                # Shared utilities, mappers, guards, and helpers
+|   |-- schemas/            # Form validation schemas and inferred form types
+|   |-- styles/             # Global or shared styles
+|   `-- __tests__/          # Test files
+|-- components.json         # shadcn/ui component configuration
+|-- eslint.config.mjs       # ESLint configuration
+|-- next.config.ts          # Next.js configuration
+|-- package.json            # Project scripts and dependencies
+|-- tailwind.config.ts      # Tailwind CSS theme/configuration
+|-- tsconfig.json           # TypeScript configuration
+`-- vitest.config.ts        # Vitest test configuration
+```
+
 ## Running Application
 
 1. Pull from the main for updates

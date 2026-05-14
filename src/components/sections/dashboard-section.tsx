@@ -82,7 +82,7 @@ const Dashboard = ({
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
 
   return (
-    <section className="w-full bg-cateneo-white px-3 py-4 sm:px-4 sm:py-5">
+    <section className="w-full bg-cateneo-white px-3 py-4 sm:px-4 sm:py-5 ">
       <div className="mx-auto w-full max-w-7xl">
         <div className="flex flex-col gap-3 border-b-2 border-cateneo-darkbrown sm:gap-4 md:flex-row md:items-end md:justify-between">
           <h2 className="flex items-center gap-2 font-gaegu text-2xl text-cateneo-black sm:text-3xl md:pb-1">
@@ -119,7 +119,7 @@ const Dashboard = ({
           </div>
         </div>
 
-        <div className="mt-4 w-full max-w-sm">
+        <div className="mt-4 w-full max-w-sm ">
           <div className="relative">
             <Input
               type="text"
@@ -144,7 +144,7 @@ const Dashboard = ({
           </div>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4 ">
           {isLoading ? (
             <div className="flex min-h-80 items-center justify-center rounded-3xl  bg-cateneo-white/80 px-6 py-10 text-center">
               <p className="font-gaegu text-2xl text-cateneo-darkbrown">

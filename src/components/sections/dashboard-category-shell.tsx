@@ -45,7 +45,7 @@ export default function DashboardCategoryShell({
   const router = useRouter();
 
   return (
-    <section className="w-full bg-cateneo-white px-3 py-4 sm:px-4 sm:py-5">
+    <section className="w-full bg-cateneo-white px-3 py-4 sm:px-4 sm:py-5 ">
       <div className="mx-auto w-full max-w-7xl">
         <div className="flex flex-col gap-3 border-b-2 border-cateneo-darkbrown sm:gap-4 md:flex-row md:items-end md:justify-between">
           <h2 className="flex items-center gap-2 font-gaegu text-2xl text-cateneo-black sm:text-3xl md:pb-1">

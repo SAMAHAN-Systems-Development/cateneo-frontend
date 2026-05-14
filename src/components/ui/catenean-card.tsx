@@ -61,7 +61,7 @@ function CateneanCard({
 
   return (
     <Card
-      className="flex bg-cateneo-white border-[2px] rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B] max-[640px]:max-h-[175.5px]"
+      className="flex bg-cateneo-white border-[2px] rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B] max-[640px]:!w-[calc(100vw-2rem)] max-[640px]:max-w-[360px] max-[640px]:max-h-[175.5px]"
       style={{
         width: responsiveClamp(282, 297.36),
         height: responsiveClamp(290, 482),

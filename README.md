@@ -52,6 +52,7 @@ VSCode Extension:
 
 ```bash
 $ git clone https://github.com/SAMAHAN-Systems-Development/cateneo-frontend
+Runs on https://localhost:5173/
 ```
 
 2. Change Directory to "cateneo-frontend"

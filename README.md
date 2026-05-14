@@ -52,7 +52,6 @@ VSCode Extension:
 
 ```bash
 $ git clone https://github.com/SAMAHAN-Systems-Development/cateneo-frontend
-Runs on https://localhost:5173/
 ```
 
 2. Change Directory to "cateneo-frontend"
@@ -87,6 +86,7 @@ $ e.g feat/21--add-hero-section
 
 ``` bash
 $ npm run dev
+Runs on https://localhost:5173/
 ```
 
 ## Project Folder Structure

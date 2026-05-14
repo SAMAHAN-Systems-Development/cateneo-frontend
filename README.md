@@ -1,5 +1,16 @@
 # Cateneo Frontend Repository
 
+## Table of Contents
+
+| Section | Description |
+| --- | --- |
+| [Description](#description) | Overview of the Cateneo frontend repository |
+| [Project Tech Stack](#project-tech-stack) | Main technologies, libraries, and tools used |
+| [Pre-requisite Installations](#pre-requisite-installations) | Required apps and VSCode extensions |
+| [Project setup](#project-setup) | Steps for cloning and preparing the project |
+| [Project Folder Structure](#project-folder-structure) | Overview of the main folders and config files |
+| [Running Application](#running-application) | Commands for installing dependencies and running the app |
+
 ## Description
 
 Official frontend repository for the **Cateneo Website**, built with **Next JS**
@@ -103,18 +114,6 @@ cateneo-frontend/
 |-- tsconfig.json           # TypeScript configuration
 `-- vitest.config.ts        # Vitest test configuration
 ```
-
-## Running Application
-
-1. Pull from the main for updates
-
-```bash
-$ git pull origin main
-```
-
-
-
-
 
 ## Running Application
 

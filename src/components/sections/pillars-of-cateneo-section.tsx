@@ -54,11 +54,11 @@ const PillarsOfCateneoSection = () => {
 
           <CarouselPrevious
             variant="ghost"
-            className="left-2 z-20 h-20 w-20 rounded-none border-0 bg-transparent p-0 text-cateneo-darkbrown shadow-none hover:bg-transparent disabled:opacity-40 md:left-6 md:h-24 md:w-24 [&>svg]:size-16 md:[&>svg]:size-20"
+            className="left-1 z-20 !h-8 !w-8 rounded-none border-0 bg-transparent p-0 text-cateneo-darkbrown shadow-none hover:bg-transparent disabled:opacity-40 sm:left-2 sm:!h-10 sm:!w-10 md:left-6 md:!h-16 md:!w-16 [&>svg]:!size-5 sm:[&>svg]:!size-7 md:[&>svg]:!size-12"
           />
           <CarouselNext
             variant="ghost"
-            className="right-2 z-20 h-20 w-20 rounded-none border-0 bg-transparent p-0 text-cateneo-darkbrown shadow-none hover:bg-transparent disabled:opacity-40 md:right-6 md:h-24 md:w-24 [&>svg]:size-16 md:[&>svg]:size-20"
+            className="right-1 z-20 !h-8 !w-8 rounded-none border-0 bg-transparent p-0 text-cateneo-darkbrown shadow-none hover:bg-transparent disabled:opacity-40 sm:right-2 sm:!h-10 sm:!w-10 md:right-6 md:!h-16 md:!w-16 [&>svg]:!size-5 sm:[&>svg]:!size-7 md:[&>svg]:!size-12"
           />
         </Carousel>
       </div>

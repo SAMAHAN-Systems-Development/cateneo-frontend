@@ -8,6 +8,7 @@ import { type UseFormReturn, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { cn } from "@/lib/utils";
+import { normalizeCatStatus } from "@/lib/cat-form-mappers";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -67,7 +68,14 @@ const typeOptions = [
   "Rescued_KITTENean",
 ];
 const parentOptions = ["Kitteean", "Snowpaw", "Ambertail", "Whisker"];
-const statusOptions = ["Lorem Ipsum", "Available", "Pending", "Adopted"];
+const statusOptions = [
+  "Available",
+  "Adoption_Pending",
+  "Resident",
+  "TooYoung",
+  "NotReady",
+  "Deceased",
+];
 const locationOptions = [
   "MEZZANINE_FLOOR",
   "RODRIGUEZ_HALL",
@@ -181,10 +189,10 @@ const normalizeColorValue = (color: string) => {
 };
 
 const normalizeVitaminValue = (vitamin: string) => {
-  const normalized = vitamin.trim().toLowerCase();
+  const normalized = vitamin.trim().toLowerCase().replace(/[-_\s]/g, "");
 
   if (normalized === "nematocide") return "Nematocide";
-  if (normalized === "lcvit" || normalized === "lc vit") return "LCVit";
+  if (normalized === "lcvit") return "LCVit";
 
   return vitamin;
 };
@@ -210,7 +218,7 @@ const mapInitialCatToFormValues = (
     dateOfDeath: toDateInput(rawDateOfDeath),
     motherCat: toSelectString(rawMotherCat),
     fatherCat: toSelectString(rawFatherCat),
-    adoptionStatus: cat.status ?? "",
+    adoptionStatus: normalizeCatStatus(cat.status),
     location: cat.currentLocation ?? "",
     vitamins: Array.isArray(cat.vitamins)
       ? cat.vitamins.map((vitamin) => normalizeVitaminValue(vitamin))
@@ -287,6 +295,10 @@ export default function EditCatForm({
   }, [initialValues.color]);
 
   const imageFile = useWatch({ control: form.control, name: "image" });
+  const selectedAdoptionStatus = useWatch({
+    control: form.control,
+    name: "adoptionStatus",
+  });
   const selectedVitamins = useWatch({
     control: form.control,
     name: "vitamins",
@@ -295,6 +307,8 @@ export default function EditCatForm({
     control: form.control,
     name: "healthStatus",
   });
+  const showDateOfDeath =
+    normalizeCatStatus(selectedAdoptionStatus) === "Deceased";
 
   React.useEffect(() => {
     if (!imageFile) {
@@ -307,6 +321,17 @@ export default function EditCatForm({
 
     return () => URL.revokeObjectURL(nextUrl);
   }, [imageFile]);
+
+  React.useEffect(() => {
+    if (showDateOfDeath || !form.getValues("dateOfDeath")) {
+      return;
+    }
+
+    form.setValue("dateOfDeath", "", {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  }, [form, showDateOfDeath]);
 
   const toggleArrayValue = (
     field: "vitamins" | "healthStatus",
@@ -412,11 +437,6 @@ export default function EditCatForm({
               name="dateOfBirth"
               label="Date of Birth"
             />
-            <DatePickerField
-              form={form}
-              name="dateOfDeath"
-              label="Date of Death"
-            />
 
             <SelectField
               form={form}
@@ -436,9 +456,16 @@ export default function EditCatForm({
               form={form}
               name="adoptionStatus"
               label="Adoption Status"
-              placeholder="Lorem Ipsum"
+              placeholder="Available"
               options={adoptionStatusSelectOptions}
             />
+            {showDateOfDeath ? (
+              <DatePickerField
+                form={form}
+                name="dateOfDeath"
+                label="Date of Death"
+              />
+            ) : null}
             <SelectField
               form={form}
               name="location"

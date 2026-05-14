@@ -5,6 +5,7 @@ import * as React from "react";
 import {
   useAdminDeleteCat,
   useAdminUpdateCat,
+  useAdminUpdateCatStatus,
 } from "@/client/mutations/cat-mutations";
 import { useGetAllCats } from "@/client/queries/cat-queries";
 import { getAdminCatById } from "@/client/service/catenean-service";
@@ -18,6 +19,7 @@ import EditCatForm, {
 import {
   mapEditFormDataToUpdateCatDTO,
   mapRawCatToEditInitialData,
+  normalizeCatStatus,
 } from "@/lib/cat-form-mappers";
 
 type CardColor = CatProps["color"][number];
@@ -98,17 +100,6 @@ const toDisplayLocation = (cat: RawCat) => {
   return rawLocation.replace(/_/g, " ").trim();
 };
 
-const toReadableDate = (value?: string | Date) => {
-  if (!value) return "N/A";
-  const date = typeof value === "string" ? new Date(value) : value;
-  if (Number.isNaN(date.getTime())) return "N/A";
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
-
 const mapCatsToCardData = (cats: RawCat[] | undefined): DashboardCardData[] => {
   if (!Array.isArray(cats)) {
     return [];
@@ -154,6 +145,7 @@ export default function Page() {
   } = useGetAllCats(filters);
   const { mutateAsync: deleteCat } = useAdminDeleteCat();
   const { mutateAsync: updateCat } = useAdminUpdateCat();
+  const { mutateAsync: updateCatStatus } = useAdminUpdateCatStatus();
 
   const cats = React.useMemo(
     () => mapCatsToCardData(adminCats as RawCat[]),
@@ -239,6 +231,15 @@ export default function Page() {
                   id: editedCard.id,
                   formData: mapEditFormDataToUpdateCatDTO(formData),
                 });
+                const nextStatus = normalizeCatStatus(formData.adoptionStatus);
+                const currentStatus = normalizeCatStatus(editedCard.status);
+
+                if (nextStatus && nextStatus !== currentStatus) {
+                  await updateCatStatus({
+                    id: editedCard.id,
+                    status: nextStatus,
+                  });
+                }
                 await refetch();
                 setIsEditModalOpen(false);
                 setEditedCard(null);

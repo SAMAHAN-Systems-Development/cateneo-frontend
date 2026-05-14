@@ -282,11 +282,11 @@ export const adminUpdateCat = async (
 export const adminUpdateCatStatus = async (
   id: number,
   status: string,
-  adoptedId: string,
+  adopterId?: number,
 ): Promise<Catenean> => {
   const payload = {
     status,
-    adoptedId,
+    adopterId,
   };
 
   const result = await apiClient<Catenean>(`/api/admin/cats/${id}/status`, {

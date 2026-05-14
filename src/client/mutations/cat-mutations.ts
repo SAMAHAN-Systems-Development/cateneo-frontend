@@ -8,9 +8,7 @@ import {
   adminAdoptCat,
   adminDeleteCat,
   adminRevertAdoption,
-  getAllCateneans,
 } from "../service/catenean-service";
-import { CateneanDTO } from "../service/catenean-service";
 
 export const useAdminCreateCat = () => {
   return useMutation({
@@ -30,12 +28,12 @@ export const useAdminUpdateCatStatus = () => {
     mutationFn: ({
       id,
       status,
-      adoptedId,
+      adopterId,
     }: {
       id: number;
       status: string;
-      adoptedId: string;
-    }) => adminUpdateCatStatus(id, status, adoptedId),
+      adopterId?: number;
+    }) => adminUpdateCatStatus(id, status, adopterId),
   });
 };
 

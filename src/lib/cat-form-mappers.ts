@@ -17,18 +17,39 @@ type RawCatForEdit = {
   location?: string;
   current_location?: string;
   residence?: string;
-  motherCat?: string | number;
-  fatherCat?: string | number;
+  mother?: ParentReference;
+  father?: ParentReference;
+  motherCat?: ParentReference;
+  fatherCat?: ParentReference;
   motherId?: string | number;
   fatherId?: string | number;
-  vitamins?: string[];
-  vitamin?: string[];
-  vaccines?: string[];
+  vitamins?: RawListInput;
+  vitamin?: RawListInput;
+  vaccines?: RawListInput;
   reproductiveStatus?: string;
   personality?: string;
   colors?: string[];
   imageUrl?: string;
 };
+
+type ParentReference =
+  | string
+  | number
+  | {
+      id?: string | number;
+      name?: string;
+      catName?: string;
+    };
+
+type RawListValue =
+  | string
+  | {
+      name?: string;
+      value?: string;
+      type?: string;
+    };
+
+type RawListInput = RawListValue[] | string | null;
 
 const toIsoDateString = (value?: string | Date) => {
   if (!value) return undefined;
@@ -75,12 +96,60 @@ const toApiColor = (value: string) => {
 };
 
 const toApiVitamin = (value: string) => {
-  const normalized = value.trim().toLowerCase();
+  const normalized = value.trim().toLowerCase().replace(/[-_\s]/g, "");
 
   if (normalized === "nematocide") return "Nematocide";
-  if (normalized === "lcvit" || normalized === "lc vit") return "LCVit";
+  if (normalized === "lcvit") return "LCVit";
 
   return null;
+};
+
+export const normalizeCatStatus = (status?: string) => {
+  const normalized = status?.trim().toLowerCase().replace(/[-\s]/g, "_");
+
+  if (!normalized) return "";
+  if (normalized === "available") return "Available";
+  if (normalized === "pending" || normalized === "adoption_pending") {
+    return "Adoption_Pending";
+  }
+  if (normalized === "adopted") return "Adopted";
+  if (normalized === "resident") return "Resident";
+  if (normalized === "tooyoung" || normalized === "too_young") {
+    return "TooYoung";
+  }
+  if (normalized === "notready" || normalized === "not_ready") {
+    return "NotReady";
+  }
+  if (normalized === "deceased") return "Deceased";
+
+  return status ?? "";
+};
+
+const toParentString = (value?: ParentReference): string | undefined => {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value === "string" || typeof value === "number") {
+    return String(value);
+  }
+
+  return value.name ?? value.catName ?? toParentString(value.id);
+};
+
+const toStringArray = (value?: RawListInput) => {
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((item) => {
+      if (typeof item === "string") return item;
+      return item.name ?? item.value ?? item.type;
+    })
+    .filter((item): item is string => Boolean(item?.trim()));
 };
 
 export const mapRawCatToEditInitialData = (
@@ -93,15 +162,19 @@ export const mapRawCatToEditInitialData = (
     cat.location ??
     cat.current_location ??
     cat.residence;
-  const rawMotherCat = cat.motherCat ?? cat.motherId;
-  const rawFatherCat = cat.fatherCat ?? cat.fatherId;
-  const rawVitamins = Array.isArray(cat.vitamins)
-    ? cat.vitamins
-    : Array.isArray(cat.vitamin)
-      ? cat.vitamin
-      : Array.isArray(cat.vaccines)
-        ? cat.vaccines
-        : [];
+  const rawMotherCat =
+    toParentString(cat.motherCat ?? cat.mother) ?? cat.motherId;
+  const rawFatherCat =
+    toParentString(cat.fatherCat ?? cat.father) ?? cat.fatherId;
+  const rawVitaminValues = toStringArray(cat.vitamins);
+  const rawVitaminFallbackValues = toStringArray(cat.vitamin);
+  const rawVaccineFallbackValues = toStringArray(cat.vaccines);
+  const rawVitamins =
+    rawVitaminValues.length > 0
+      ? rawVitaminValues
+      : rawVitaminFallbackValues.length > 0
+        ? rawVitaminFallbackValues
+        : rawVaccineFallbackValues;
 
   return {
     id: cat.id,
@@ -111,7 +184,7 @@ export const mapRawCatToEditInitialData = (
     dob: toIsoDateString(cat.dob),
     dod: toIsoDateString(cat.dod),
     dateOfDeath: toIsoDateString(rawDateOfDeath),
-    status: rawStatus,
+    status: normalizeCatStatus(rawStatus),
     currentLocation: rawLocation,
     motherCat:
       rawMotherCat !== undefined && rawMotherCat !== null
@@ -156,8 +229,8 @@ export const mapEditFormDataToUpdateCatDTO = (
     personality: formData.personality,
     colors: mappedColors.length > 0 ? mappedColors : ["Black"],
     classification: toClassification(formData.type),
-    status: formData.adoptionStatus,
+    status: normalizeCatStatus(formData.adoptionStatus),
     currentLocation: formData.location,
-    vitamins: mappedVitamins.length > 0 ? mappedVitamins : undefined,
+    vitamins: mappedVitamins,
   };
 };

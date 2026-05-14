@@ -44,7 +44,13 @@ const typeOptions = [
   "Rescued_KITTENean",
 ];
 const parentOptions = ["Kitteean", "Snowpaw", "Ambertail", "Whisker"];
-const statusOptions = ["Lorem Ipsum", "Available", "Pending", "Adopted"];
+const statusOptions = [
+  "Available",
+  "Adoption_Pending",
+  "Resident",
+  "TooYoung",
+  "NotReady",
+];
 const locationOptions = [
   "MEZZANINE_FLOOR",
   "RODRIGUEZ_HALL",

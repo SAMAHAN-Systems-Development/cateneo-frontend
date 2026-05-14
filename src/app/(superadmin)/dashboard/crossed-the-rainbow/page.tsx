@@ -5,6 +5,7 @@ import * as React from "react";
 import {
   useAdminDeleteCat,
   useAdminUpdateCat,
+  useAdminUpdateCatStatus,
 } from "@/client/mutations/cat-mutations";
 import { useGetAllCats } from "@/client/queries/cat-queries";
 import { getAdminCatById } from "@/client/service/catenean-service";
@@ -21,6 +22,7 @@ import KitteneanCard, {
 import {
   mapEditFormDataToUpdateCatDTO,
   mapRawCatToEditInitialData,
+  normalizeCatStatus,
 } from "@/lib/cat-form-mappers";
 
 type CardColor = CatProps["color"][number];
@@ -138,6 +140,7 @@ export default function Page() {
   } = useGetAllCats(filters);
   const { mutateAsync: deleteCat } = useAdminDeleteCat();
   const { mutateAsync: updateCat } = useAdminUpdateCat();
+  const { mutateAsync: updateCatStatus } = useAdminUpdateCatStatus();
 
   const filteredCats = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -268,6 +271,15 @@ export default function Page() {
                   id: editedCard.id,
                   formData: mapEditFormDataToUpdateCatDTO(formData),
                 });
+                const nextStatus = normalizeCatStatus(formData.adoptionStatus);
+                const currentStatus = normalizeCatStatus(editedCard.status);
+
+                if (nextStatus && nextStatus !== currentStatus) {
+                  await updateCatStatus({
+                    id: editedCard.id,
+                    status: nextStatus,
+                  });
+                }
                 await refetch();
                 setIsEditModalOpen(false);
                 setEditedCard(null);

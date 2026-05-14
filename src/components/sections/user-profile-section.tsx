@@ -14,14 +14,22 @@ export type UserProfileSectionProps = {
   className?: string;
 };
 
+const AVATAR_FALLBACK = "/images/cathead.svg";
+
 export default function UserProfileSection({
   userName = "Andrew Jacob Lomanta",
   roleLabel = "Admin",
   memberSinceLabel = "Member since 2024",
-  avatarSrc = "/cateneo-navbar-logo.svg",
+  avatarSrc = AVATAR_FALLBACK,
   onEditProfile = () => {},
   className,
 }: UserProfileSectionProps) {
+  const [displaySrc, setDisplaySrc] = React.useState(avatarSrc);
+
+  React.useEffect(() => {
+    setDisplaySrc(avatarSrc);
+  }, [avatarSrc]);
+
   return (
     <section className={cn("w-full bg-cateneo-white", className)}>
       {/* Decorative header band */}
@@ -54,12 +62,13 @@ export default function UserProfileSection({
               {/* Tuned inset so avatar sits cleanly within the decorative frame */}
               <div className="absolute left-1/2 top-1/2 h-[50%] w-[50%] -translate-x-1/2 -translate-y-2/5 overflow-hidden rounded-full border-0 border-cateneo-white bg-cateneo-black/10">
                 <Image
-                  src={avatarSrc}
+                  src={displaySrc}
                   alt="User avatar"
                   fill
                   className="object-cover"
                   sizes="(max-width: 640px) 90px, (max-width: 768px) 100px, 110px"
                   priority
+                  onError={() => setDisplaySrc(AVATAR_FALLBACK)}
                 />
               </div>
             </div>

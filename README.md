@@ -4,6 +4,22 @@
 
 Official frontend repository for the **Cateneo Website**, built with **Next JS**
 
+## Project Tech Stack
+
+| Category | Technology |
+| --- | --- |
+| Framework | Next.js 16 |
+| Language | TypeScript |
+| UI Library | React 19 |
+| Styling | Tailwind CSS 4 |
+| UI Components | shadcn/ui, Radix UI |
+| Icons | Lucide React, React Icons |
+| Forms | React Hook Form |
+| Validation | Zod |
+| Data Fetching | TanStack React Query |
+| Testing | Vitest, Testing Library |
+| Linting | ESLint |
+
 ## Pre-requisite Installations
 
 Install the following:

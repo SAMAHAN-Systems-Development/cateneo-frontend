@@ -9,7 +9,6 @@
 | [Pre-requisite Installations](#pre-requisite-installations) | Required apps and VSCode extensions |
 | [Project setup](#project-setup) | Steps for cloning and preparing the project |
 | [Project Folder Structure](#project-folder-structure) | Overview of the main folders and config files |
-| [Running Application](#running-application) | Commands for installing dependencies and running the app |
 
 ## Description
 

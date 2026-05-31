@@ -2,60 +2,43 @@
 
 import * as React from "react";
 
-import { useGetRegisteredAdopters } from "@/client/queries/adopters-queries";
+import { useFindAdoptees } from "@/client/queries/adoptees-queries";
+import type {
+  AdopteeCatDTO,
+  AdopteeDTO,
+} from "@/client/service/adoptees-service";
 import {
   ListOfAdopteesTable,
   type Adoptee,
 } from "@/components/ui/list-of-adoptees-table";
-import type { RegisteredAdoptersResponseDTO } from "@/client/service/adopters-service";
 
-const getTableRows = (
-  data: {
-    full_name?: string;
-    fullName?: string;
-    firstName?: string;
-    lastName?: string;
-    age?: number;
-    contact_number?: string;
-    contactNumber?: string;
-    email?: string;
-    address?: string;
-  }[] = [],
-): Adoptee[] => {
-  return data.map((item) => {
-    const fullName =
-      item.full_name ??
-      item.fullName ??
-      [item.firstName, item.lastName].filter(Boolean).join(" ");
+const formatAdoptedCats = (cats: AdopteeCatDTO[] = []) => {
+  const catNames = cats.map((cat) => cat.name).filter(Boolean);
 
-    return {
-      name: fullName || "-",
-      age: item.age ?? "-",
-      contactNumber: item.contact_number ?? item.contactNumber ?? "-",
-      email: item.email ?? "-",
-      address: item.address ?? "-",
-      adoptedCat: "-",
-    };
-  });
+  return catNames.length ? catNames.join(", ") : "-";
 };
+
+const toTableRow = (adoptee: AdopteeDTO): Adoptee => ({
+  name: adoptee.fullName || "-",
+  age: adoptee.age ?? "-",
+  contactNumber: adoptee.contactNumber || "-",
+  email: adoptee.email || "-",
+  address: adoptee.address || "-",
+  adoptedCat: formatAdoptedCats(adoptee.cats),
+});
 
 const Page = () => {
   const [search, setSearch] = React.useState("");
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
   const [currentPage, setCurrentPage] = React.useState(1);
 
-  const { data, isLoading, isError, error } = useGetRegisteredAdopters(
+  const { data, isLoading, isError, error } = useFindAdoptees(
     currentPage,
     itemsPerPage,
-  ) as {
-    data?: RegisteredAdoptersResponseDTO;
-    isLoading: boolean;
-    isError: boolean;
-    error: unknown;
-  };
+  );
 
   const tableRows = React.useMemo(() => {
-    const rows = getTableRows(data?.data ?? []);
+    const rows = (data?.data ?? []).map(toTableRow);
     const query = search.trim().toLowerCase();
 
     if (!query) return rows;
@@ -76,12 +59,20 @@ const Page = () => {
     });
   }, [data, search]);
 
+  const totalPages = Math.max(1, data?.meta.totalPages ?? 1);
+
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value);
+    setCurrentPage(1);
+  };
+
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [search, itemsPerPage]);
+  }, [search]);
 
-  const isSearching = search.trim().length > 0;
-  const totalPages = isSearching ? 1 : (data?.meta.totalPages ?? 1);
+  React.useEffect(() => {
+    setCurrentPage((page) => Math.min(page, totalPages));
+  }, [totalPages]);
 
   return (
     <main className="w-full px-3 py-6 md:px-5">
@@ -98,9 +89,9 @@ const Page = () => {
           search={search}
           onSearchChange={setSearch}
           itemsPerPage={itemsPerPage}
-          onItemsPerPageChange={setItemsPerPage}
+          onItemsPerPageChange={handleItemsPerPageChange}
           currentPage={currentPage}
-          totalPages={Math.max(1, totalPages)}
+          totalPages={totalPages}
           onPageChange={setCurrentPage}
           isLoading={isLoading}
         />

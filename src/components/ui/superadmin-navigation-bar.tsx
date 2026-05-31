@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -176,7 +176,7 @@ export default function SuperAdminNavigationBar() {
       await createUserMutation.mutateAsync(data);
       setIsCreateAccountOpen(false);
       form.reset();
-    } catch (e) {
+    } catch {
       // Optionally handle error
     }
   }
@@ -187,28 +187,10 @@ export default function SuperAdminNavigationBar() {
   const { data: profile } = useGetMyProfile();
   const { mutateAsync: logout, isPending: isLoggingOut } = useLogout();
 
-  const isVolunteer = normalizeRole(profile?.role) === "VOLUNTEER";
   const isSuperAdmin = normalizeRole(profile?.role) === "SUPERADMIN";
-  const visibleManagementItems = useMemo(() => {
-    if (!isVolunteer) {
-      return managementItems;
-    }
-
-    return managementItems.filter(
-      (item) =>
-        item.href !== "/management/add-new-cat" &&
-        item.href !== "/management/list-of-users",
-    );
-  }, [isVolunteer]);
 
   const isHomeActive = isPathActive(pathname, "/dashboard/cateneans");
   const isProfileActive = isPathActive(pathname, "/profile");
-  const isManagementActive = visibleManagementItems.some((item) =>
-    isPathActive(pathname, item.href),
-  );
-  const isAdoptionsActive = adoptionItems.some((item) =>
-    isPathActive(pathname, item.href),
-  );
 
   const toggleDropdown = (key: DropdownKey) => {
     setOpenDropdown((current) => (current === key ? null : key));
@@ -265,15 +247,17 @@ export default function SuperAdminNavigationBar() {
               </Link>
             </li>
 
-            <DesktopDropdown
-              label="Management"
-              menuKey="management"
-              items={visibleManagementItems}
-              pathname={pathname}
-              openDropdown={openDropdown}
-              onToggle={toggleDropdown}
-              onClose={() => setOpenDropdown(null)}
-            />
+            {isSuperAdmin && (
+              <DesktopDropdown
+                label="Management"
+                menuKey="management"
+                items={managementItems}
+                pathname={pathname}
+                openDropdown={openDropdown}
+                onToggle={toggleDropdown}
+                onClose={() => setOpenDropdown(null)}
+              />
+            )}
 
             <DesktopDropdown
               label="Adoptions"
@@ -357,29 +341,33 @@ export default function SuperAdminNavigationBar() {
               Profile
             </Link>
 
-            <button
-              type="button"
-              className="flex items-center justify-between"
-              onClick={() => toggleDropdown("management")}
-            >
-              Management
-              <ChevronDown
-                className={`size-4 transition-transform ${openDropdown === "management" ? "rotate-180" : ""}`}
-              />
-            </button>
-            {openDropdown === "management" && (
-              <div className="ml-2 flex flex-col gap-2">
-                {visibleManagementItems.map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className={`text-xl ${isPathActive(pathname, item.href) ? "text-cateneo-orange" : "text-cateneo-black"}`}
-                    onClick={closeMenus}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
+            {isSuperAdmin && (
+              <>
+                <button
+                  type="button"
+                  className="flex items-center justify-between"
+                  onClick={() => toggleDropdown("management")}
+                >
+                  Management
+                  <ChevronDown
+                    className={`size-4 transition-transform ${openDropdown === "management" ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {openDropdown === "management" && (
+                  <div className="ml-2 flex flex-col gap-2">
+                    {managementItems.map((item) => (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        className={`text-xl ${isPathActive(pathname, item.href) ? "text-cateneo-orange" : "text-cateneo-black"}`}
+                        onClick={closeMenus}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
 
             <button

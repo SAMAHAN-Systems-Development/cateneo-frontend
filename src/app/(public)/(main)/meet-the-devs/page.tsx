@@ -34,10 +34,10 @@ export default function MeetTheDevelopurrsPage() {
       <Image
         src="/images/black-asset.svg"
         alt=""
-        width={100}
-        height={100}
+        width={113}
+        height={707}
         priority
-        className="pointer-events-none absolute left-0 top-[300vh] z-0 w-20 opacity-80 sm:w-28 md:w-36 lg:w-40"
+        className="pointer-events-none absolute left-0 top-[300vh] z-0 h-auto w-20 opacity-80 max-[413px]:top-[340vh] sm:w-28 md:top-[220vh] md:w-48 lg:top-[300vh] lg:w-40"
       />
       <Image
         src="/images/brown-yarn.svg"
@@ -47,7 +47,7 @@ export default function MeetTheDevelopurrsPage() {
         priority
         className="pointer-events-none absolute right-0 top-[200vh] z-0 w-24 opacity-70 sm:w-32 md:w-40 lg:w-48"
       />
-      
+
       <Image
         src="/faq-page/tr-black.svg"
         alt=""
@@ -56,7 +56,6 @@ export default function MeetTheDevelopurrsPage() {
         priority
         className="pointer-events-none absolute right-0 top-[-100px] z-0 w-24 opacity-70 sm:w-32 md:w-40 lg:w-48"
       />
-
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <header className="mx-auto max-w-3xl text-center">
@@ -95,7 +94,6 @@ export default function MeetTheDevelopurrsPage() {
                 className="w-full"
                 aria-labelledby={`mtv-section-${sectionId}`}
               >
-
                 <div className="mx-auto max-w-3xl text-center">
                   <h2
                     id={`mtv-section-${sectionId}`}
@@ -113,7 +111,10 @@ export default function MeetTheDevelopurrsPage() {
                 {members.length > 0 ? (
                   <ul className="mx-auto mt-8 flex w-full max-w-6xl list-none flex-wrap justify-center gap-x-8 gap-y-12 sm:mt-10 lg:mt-12 lg:gap-y-14">
                     {members.map((member) => (
-                      <li key={member.id} className="flex shrink-0 justify-center">
+                      <li
+                        key={member.id}
+                        className="flex shrink-0 justify-center"
+                      >
                         <MtdCard
                           imageUrl={member.imageUrl}
                           name={member.name}

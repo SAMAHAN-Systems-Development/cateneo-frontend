@@ -26,10 +26,10 @@ export default function MeetTheDevelopurrsPage() {
       <Image
         src="/images/mustard-cat.svg"
         alt=""
-        width={180}
-        height={180}
+        width={237}
+        height={385}
         priority
-        className="pointer-events-none absolute left-0 top-[100vh] z-0 w-20 opacity-80 sm:w-28 md:w-36 lg:w-40"
+        className="pointer-events-none absolute left-0 top-[100vh] z-0 h-auto w-20 opacity-80 max-[413px]:top-[114vh] sm:w-28 md:w-36 lg:w-40"
       />
       <Image
         src="/images/black-asset.svg"

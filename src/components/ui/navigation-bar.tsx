@@ -9,7 +9,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="relative flex z-50 items-center justify-between md:justify-center px-4 py-3 text-white lg:mx-4 md:px-8 md:py-4 md:mx-10 ">
+    <nav className="relative z-50 flex w-full items-center justify-between px-4 py-3 text-white md:justify-center md:gap-4 md:px-6 md:py-4 lg:mx-auto lg:max-w-[calc(100vw-2rem)] lg:px-4 xl:gap-10">
       {/* Desktop-only Logo Section */}
       <div className="hidden md:flex shrink-0 text-xl font-gaegu tracking-wide">
         <Link
@@ -22,6 +22,7 @@ export default function Navbar() {
             width={55}
             height={55}
             priority
+            className="h-12 w-12 xl:h-[55px] xl:w-[55px]"
           />
         </Link>
       </div>
@@ -30,7 +31,7 @@ export default function Navbar() {
       <ul
         className={`${
           isMenuOpen ? "flex" : "hidden"
-        } absolute left-3 top-2 z-50 flex-col min-w-[200px] gap-4 rounded-br-[50px] border-2 border-cateneo-darkbrown bg-cateneo-white p-3 text-cateneo-black text-xl font-gaegu shadow-lg lg:mx-10 lg:gap-30 lg:px-20 md:static md:mx-10 md:mt-0 md:flex md:flex-row md:items-center md:gap-6 md:rounded-full md:bg-cateneo-white md:px-10 md:py-2 shrink-0`}
+        } absolute left-3 top-2 z-50 flex-col min-w-[200px] gap-4 rounded-br-[50px] border-2 border-cateneo-darkbrown bg-cateneo-white p-3 text-cateneo-black text-xl font-gaegu shadow-lg md:static md:mx-0 md:mt-0 md:flex md:flex-row md:items-center md:gap-5 md:rounded-full md:bg-cateneo-white md:px-6 md:py-2 lg:gap-6 lg:px-8 xl:mx-10 xl:gap-30 xl:px-20 shrink-0`}
       >
         {/* Mobile-only Hamburger/Close Button inside the menu */}
         <li className="md:hidden flex mb-4">
@@ -116,7 +117,7 @@ export default function Navbar() {
       </ul>
 
       {/* Desktop Adopt Button */}
-      <div className="hidden md:block text-xl font-gaegu tracking-wide bg-cateneo-lightbrown text-cateneo-white px-10 py-2 rounded-full shrink-0">
+      <div className="hidden shrink-0 rounded-full bg-cateneo-lightbrown px-6 py-2 font-gaegu text-lg tracking-wide text-cateneo-white md:block lg:px-8 xl:px-10 xl:text-xl">
         <Link
           href="/"
           className="hover:opacity-90 transition-opacity duration-200"

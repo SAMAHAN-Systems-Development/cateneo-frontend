@@ -89,7 +89,7 @@ export const mtvTeamMembers: MtvTeamMember[] = [
     id: "hanz-regaldo",
     name: "Hanz Regalado",
     position: "Head Frontend Developer",
-    imageUrl: mtvPlaceholderImageUrl,
+    imageUrl: "/dev-images/Hanz.png",
     section: "frontend",
   },
   {
@@ -192,8 +192,6 @@ export const mtvTeamMembers: MtvTeamMember[] = [
   },
 ];
 
-export function getMtvMembersBySection(
-  section: MtvSectionId,
-): MtvTeamMember[] {
+export function getMtvMembersBySection(section: MtvSectionId): MtvTeamMember[] {
   return mtvTeamMembers.filter((m) => m.section === section);
 }

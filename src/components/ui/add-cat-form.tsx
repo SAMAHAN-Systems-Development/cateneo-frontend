@@ -110,6 +110,7 @@ export default function AddCatForm({
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
 
   const imageFile = useWatch({ control: form.control, name: "image" });
+  const selectedType = useWatch({ control: form.control, name: "type" });
   const selectedVitamins = useWatch({
     control: form.control,
     name: "vitamins",
@@ -122,6 +123,15 @@ export default function AddCatForm({
     control: form.control,
     name: "vaccines",
   });
+
+  const isRescued = selectedType?.startsWith("Rescued_") ?? false;
+
+  // Clear dateRescued when switching away from a rescued classification
+  React.useEffect(() => {
+    if (!isRescued) {
+      form.setValue("dateRescued", "", { shouldValidate: false });
+    }
+  }, [isRescued, form]);
 
   React.useEffect(() => {
     if (!imageFile) {
@@ -235,6 +245,7 @@ export default function AddCatForm({
               options={typeOptions}
             />
             <DateOfBirthField form={form} />
+            {isRescued && <DateRescuedField form={form} />}
             <SelectField
               form={form}
               name="motherCat"
@@ -527,6 +538,58 @@ function DateOfBirthField({ form }: { form: UseFormReturn<AddCatFormData> }) {
       render={({ field, fieldState }) => (
         <FormItem>
           <FormLabel>Date of Birth</FormLabel>
+          <FormControl>
+            <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+              <PopoverPrimitive.Trigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    fieldControlClass,
+                    "flex min-w-0 max-w-full items-center justify-between gap-2 overflow-hidden",
+                  )}
+                >
+                  <span className="min-w-0 flex-1 truncate text-left">
+                    {selectedDate || "mm/dd/yyyy"}
+                  </span>
+                  <Calendar className="size-4 shrink-0" />
+                </button>
+              </PopoverPrimitive.Trigger>
+              <PopoverPrimitive.Portal>
+                <PopoverPrimitive.Content
+                  sideOffset={8}
+                  className="z-50 w-64 rounded-xl border-2 border-cateneo-darkbrown bg-cateneo-white p-3 shadow-md"
+                >
+                  <input
+                    type="date"
+                    value={field.value}
+                    onChange={(event) => {
+                      field.onChange(event.target.value);
+                      setOpen(false);
+                    }}
+                    className={fieldControlClass}
+                  />
+                </PopoverPrimitive.Content>
+              </PopoverPrimitive.Portal>
+            </PopoverPrimitive.Root>
+          </FormControl>
+          <FormMessage>{fieldState.error?.message}</FormMessage>
+        </FormItem>
+      )}
+    />
+  );
+}
+
+function DateRescuedField({ form }: { form: UseFormReturn<AddCatFormData> }) {
+  const selectedDate = form.watch("dateRescued");
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <FormField
+      control={form.control}
+      name="dateRescued"
+      render={({ field, fieldState }) => (
+        <FormItem>
+          <FormLabel>Date Rescued</FormLabel>
           <FormControl>
             <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
               <PopoverPrimitive.Trigger asChild>

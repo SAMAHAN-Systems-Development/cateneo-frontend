@@ -1,11 +1,13 @@
 "use client";
 
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { useAdminCreateCat } from "@/client/mutations/cat-mutations";
 import AddCatForm from "@/components/ui/add-cat-form";
 import RoleGuard from "@/lib/role-guard";
+import { FormErrorPopup } from "./form-error-popup";
 import type {
   CatClassification,
   CatColor,
@@ -102,6 +104,7 @@ const toReproductiveStatus = (values: string[]) => {
 
 const Page = () => {
   const createCatMutation = useAdminCreateCat();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const form = useForm<AddCatFormData>({
     resolver: zodResolver(addCatFormSchema),
@@ -113,6 +116,7 @@ const Page = () => {
       name: data.name,
       sex: data.sex,
       dob: data.dateOfBirth,
+      dateRescued: data.dateRescued || undefined,
       personality: data.personality,
       colors: data.color.map(toCatColor),
       classification: toClassification(data.type),
@@ -126,9 +130,16 @@ const Page = () => {
       imageUrl: undefined,
     };
 
-    await createCatMutation.mutateAsync(payload);
-    form.reset(addCatFormDefaultValues);
+    try {
+      await createCatMutation.mutateAsync(payload);
+      form.reset(addCatFormDefaultValues);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to create cat";
+      setErrorMessage(message);
+    }
   };
+
 
   const handleCancel = () => {
     form.reset(addCatFormDefaultValues);
@@ -146,6 +157,10 @@ const Page = () => {
           />
         </div>
       </main>
+      <FormErrorPopup
+        errorMessage={errorMessage}
+        onClose={() => setErrorMessage(null)}
+      />
     </RoleGuard>
   );
 };

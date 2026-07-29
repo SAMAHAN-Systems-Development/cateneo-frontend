@@ -28,15 +28,17 @@ export const editCatFormSchema = z
     color: z.array(z.string()).min(1, { message: "Color is required" }),
   })
   .superRefine((data, ctx) => {
-    if (data.adoptionStatus !== "Deceased" || data.dateOfDeath.trim()) {
+    if (data.adoptionStatus !== "Deceased") {
       return;
     }
 
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Date of death is required when status is Deceased",
-      path: ["dateOfDeath"],
-    });
+    if (!data.dateOfDeath || !data.dateOfDeath.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Date of death is required when status is Deceased",
+        path: ["dateOfDeath"],
+      });
+    }
   });
 
 export type EditCatFormData = z.infer<typeof editCatFormSchema>;

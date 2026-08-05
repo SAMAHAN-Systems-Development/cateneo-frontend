@@ -26,6 +26,14 @@ type CateneanListResponse =
       results?: Catenean[];
     };
 
+const normalizeCateneanList = (result: CateneanListResponse): Catenean[] => {
+  if (Array.isArray(result)) return result;
+  if (Array.isArray(result?.data)) return result.data;
+  if (Array.isArray(result?.items)) return result.items;
+  if (Array.isArray(result?.results)) return result.results;
+  return [];
+};
+
 export interface CateneanDTO {
   status?: string;
   classification?:
@@ -97,23 +105,7 @@ export const getAllCateneans = async (
     method: "GET",
   });
 
-  if (Array.isArray(result)) {
-    return result;
-  }
-
-  if (Array.isArray(result?.data)) {
-    return result.data;
-  }
-
-  if (Array.isArray(result?.items)) {
-    return result.items;
-  }
-
-  if (Array.isArray(result?.results)) {
-    return result.results;
-  }
-
-  return [];
+  return normalizeCateneanList(result);
 };
 
 export const getCateneanById = async (id: number): Promise<Catenean> => {
@@ -146,23 +138,7 @@ export const getAdminCats = async (
     credentials: "include",
   });
 
-  if (Array.isArray(result)) {
-    return result;
-  }
-
-  if (Array.isArray(result?.data)) {
-    return result.data;
-  }
-
-  if (Array.isArray(result?.items)) {
-    return result.items;
-  }
-
-  if (Array.isArray(result?.results)) {
-    return result.results;
-  }
-
-  return [];
+  return normalizeCateneanList(result);
 };
 
 /**
@@ -204,13 +180,13 @@ export const adminCreateCat = async (
  * Returns eligible mother cats (female, resident)
  */
 export const getEligibleMothers = async (): Promise<Catenean[]> => {
-  const result = await apiClient<Catenean[]>(
+  const result = await apiClient<CateneanListResponse>(
     "/api/admin/cats/parents/mothers",
     {
       method: "GET",
     },
   );
-  return result;
+  return normalizeCateneanList(result);
 };
 
 /**
@@ -218,13 +194,13 @@ export const getEligibleMothers = async (): Promise<Catenean[]> => {
  * Returns eligible father cats (male, resident)
  */
 export const getEligibleFathers = async (): Promise<Catenean[]> => {
-  const result = await apiClient<Catenean[]>(
+  const result = await apiClient<CateneanListResponse>(
     "/api/admin/cats/parents/fathers",
     {
       method: "GET",
     },
   );
-  return result;
+  return normalizeCateneanList(result);
 };
 
 /**

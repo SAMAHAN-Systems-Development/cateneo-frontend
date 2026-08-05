@@ -2,13 +2,19 @@
 
 import * as React from "react";
 import Image from "next/image";
+import { format, parseISO } from "date-fns";
 import { useWatch, type UseFormReturn } from "react-hook-form";
-import { Popover as PopoverPrimitive } from "radix-ui";
-import { Calendar, Plus, Upload } from "lucide-react";
+import { CalendarIcon, Plus, Upload } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Form,
   FormControl,
@@ -528,7 +534,6 @@ export default function AddCatForm({
 }
 
 function DateOfBirthField({ form }: { form: UseFormReturn<AddCatFormData> }) {
-  const selectedDate = form.watch("dateOfBirth");
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -539,38 +544,44 @@ function DateOfBirthField({ form }: { form: UseFormReturn<AddCatFormData> }) {
         <FormItem>
           <FormLabel>Date of Birth</FormLabel>
           <FormControl>
-            <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
-              <PopoverPrimitive.Trigger asChild>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
                 <button
                   type="button"
+                  aria-label="Choose date of birth"
                   className={cn(
                     fieldControlClass,
                     "flex min-w-0 max-w-full items-center justify-between gap-2 overflow-hidden",
                   )}
                 >
                   <span className="min-w-0 flex-1 truncate text-left">
-                    {selectedDate || "mm/dd/yyyy"}
+                    {field.value
+                      ? format(parseISO(field.value), "MM/dd/yyyy")
+                      : "mm/dd/yyyy"}
                   </span>
-                  <Calendar className="size-4 shrink-0" />
+                  <CalendarIcon className="size-4 shrink-0" />
                 </button>
-              </PopoverPrimitive.Trigger>
-              <PopoverPrimitive.Portal>
-                <PopoverPrimitive.Content
-                  sideOffset={8}
-                  className="z-50 w-64 rounded-xl border-2 border-cateneo-darkbrown bg-cateneo-white p-3 shadow-md"
-                >
-                  <input
-                    type="date"
-                    value={field.value}
-                    onChange={(event) => {
-                      field.onChange(event.target.value);
-                      setOpen(false);
-                    }}
-                    className={fieldControlClass}
-                  />
-                </PopoverPrimitive.Content>
-              </PopoverPrimitive.Portal>
-            </PopoverPrimitive.Root>
+              </PopoverTrigger>
+              <PopoverContent
+                align="start"
+                sideOffset={8}
+                className="w-auto rounded-xl border-2 border-cateneo-darkbrown bg-cateneo-white p-1 font-gaegu text-cateneo-darkbrown"
+              >
+                <Calendar
+                  mode="single"
+                  captionLayout="dropdown"
+                  selected={field.value ? parseISO(field.value) : undefined}
+                  onSelect={(date) => {
+                    if (!date) return;
+                    field.onChange(format(date, "yyyy-MM-dd"));
+                    setOpen(false);
+                  }}
+                  disabled={{ after: new Date() }}
+                  endMonth={new Date()}
+                  startMonth={new Date(new Date().getFullYear() - 30, 0)}
+                />
+              </PopoverContent>
+            </Popover>
           </FormControl>
           <FormMessage>{fieldState.error?.message}</FormMessage>
         </FormItem>
@@ -580,7 +591,6 @@ function DateOfBirthField({ form }: { form: UseFormReturn<AddCatFormData> }) {
 }
 
 function DateRescuedField({ form }: { form: UseFormReturn<AddCatFormData> }) {
-  const selectedDate = form.watch("dateRescued");
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -591,38 +601,44 @@ function DateRescuedField({ form }: { form: UseFormReturn<AddCatFormData> }) {
         <FormItem>
           <FormLabel>Date Rescued</FormLabel>
           <FormControl>
-            <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
-              <PopoverPrimitive.Trigger asChild>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
                 <button
                   type="button"
+                  aria-label="Choose date rescued"
                   className={cn(
                     fieldControlClass,
                     "flex min-w-0 max-w-full items-center justify-between gap-2 overflow-hidden",
                   )}
                 >
                   <span className="min-w-0 flex-1 truncate text-left">
-                    {selectedDate || "mm/dd/yyyy"}
+                    {field.value
+                      ? format(parseISO(field.value), "MM/dd/yyyy")
+                      : "mm/dd/yyyy"}
                   </span>
-                  <Calendar className="size-4 shrink-0" />
+                  <CalendarIcon className="size-4 shrink-0" />
                 </button>
-              </PopoverPrimitive.Trigger>
-              <PopoverPrimitive.Portal>
-                <PopoverPrimitive.Content
-                  sideOffset={8}
-                  className="z-50 w-64 rounded-xl border-2 border-cateneo-darkbrown bg-cateneo-white p-3 shadow-md"
-                >
-                  <input
-                    type="date"
-                    value={field.value}
-                    onChange={(event) => {
-                      field.onChange(event.target.value);
-                      setOpen(false);
-                    }}
-                    className={fieldControlClass}
-                  />
-                </PopoverPrimitive.Content>
-              </PopoverPrimitive.Portal>
-            </PopoverPrimitive.Root>
+              </PopoverTrigger>
+              <PopoverContent
+                align="start"
+                sideOffset={8}
+                className="w-auto rounded-xl border-2 border-cateneo-darkbrown bg-cateneo-white p-1 font-gaegu text-cateneo-darkbrown"
+              >
+                <Calendar
+                  mode="single"
+                  captionLayout="dropdown"
+                  selected={field.value ? parseISO(field.value) : undefined}
+                  onSelect={(date) => {
+                    if (!date) return;
+                    field.onChange(format(date, "yyyy-MM-dd"));
+                    setOpen(false);
+                  }}
+                  disabled={{ after: new Date() }}
+                  endMonth={new Date()}
+                  startMonth={new Date(new Date().getFullYear() - 30, 0)}
+                />
+              </PopoverContent>
+            </Popover>
           </FormControl>
           <FormMessage>{fieldState.error?.message}</FormMessage>
         </FormItem>

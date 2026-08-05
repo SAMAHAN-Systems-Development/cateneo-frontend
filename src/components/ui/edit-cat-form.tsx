@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Calendar, Plus, Upload } from "lucide-react";
-import { Popover as PopoverPrimitive } from "radix-ui";
+import { format, parseISO } from "date-fns";
+import { CalendarIcon, Plus, Upload } from "lucide-react";
 import { type UseFormReturn, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -14,7 +14,13 @@ import {
 import { cn } from "@/lib/utils";
 import { normalizeCatStatus } from "@/lib/cat-form-mappers";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Form,
   FormControl,
@@ -183,13 +189,14 @@ const withSelectedParentOptions = (
   selected?: string,
   currentCatId?: number,
 ): SelectOption[] => {
-  const parentOptions =
-    parents
-      ?.filter((parent) => parent.id !== currentCatId)
-      .map((parent) => ({
+  const parentOptions = Array.isArray(parents)
+    ? parents
+        .filter((parent) => parent.id !== currentCatId)
+        .map((parent) => ({
         value: String(parent.id),
         label: parent.name ?? `Cat #${parent.id}`,
-      })) ?? [];
+        }))
+    : [];
 
   if (!selected || parentOptions.some((option) => option.value === selected)) {
     return parentOptions;
@@ -415,7 +422,7 @@ export default function EditCatForm({
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(
-          "mx-auto box-border w-full max-w-[70%] overflow-x-hidden rounded-3xl bg-cateneo-white p-4 text-center font-gaegu text-cateneo-darkbrown sm:max-w-md md:max-w-xl md:p-6 lg:max-w-none lg:text-left",
+          "mx-auto box-border max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100vw-2rem)] overflow-x-hidden overflow-y-auto overscroll-contain rounded-3xl bg-cateneo-white p-4 text-center font-gaegu text-cateneo-darkbrown sm:max-w-md md:max-w-xl md:p-6 lg:max-w-none lg:text-left",
           className,
         )}
       >
@@ -640,7 +647,7 @@ export default function EditCatForm({
                   <FormControl>
                     <label
                       htmlFor="cat-image-upload"
-                      className="mx-auto relative flex aspect-square w-full max-w-80 cursor-pointer items-center justify-center rounded-xl border-2 border-cateneo-darkbrown bg-white lg:mx-0"
+                      className="relative mx-auto flex aspect-square w-full max-w-48 cursor-pointer items-center justify-center rounded-xl border-2 border-cateneo-darkbrown bg-white sm:max-w-64 lg:mx-0 lg:max-w-80"
                     >
                       <span className="absolute right-3 top-3 inline-flex size-8 items-center justify-center rounded-full bg-cateneo-black text-cateneo-white ">
                         <Plus className="size-4" />
@@ -762,7 +769,6 @@ function DatePickerField({
   name: "dateOfBirth" | "dateOfDeath";
   label: string;
 }) {
-  const selectedDate = form.watch(name) as string;
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -773,32 +779,43 @@ function DatePickerField({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
-              <PopoverPrimitive.Trigger asChild>
-                <button type="button" className={dateButtonClass}>
-                  <span className="min-w-0 flex-1 truncate text-left">
-                    {selectedDate || "mm/dd/yyyy"}
-                  </span>
-                  <Calendar className="size-4 shrink-0" />
-                </button>
-              </PopoverPrimitive.Trigger>
-              <PopoverPrimitive.Portal>
-                <PopoverPrimitive.Content
-                  sideOffset={8}
-                  className="z-50 w-64 rounded-xl border-2 border-cateneo-darkbrown bg-cateneo-white p-3 shadow-md"
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  aria-label={`Choose ${label.toLowerCase()}`}
+                  className={dateButtonClass}
                 >
-                  <input
-                    type="date"
-                    value={(field.value ?? "") as string}
-                    onChange={(event) => {
-                      field.onChange(event.target.value);
-                      setOpen(false);
-                    }}
-                    className={fieldControlClass}
-                  />
-                </PopoverPrimitive.Content>
-              </PopoverPrimitive.Portal>
-            </PopoverPrimitive.Root>
+                  <span className="min-w-0 flex-1 truncate text-left">
+                    {field.value
+                      ? format(parseISO(field.value as string), "MM/dd/yyyy")
+                      : "mm/dd/yyyy"}
+                  </span>
+                  <CalendarIcon className="size-4 shrink-0" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent
+                align="start"
+                sideOffset={8}
+                className="w-auto rounded-xl border-2 border-cateneo-darkbrown bg-cateneo-white p-1 font-gaegu text-cateneo-darkbrown"
+              >
+                <Calendar
+                  mode="single"
+                  captionLayout="dropdown"
+                  selected={
+                    field.value ? parseISO(field.value as string) : undefined
+                  }
+                  onSelect={(date) => {
+                    if (!date) return;
+                    field.onChange(format(date, "yyyy-MM-dd"));
+                    setOpen(false);
+                  }}
+                  disabled={{ after: new Date() }}
+                  endMonth={new Date()}
+                  startMonth={new Date(new Date().getFullYear() - 30, 0)}
+                />
+              </PopoverContent>
+            </Popover>
           </FormControl>
           <FormMessage>{fieldState.error?.message}</FormMessage>
         </FormItem>

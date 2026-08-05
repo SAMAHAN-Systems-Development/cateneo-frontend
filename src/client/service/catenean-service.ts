@@ -24,7 +24,20 @@ type CateneanListResponse =
       data?: Catenean[];
       items?: Catenean[];
       results?: Catenean[];
+      meta?: Partial<CateneanPaginationMeta>;
     };
+
+export interface CateneanPaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface CateneanPage {
+  data: Catenean[];
+  meta: CateneanPaginationMeta;
+}
 
 const normalizeCateneanList = (result: CateneanListResponse): Catenean[] => {
   if (Array.isArray(result)) return result;
@@ -34,18 +47,36 @@ const normalizeCateneanList = (result: CateneanListResponse): Catenean[] => {
   return [];
 };
 
+const normalizeCateneanPage = (
+  result: CateneanListResponse,
+  requestedPage = 1,
+  requestedLimit = 10,
+): CateneanPage => {
+  const data = normalizeCateneanList(result);
+  const meta = Array.isArray(result) ? undefined : result.meta;
+  const total = meta?.total ?? data.length;
+  const limit = meta?.limit ?? requestedLimit;
+
+  return {
+    data,
+    meta: {
+      total,
+      page: meta?.page ?? requestedPage,
+      limit,
+      totalPages: meta?.totalPages ?? Math.max(1, Math.ceil(total / limit)),
+    },
+  };
+};
+
 export interface CateneanDTO {
-  status?: string;
-  classification?:
-    | "CATenean"
-    | "KITTENean"
-    | "Rescued_CATenean"
-    | "Rescued_KITTENean";
-  type?: string;
-  sex?: string;
+  page?: number;
+  limit?: number;
+  status?: CatStatus;
+  classification?: CatClassification;
+  type?: "catenean" | "kittenean";
+  sex?: Sex;
   name?: string;
-  reproductiveStatus?: string;
-  currentLocation?: string;
+  reproductiveStatus?: ReproductiveStatus;
 }
 
 export type Sex = "Male" | "Female";
@@ -84,32 +115,43 @@ export interface UpdateCatDTO extends Partial<CreateNewCatDTO> {
   currentLocation?: CatLocation;
 }
 
+export const getCatColors = () => apiClient<CatColor[]>("/api/cats/colors");
+
 export const getAllCateneans = async (
   filters?: CateneanDTO,
-): Promise<Catenean[]> => {
+): Promise<CateneanPage> => {
   const queryParams = new URLSearchParams();
 
-  if (filters) {
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== "") {
-        queryParams.set(key, String(value));
-      }
-    });
+  if (filters?.page !== undefined) {
+    queryParams.set("page", String(filters.page));
+  }
+  if (filters?.limit !== undefined) {
+    queryParams.set("limit", String(filters.limit));
+  }
+  if (filters?.status) queryParams.set("status", filters.status);
+  if (filters?.classification) {
+    queryParams.set("classification", filters.classification);
+  }
+  if (filters?.type) queryParams.set("type", filters.type);
+  if (filters?.sex) queryParams.set("sex", filters.sex);
+  if (filters?.name) queryParams.set("name", filters.name);
+  if (filters?.reproductiveStatus) {
+    queryParams.set("reproductiveStatus", filters.reproductiveStatus);
   }
 
   const endpoint = queryParams.toString()
-    ? `/api/public/cats?${queryParams.toString()}`
-    : "/api/public/cats";
+    ? `/api/cats?${queryParams.toString()}`
+    : "/api/cats";
 
   const result = await apiClient<CateneanListResponse>(endpoint, {
     method: "GET",
   });
 
-  return normalizeCateneanList(result);
+  return normalizeCateneanPage(result, filters?.page, filters?.limit);
 };
 
 export const getCateneanById = async (id: number): Promise<Catenean> => {
-  const result = await apiClient<Catenean>(`/api/public/cats/${id}`, {
+  const result = await apiClient<Catenean>(`/api/cats/${id}`, {
     method: "GET",
   });
 
@@ -130,8 +172,8 @@ export const getAdminCats = async (
   }
 
   const endpoint = queryParams.toString()
-    ? `/api/admin/cats?${queryParams.toString()}`
-    : "/api/admin/cats";
+    ? `/api/cats/admin?${queryParams.toString()}`
+    : "/api/cats/admin";
 
   const result = await apiClient<CateneanListResponse>(endpoint, {
     method: "GET",
@@ -142,7 +184,7 @@ export const getAdminCats = async (
 };
 
 /**
- * POST /api/admin/cats/create
+ * POST /api/cats/admin
  * SuperAdmin only - creates a new cat record
  */
 
@@ -167,7 +209,7 @@ export const adminCreateCat = async (
     vitamins: formData.vitamins,
     vaccines: formData.vaccines,
   };
-  const result = await apiClient<Catenean>("/api/admin/cats/create", {
+  const result = await apiClient<Catenean>("/api/cats/admin", {
     method: "POST",
     body: JSON.stringify(payload),
     credentials: "include",
@@ -176,12 +218,12 @@ export const adminCreateCat = async (
 };
 
 /**
- * GET /api/admin/cats/parents/mothers
+ * GET /api/cats/admin/parents/mothers
  * Returns eligible mother cats (female, resident)
  */
 export const getEligibleMothers = async (): Promise<Catenean[]> => {
   const result = await apiClient<CateneanListResponse>(
-    "/api/admin/cats/parents/mothers",
+    "/api/cats/admin/parents/mothers",
     {
       method: "GET",
     },
@@ -190,12 +232,12 @@ export const getEligibleMothers = async (): Promise<Catenean[]> => {
 };
 
 /**
- * GET /api/admin/cats/parents/fathers
+ * GET /api/cats/admin/parents/fathers
  * Returns eligible father cats (male, resident)
  */
 export const getEligibleFathers = async (): Promise<Catenean[]> => {
   const result = await apiClient<CateneanListResponse>(
-    "/api/admin/cats/parents/fathers",
+    "/api/cats/admin/parents/fathers",
     {
       method: "GET",
     },
@@ -204,19 +246,19 @@ export const getEligibleFathers = async (): Promise<Catenean[]> => {
 };
 
 /**
- * GET /api/admin/cats/:id
+ * GET /api/cats/admin/:id
  * Any Admin - fetches full admin details
  */
 
 export const getAdminCatById = async (id: number): Promise<Catenean> => {
-  const result = await apiClient<Catenean>(`/api/admin/cats/${id}`, {
+  const result = await apiClient<Catenean>(`/api/cats/admin/${id}`, {
     method: "GET",
   });
   return result;
 };
 
 /**
- * PATCH /api/admin/cats/:id
+ * PATCH /api/cats/admin/:id
  * Any Admin - updates general info
  */
 
@@ -242,7 +284,7 @@ export const adminUpdateCat = async (
     vaccines: formData.vaccines,
     personality: formData.personality,
   };
-  const result = await apiClient<Catenean>(`/api/admin/cats/${id}`, {
+  const result = await apiClient<Catenean>(`/api/cats/admin/${id}`, {
     method: "PATCH",
     body: JSON.stringify(payload),
     credentials: "include",
@@ -251,7 +293,7 @@ export const adminUpdateCat = async (
 };
 
 /**
- * PATCH /api/admin/cats/:id/status
+ * PATCH /api/cats/admin/:id/status
  * Any Admin - updates status field
  */
 
@@ -265,7 +307,7 @@ export const adminUpdateCatStatus = async (
     adopterId,
   };
 
-  const result = await apiClient<Catenean>(`/api/admin/cats/${id}/status`, {
+  const result = await apiClient<Catenean>(`/api/cats/admin/${id}/status`, {
     method: "PATCH",
     body: JSON.stringify(payload),
     credentials: "include",
@@ -274,7 +316,7 @@ export const adminUpdateCatStatus = async (
 };
 
 /**
- * PATCH /api/admin/cats/:id/adopt
+ * POST /api/cats/admin/:id/adoption
  * Any Admin - finalizes adoption
  */
 
@@ -290,16 +332,19 @@ export const adminAdoptCat = async (
   const payload = {
     adopterName,
   };
-  const result = await apiClient<Catenean>(`/api/admin/cats/${id}/adopt`, {
-    method: "PATCH",
-    body: JSON.stringify(payload),
-    credentials: "include",
-  });
+  const result = await apiClient<Catenean>(
+    `/api/cats/admin/${id}/adoption`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+      credentials: "include",
+    },
+  );
   return result;
 };
 
 /**
- * POST /api/admin/cats/adopt-atomic
+ * POST /api/cats/admin/adoptions
  * Atomic adoption: creates adopter and links cat in a single transaction
  */
 
@@ -311,7 +356,7 @@ export const adminAtomicAdoptCat = async (
     catId: catId.toString(),
     adopterName,
   };
-  const result = await apiClient<Catenean>("/api/admin/cats/adopt-atomic", {
+  const result = await apiClient<Catenean>("/api/cats/admin/adoptions", {
     method: "POST",
     body: JSON.stringify(payload),
     credentials: "include",
@@ -320,27 +365,27 @@ export const adminAtomicAdoptCat = async (
 };
 
 /**
- * DELETE /api/admin/cats/:id
+ * DELETE /api/cats/admin/:id
  * SuperAdmin only - hard delete a cat if all business rules are satisfied
  */
 
 export const adminDeleteCat = async (id: number): Promise<void> => {
-  await apiClient(`/api/admin/cats/${id}`, {
+  await apiClient(`/api/cats/admin/${id}`, {
     method: "DELETE",
     credentials: "include",
   });
 };
 
 /**
- * POST /api/admin/cats/:id/revert-adoption
+ * DELETE /api/cats/admin/:id/adoption
  * Reverts a cat adoption (makes cat available again)
  */
 
 export const adminRevertAdoption = async (id: number): Promise<Catenean> => {
   const result = await apiClient<Catenean>(
-    `/api/admin/cats/${id}/revert-adoption`,
+    `/api/cats/admin/${id}/adoption`,
     {
-      method: "POST",
+      method: "DELETE",
       credentials: "include",
     },
   );

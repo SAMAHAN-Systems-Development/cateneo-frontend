@@ -39,7 +39,7 @@ export const findAdoptees = async (
   });
 
   return apiClient<FindAdopteesResponseDTO>(
-    `/api/admin/adopters/adoptees?${params.toString()}`,
+    `/api/adopters/?${params.toString()}`,
     {
       method: "GET",
       credentials: "include",

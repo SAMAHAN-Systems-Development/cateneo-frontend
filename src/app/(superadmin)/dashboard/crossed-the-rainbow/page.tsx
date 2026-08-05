@@ -119,6 +119,8 @@ const isKittenClassification = (value: string) =>
 
 export default function Page() {
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [page, setPage] = React.useState(1);
+  const [limit, setLimit] = React.useState(5);
   const [editedCard, setEditedCard] = React.useState<EditCatInitialData | null>(
     null,
   );
@@ -129,11 +131,16 @@ export default function Page() {
   } | null>(null);
 
   const filters = React.useMemo<CateneanDTO>(
-    () => ({ status: "deceased" }),
-    [],
+    () => ({
+      status: "deceased",
+      page,
+      limit,
+      name: searchQuery.trim() || undefined,
+    }),
+    [limit, page, searchQuery],
   );
   const {
-    data: deadCats = [],
+    data: deadCatsPage,
     isLoading,
     isError,
     refetch,
@@ -144,7 +151,9 @@ export default function Page() {
 
   const filteredCats = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    const cats = Array.isArray(deadCats) ? (deadCats as RawCat[]) : [];
+    const cats = Array.isArray(deadCatsPage?.data)
+      ? (deadCatsPage.data as RawCat[])
+      : [];
 
     if (!query) return cats;
 
@@ -156,7 +165,7 @@ export default function Page() {
         cat.classification.toLowerCase().includes(query)
       );
     });
-  }, [deadCats, searchQuery]);
+  }, [deadCatsPage, searchQuery]);
 
   const handleEditClick = async (catId: number) => {
     const detailedCat = await getAdminCatById(catId);
@@ -169,12 +178,23 @@ export default function Page() {
       <DashboardCategoryShell
         title="Crossed the Rainbow"
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={(value) => {
+          setSearchQuery(value);
+          setPage(1);
+        }}
         searchPlaceholder="Search for crossed cats"
         isLoading={isLoading}
         errorMessage={
           isError ? "Failed to load crossed-the-rainbow cats." : null
         }
+        page={page}
+        limit={limit}
+        totalPages={deadCatsPage?.meta.totalPages ?? 1}
+        onPageChange={setPage}
+        onLimitChange={(value) => {
+          setLimit(value);
+          setPage(1);
+        }}
       >
         {filteredCats.length === 0 ? (
           <p className="font-gaegu text-2xl text-cateneo-darkbrown">

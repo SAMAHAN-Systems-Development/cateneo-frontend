@@ -36,7 +36,7 @@ type UserListResponse =
     };
 
 export const getMyProfile = async (): Promise<User> => {
-  const result = await apiClient<User>(`/api/admin/users/me`, {
+  const result = await apiClient<User>(`/api/users/me`, {
     method: "GET",
     credentials: "include",
   });
@@ -47,7 +47,7 @@ export const getMyProfile = async (): Promise<User> => {
 export const updateMyProfile = async (
   userData: UpdateUserDTO,
 ): Promise<User> => {
-  const result = await apiClient<User>(`/api/admin/users/me`, {
+  const result = await apiClient<User>(`/api/users/me`, {
     method: "PATCH",
     body: JSON.stringify(userData),
     credentials: "include",
@@ -65,7 +65,7 @@ export const updateMyPassword = async (
     newPassword,
   };
 
-  await apiClient(`/api/admin/users/me/password`, {
+  await apiClient(`/api/users/me/password`, {
     method: "PUT",
     body: JSON.stringify(payload),
     credentials: "include",
@@ -88,9 +88,7 @@ export const findAllUsers = async (
   }
 
   const queryString = query.toString();
-  const path = queryString
-    ? `/api/admin/users?${queryString}`
-    : `/api/admin/users`;
+  const path = queryString ? `/api/users?${queryString}` : `/api/users`;
 
   const result = await apiClient<UserListResponse>(path, {
     method: "GET",
@@ -121,7 +119,7 @@ export const findAllUsers = async (
 };
 
 export const findUserById = async (id: string): Promise<User> => {
-  const result = await apiClient<User>(`/api/admin/users/${id}`, {
+  const result = await apiClient<User>(`/api/users/${id}`, {
     method: "GET",
     credentials: "include",
   });
@@ -132,7 +130,7 @@ export const updateUserByAdmin = async (
   id: string,
   userData: UpdateUserByAdminDTO,
 ): Promise<User> => {
-  const result = await apiClient<User>(`/api/admin/users/${id}`, {
+  const result = await apiClient<User>(`/api/users/${id}`, {
     method: "PATCH",
     body: JSON.stringify(userData),
     credentials: "include",
@@ -144,7 +142,7 @@ export const changeUserPasswordService = async (formData: {
   currentPassword: string;
   newPassword: string;
 }): Promise<void> => {
-  await apiClient(`/api/admin/users/me/password`, {
+  await apiClient(`/api/users/me/password`, {
     method: "PATCH",
     body: JSON.stringify(formData),
     credentials: "include",
@@ -152,7 +150,7 @@ export const changeUserPasswordService = async (formData: {
 };
 
 export const softDeleteUser = async (id: string): Promise<User> => {
-  const result = await apiClient<User>(`/api/admin/users/${id}`, {
+  const result = await apiClient<User>(`/api/users/${id}`, {
     method: "PATCH",
     credentials: "include",
   });
@@ -160,7 +158,7 @@ export const softDeleteUser = async (id: string): Promise<User> => {
 };
 
 export const reactivateUser = async (id: string): Promise<User> => {
-  const result = await apiClient<User>(`/api/admin/users/${id}/reactivate`, {
+  const result = await apiClient<User>(`/api/users/${id}/reactivate`, {
     method: "PATCH",
     credentials: "include",
   });

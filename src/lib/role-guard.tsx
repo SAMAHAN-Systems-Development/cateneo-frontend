@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { apiClient } from "@/lib/api-client";
+import { getMyProfile } from "@/client/service/user-service";
 
 type Role = "ADMIN" | "SUPERADMIN" | "VOLUNTEER";
 
@@ -50,12 +50,9 @@ const RoleGuard = ({
 
     let disposed = false;
 
-    const hydrateCurrentUser = async () => {
+    const loadCurrentUser = async () => {
       try {
-        const me = await apiClient<{ role: string }>("/api/admin/users/me", {
-          method: "GET",
-          credentials: "include",
-        });
+        const me = await getMyProfile();
 
         if (disposed) return;
 
@@ -73,7 +70,7 @@ const RoleGuard = ({
       }
     };
 
-    hydrateCurrentUser();
+    void loadCurrentUser();
 
     return () => {
       disposed = true;

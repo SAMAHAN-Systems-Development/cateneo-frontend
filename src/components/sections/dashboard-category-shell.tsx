@@ -3,10 +3,17 @@
 import type { ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import TabButton from "@/components/ui/tab-button";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
-
-import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { href: "/dashboard/cateneans", label: "Cateneans" },
@@ -24,6 +31,11 @@ type DashboardCategoryShellProps = {
   searchPlaceholder?: string;
   isLoading?: boolean;
   errorMessage?: string | null;
+  page: number;
+  limit: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  onLimitChange: (limit: number) => void;
   children: ReactNode;
 };
 
@@ -39,6 +51,11 @@ export default function DashboardCategoryShell({
   searchPlaceholder = "Search for Cat",
   isLoading = false,
   errorMessage = null,
+  page,
+  limit,
+  totalPages,
+  onPageChange,
+  onLimitChange,
   children,
 }: DashboardCategoryShellProps) {
   const pathname = usePathname();
@@ -82,8 +99,8 @@ export default function DashboardCategoryShell({
           </nav>
         </div>
 
-        <div className="mt-4 w-full max-w-sm">
-          <div className="relative">
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative w-full max-w-sm">
             <input
               type="text"
               value={searchQuery}
@@ -104,6 +121,54 @@ export default function DashboardCategoryShell({
               <circle cx="11" cy="11" r="7" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 font-gaegu text-cateneo-darkbrown">
+            <span className="text-lg">Show</span>
+            <Select
+              value={String(limit)}
+              onValueChange={(value) => onLimitChange(Number(value))}
+            >
+              <SelectTrigger className="h-10 w-20 rounded-lg border-2 border-cateneo-darkbrown bg-cateneo-white px-2.5 font-gaegu text-lg text-cateneo-darkbrown shadow-none outline-none focus-visible:border-cateneo-darkbrown focus-visible:ring-3 focus-visible:ring-ring/50 [&_svg]:text-cateneo-darkbrown">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="rounded-lg border-2 border-cateneo-darkbrown bg-cateneo-white p-1 font-gaegu shadow-md">
+                {[5, 10, 15, 20].map((value) => (
+                  <SelectItem
+                    key={value}
+                    value={String(value)}
+                    className="rounded-md py-2 pr-8 pl-2 font-gaegu text-base text-cateneo-darkbrown outline-none focus:bg-cateneo-orange/15 focus:text-cateneo-darkbrown data-[highlighted]:bg-cateneo-orange/15 data-[highlighted]:text-cateneo-darkbrown [&_svg]:text-cateneo-darkbrown"
+                  >
+                    {value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label="Previous page"
+              disabled={page <= 1}
+              onClick={() => onPageChange(page - 1)}
+              className="border-2 border-cateneo-lightbrown"
+            >
+              <ChevronLeft />
+            </Button>
+            <span className="min-w-24 text-center text-lg">
+              Page {page} of {Math.max(1, totalPages)}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label="Next page"
+              disabled={page >= totalPages}
+              onClick={() => onPageChange(page + 1)}
+              className="border-2 border-cateneo-lightbrown"
+            >
+              <ChevronRight />
+            </Button>
           </div>
         </div>
 

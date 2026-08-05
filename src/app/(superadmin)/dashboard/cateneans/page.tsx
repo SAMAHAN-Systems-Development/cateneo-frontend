@@ -127,6 +127,8 @@ const mapCatsToCardData = (cats: RawCat[] | undefined): DashboardCardData[] => {
 
 export default function Page() {
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [page, setPage] = React.useState(1);
+  const [limit, setLimit] = React.useState(5);
   const [editedCard, setEditedCard] = React.useState<EditCatInitialData | null>(
     null,
   );
@@ -136,9 +138,17 @@ export default function Page() {
     name: string;
   } | null>(null);
 
-  const filters = React.useMemo<CateneanDTO>(() => ({ type: "catenean" }), []);
+  const filters = React.useMemo<CateneanDTO>(
+    () => ({
+      type: "catenean",
+      page,
+      limit,
+      name: searchQuery.trim() || undefined,
+    }),
+    [limit, page, searchQuery],
+  );
   const {
-    data: adminCats = [],
+    data: catsPage,
     isLoading,
     isError,
     refetch,
@@ -148,8 +158,8 @@ export default function Page() {
   const { mutateAsync: updateCatStatus } = useAdminUpdateCatStatus();
 
   const cats = React.useMemo(
-    () => mapCatsToCardData(adminCats as RawCat[]),
-    [adminCats],
+    () => mapCatsToCardData(catsPage?.data as RawCat[] | undefined),
+    [catsPage?.data],
   );
 
   const filteredCats = React.useMemo(() => {
@@ -178,10 +188,21 @@ export default function Page() {
       <DashboardCategoryShell
         title="Cateneans"
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={(value) => {
+          setSearchQuery(value);
+          setPage(1);
+        }}
         searchPlaceholder="Search for Cateneans"
         isLoading={isLoading}
         errorMessage={errorMessage}
+        page={page}
+        limit={limit}
+        totalPages={catsPage?.meta.totalPages ?? 1}
+        onPageChange={setPage}
+        onLimitChange={(value) => {
+          setLimit(value);
+          setPage(1);
+        }}
       >
         {filteredCats.length === 0 ? (
           <p className="font-gaegu text-2xl text-cateneo-darkbrown">

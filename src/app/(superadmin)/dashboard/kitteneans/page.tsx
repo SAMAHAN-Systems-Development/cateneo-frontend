@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { FormErrorPopup } from "@/app/(superadmin)/management/add-new-cat/form-error-popup";
 
 import {
   useAdminDeleteCat,
@@ -170,6 +171,9 @@ export default function Page() {
   const { mutateAsync: deleteCat } = useAdminDeleteCat();
   const { mutateAsync: updateCat } = useAdminUpdateCat();
   const { mutateAsync: updateCatStatus } = useAdminUpdateCatStatus();
+  const [editErrorMessage, setEditErrorMessage] = React.useState<string | null>(
+    null,
+  );
 
   const kittens = React.useMemo(
     () => mapCatsToCardData(kittenPage?.data as RawCat[] | undefined),
@@ -268,22 +272,32 @@ export default function Page() {
               onSubmit={async (formData) => {
                 if (!editedCard.id) return;
 
-                await updateCat({
-                  id: editedCard.id,
-                  formData: mapEditFormDataToUpdateCatDTO(formData),
-                });
-                const nextStatus = normalizeCatStatus(formData.adoptionStatus);
-                const currentStatus = normalizeCatStatus(editedCard.status);
-
-                if (nextStatus && nextStatus !== currentStatus) {
-                  await updateCatStatus({
+                try {
+                  await updateCat({
                     id: editedCard.id,
-                    status: nextStatus,
+                    formData: mapEditFormDataToUpdateCatDTO(formData),
                   });
+                  const nextStatus = normalizeCatStatus(
+                    formData.adoptionStatus,
+                  );
+                  const currentStatus = normalizeCatStatus(editedCard.status);
+
+                  if (nextStatus && nextStatus !== currentStatus) {
+                    await updateCatStatus({
+                      id: editedCard.id,
+                      status: nextStatus,
+                    });
+                  }
+                  await refetch();
+                  setIsEditModalOpen(false);
+                  setEditedCard(null);
+                } catch (error) {
+                  setEditErrorMessage(
+                    error instanceof Error
+                      ? error.message
+                      : "Failed to update cat",
+                  );
                 }
-                await refetch();
-                setIsEditModalOpen(false);
-                setEditedCard(null);
               }}
               onCancel={() => {
                 setIsEditModalOpen(false);
@@ -305,6 +319,10 @@ export default function Page() {
           }}
         />
       ) : null}
+      <FormErrorPopup
+        errorMessage={editErrorMessage}
+        onClose={() => setEditErrorMessage(null)}
+      />
     </DashboardCategoryShell>
   );
 }

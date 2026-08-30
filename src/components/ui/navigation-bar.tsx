@@ -13,7 +13,7 @@ export default function Navbar() {
       {/* Desktop-only Logo Section */}
       <div className="hidden md:flex shrink-0 text-xl font-gaegu tracking-wide">
         <Link
-          href="/home"
+          href="/"
           className="hover:opacity-90 transition-opacity duration-200 flex items-center gap-2"
         >
           <Image
@@ -54,7 +54,7 @@ export default function Navbar() {
         {/* Mobile-only Logo inside the menu */}
         <li className="md:hidden flex mb-2">
           <Link
-            href="/home"
+            href="/"
             onClick={() => setIsMenuOpen(false)}
             className="hover:opacity-90 transition-opacity duration-200"
           >
@@ -70,7 +70,7 @@ export default function Navbar() {
 
         <li>
           <Link
-            href="/home"
+            href="/"
             className="hover:text-cateneo-orange transition-colors duration-200"
             onClick={() => setIsMenuOpen(false)}
           >

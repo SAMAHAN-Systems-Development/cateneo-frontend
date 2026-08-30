@@ -108,7 +108,7 @@ export default function Footer() {
                   Quick Links
                 </h1>
                 <Link
-                  href="/home#about-us"
+                  href="/#about-us"
                   className="text-[20px] lg:text-[16px] xl:text-[18px] font-gaegu font-bold text-cateneo-lightbrown hover:text-cateneo-darkbrown transition-colors block"
                 >
                   About

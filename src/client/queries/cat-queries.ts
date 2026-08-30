@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   CateneanDTO,
   getAdminCatById,
@@ -26,7 +26,10 @@ const toStableFilters = (filtersKey: string) => {
   return Object.fromEntries(JSON.parse(filtersKey)) as CateneanDTO;
 };
 
-export const useGetAllCats = (filters?: CateneanDTO) => {
+export const useGetAllCats = (
+  filters?: CateneanDTO,
+  options?: { keepPreviousData?: boolean; minimumDelayMs?: number },
+) => {
   const filtersKey = getStableFiltersKey(filters);
   const stableFilters = useMemo(
     () => toStableFilters(filtersKey),
@@ -39,7 +42,17 @@ export const useGetAllCats = (filters?: CateneanDTO) => {
 
   return useQuery({
     queryKey,
-    queryFn: () => getAllCateneans(stableFilters),
+    queryFn: async () => {
+      const minimumDelayMs = options?.minimumDelayMs ?? 0;
+      const [result] = await Promise.all([
+        getAllCateneans(stableFilters),
+        minimumDelayMs > 0
+          ? new Promise((resolve) => setTimeout(resolve, minimumDelayMs))
+          : Promise.resolve(),
+      ]);
+      return result;
+    },
+    placeholderData: options?.keepPreviousData ? keepPreviousData : undefined,
   });
 };
 

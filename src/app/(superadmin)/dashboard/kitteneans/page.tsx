@@ -165,9 +165,13 @@ export default function Page() {
   const {
     data: kittenPage,
     isLoading,
+    isFetching,
     isError,
     refetch,
-  } = useGetAllCats(filters);
+  } = useGetAllCats(filters, {
+    keepPreviousData: true,
+    minimumDelayMs: 300,
+  });
   const { mutateAsync: deleteCat } = useAdminDeleteCat();
   const { mutateAsync: updateCat } = useAdminUpdateCat();
   const { mutateAsync: updateCatStatus } = useAdminUpdateCatStatus();
@@ -209,6 +213,7 @@ export default function Page() {
       }}
       searchPlaceholder="Search for Kitteneans"
       isLoading={isLoading}
+      isRefreshing={isFetching}
       errorMessage={isError ? "Failed to load kitteneans." : null}
       page={page}
       limit={limit}

@@ -74,7 +74,7 @@ export const createUserService = async (
     role: formData.role,
   };
 
-  const res = await apiClient<AuthResponseDTO>("/api/user/create", {
+  const res = await apiClient<AuthResponseDTO>("/api/auth/user/create", {
     method: "POST",
     body: payload,
     credentials: "include",

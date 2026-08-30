@@ -143,9 +143,13 @@ export default function Page() {
   const {
     data: deadCatsPage,
     isLoading,
+    isFetching,
     isError,
     refetch,
-  } = useGetAllCats(filters);
+  } = useGetAllCats(filters, {
+    keepPreviousData: true,
+    minimumDelayMs: 300,
+  });
   const { mutateAsync: deleteCat } = useAdminDeleteCat();
   const { mutateAsync: updateCat } = useAdminUpdateCat();
   const { mutateAsync: updateCatStatus } = useAdminUpdateCatStatus();
@@ -188,6 +192,7 @@ export default function Page() {
         }}
         searchPlaceholder="Search for crossed cats"
         isLoading={isLoading}
+        isRefreshing={isFetching}
         errorMessage={
           isError ? "Failed to load crossed-the-rainbow cats." : null
         }

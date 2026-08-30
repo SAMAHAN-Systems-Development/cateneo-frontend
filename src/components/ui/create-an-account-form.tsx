@@ -103,7 +103,7 @@ const CreateAnAccountForm = ({ form, onSubmit }: SignUpFormProps) => {
                       </SelectTrigger>
                       <SelectContent className="min-w-(--radix-select-trigger-width) rounded-3xl border-3 border-cateneo-darkbrown bg-cateneo-white p-3 shadow-none">
                         <SelectItem
-                          value="volunteer"
+                          value="Volunteer"
                           className="font-gaegu text-2xl text-cateneo-darkbrown py-3 px-3 pr-3 focus:bg-transparent focus:text-cateneo-darkbrown [&_svg]:hidden"
                         >
                           Volunteer

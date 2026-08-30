@@ -151,9 +151,13 @@ export default function Page() {
   const {
     data: catsPage,
     isLoading,
+    isFetching,
     isError,
     refetch,
-  } = useGetAllCats(filters);
+  } = useGetAllCats(filters, {
+    keepPreviousData: true,
+    minimumDelayMs: 300,
+  });
   const { mutateAsync: deleteCat } = useAdminDeleteCat();
   const { mutateAsync: updateCat } = useAdminUpdateCat();
   const { mutateAsync: updateCatStatus } = useAdminUpdateCatStatus();
@@ -198,6 +202,7 @@ export default function Page() {
         }}
         searchPlaceholder="Search for Cateneans"
         isLoading={isLoading}
+        isRefreshing={isFetching}
         errorMessage={errorMessage}
         page={page}
         limit={limit}

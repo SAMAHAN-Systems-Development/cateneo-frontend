@@ -85,7 +85,8 @@ function CateneanCard({
       }}
     >
       {/* ── Actions popover ── */}
-      <Popover open={actionsIsOpen} onOpenChange={setActionsIsOpen}>
+      {(onEdit || onDelete) && (
+        <Popover open={actionsIsOpen} onOpenChange={setActionsIsOpen}>
         <PopoverTrigger asChild>
           <button
             type="button"
@@ -176,7 +177,8 @@ function CateneanCard({
             <span>Delete</span>
           </button>
         </PopoverContent>
-      </Popover>
+        </Popover>
+      )}
 
       <CardContent className="flex flex-col w-[100%] max-[640px]:flex-row max-[640px]:flex-wrap">
         {/* ── Cat SVG + photo ── */}

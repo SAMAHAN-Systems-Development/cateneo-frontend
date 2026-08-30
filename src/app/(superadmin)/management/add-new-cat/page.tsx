@@ -1,13 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { useAdminCreateCat } from "@/client/mutations/cat-mutations";
 import AddCatForm from "@/components/ui/add-cat-form";
 import RoleGuard from "@/lib/role-guard";
-import { FormErrorPopup } from "./form-error-popup";
+import {
+  CatCreationResultModal,
+  type CatCreationResult,
+} from "@/components/ui/cat-creation-result-modal";
 import type {
   CatClassification,
   CatColor,
@@ -104,7 +107,8 @@ const toReproductiveStatus = (values: string[]) => {
 
 const Page = () => {
   const createCatMutation = useAdminCreateCat();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [creationResult, setCreationResult] =
+    useState<CatCreationResult | null>(null);
 
   const form = useForm<AddCatFormData>({
     resolver: zodResolver(addCatFormSchema),
@@ -112,6 +116,7 @@ const Page = () => {
   });
 
   const handleSubmit = async (data: AddCatFormData) => {
+    setCreationResult(null);
     const payload: CreateNewCatDTO = {
       name: data.name,
       sex: data.sex,
@@ -133,10 +138,14 @@ const Page = () => {
     try {
       await createCatMutation.mutateAsync(payload);
       form.reset(addCatFormDefaultValues);
+      setCreationResult({
+        status: "success",
+        message: `${data.name.trim()} was added successfully.`,
+      });
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to create cat";
-      setErrorMessage(message);
+      setCreationResult({ status: "error", message });
     }
   };
 
@@ -144,6 +153,10 @@ const Page = () => {
   const handleCancel = () => {
     form.reset(addCatFormDefaultValues);
   };
+
+  const closeCreationResult = useCallback(() => {
+    setCreationResult(null);
+  }, []);
 
   return (
     <RoleGuard allowedRoles={["SUPERADMIN"]} redirectTo="/dashboard/cateneans">
@@ -157,9 +170,9 @@ const Page = () => {
           />
         </div>
       </main>
-      <FormErrorPopup
-        errorMessage={errorMessage}
-        onClose={() => setErrorMessage(null)}
+      <CatCreationResultModal
+        result={creationResult}
+        onClose={closeCreationResult}
       />
     </RoleGuard>
   );

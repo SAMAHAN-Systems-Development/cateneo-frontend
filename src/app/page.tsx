@@ -1,9 +1,12 @@
 import CateneanCard, { type CatProps } from "@/components/ui/catenean-card";
-import KitteneanCard, { type KitteneanProps } from "@/components/ui/kittenean-card";
+import KitteneanCard, {
+  type KitteneanProps,
+} from "@/components/ui/kittenean-card";
 
 const kitteneanData: KitteneanProps[] = [
   {
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/200px-Cat_November_2010-1a.jpg",
+    imageUrl:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Cat_November_2010-1a.jpg?width=200",
     name: "Iggyasdfasdfasdfasfdasdfasdfsaasdfasdfd",
     gender: "male",
     parent: "Minggaydsafasdfasdfsad",
@@ -18,7 +21,8 @@ const kitteneanData: KitteneanProps[] = [
     svgColor: "orange",
   },
   {
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Kittyply_edit1.jpg/200px-Kittyply_edit1.jpg",
+    imageUrl:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Kittyply_edit1.jpg?width=200",
     name: "Peddy",
     gender: "female",
     parent: "Minggay",
@@ -33,7 +37,8 @@ const kitteneanData: KitteneanProps[] = [
     svgColor: "darkbrown",
   },
   {
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg/200px-Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg",
+    imageUrl:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Cat_November_2010-1a.jpg?width=200",
     name: "Favvy",
     gender: "female",
     parent: "Minggay",
@@ -48,7 +53,8 @@ const kitteneanData: KitteneanProps[] = [
     svgColor: "orange",
   },
   {
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/200px-Cat03.jpg",
+    imageUrl:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Cat03.jpg?width=200",
     name: "Anchy",
     gender: "female",
     parent: "Minggay",
@@ -66,7 +72,8 @@ const kitteneanData: KitteneanProps[] = [
 
 const cateneanData: CatProps[] = [
   {
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/200px-Cat_November_2010-1a.jpg",
+    imageUrl:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Cat_November_2010-1a.jpg?width=200",
     catName: "Lunafasdfasdfsadfsadfsadfasdfasdf",
     sex: "female",
     medicine: "Flea treatment fasdfasdfasdt",
@@ -78,7 +85,8 @@ const cateneanData: CatProps[] = [
     svgColor: "orange",
   },
   {
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Kittyply_edit1.jpg/200px-Kittyply_edit1.jpg",
+    imageUrl:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Kittyply_edit1.jpg?width=200",
     catName: "Shadow",
     sex: "male",
     medicine: "Regular checkup",
@@ -88,7 +96,7 @@ const cateneanData: CatProps[] = [
     personality:
       "Bold and adventurous, Shadow loves exploring every corner of the sanctuary. He's a natural leader and loves playing with other cats.",
     svgColor: "darkbrown",
-  }
+  },
 ];
 
 const Page = () => {
@@ -96,7 +104,9 @@ const Page = () => {
     <div className="min-h-screen bg-cateneo-white p-4 md:p-8">
       <div className="mx-auto max-w-7xl space-y-10">
         <div>
-          <h2 className="mb-4 text-2xl font-bold text-cateneo-darkbrown">Cateneans</h2>
+          <h2 className="mb-4 text-2xl font-bold text-cateneo-darkbrown">
+            Cateneans
+          </h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {cateneanData.map((catenean) => (
               <CateneanCard key={catenean.catName} {...catenean} />
@@ -105,7 +115,9 @@ const Page = () => {
         </div>
 
         <div>
-          <h2 className="mb-4 text-2xl font-bold text-cateneo-darkbrown">Kitteneans</h2>
+          <h2 className="mb-4 text-2xl font-bold text-cateneo-darkbrown">
+            Kitteneans
+          </h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {kitteneanData.map((kittenean) => (
               <KitteneanCard key={kittenean.name} {...kittenean} />

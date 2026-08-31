@@ -29,8 +29,10 @@ export type KitteneanProps = {
 
 // Vitamin lookup dictionary for the popover descriptions
 const VITAMIN_DICTIONARY: Record<string, string> = {
-  "LC-Vit": "LC-Vit (or LC-Vit Plus) for cats is a popular, over-the-counter multivitamin syrup designed to boost immunity, increase appetite, and treat vitamin deficiencies during stress or illness.",
-  "Nutri-Plus Gel": "Nutri-Plus Gel is a fast-acting energy supplement and nutritional support for growing, active, or recovering cats.",
+  "LC-Vit":
+    "LC-Vit (or LC-Vit Plus) for cats is a popular, over-the-counter multivitamin syrup designed to boost immunity, increase appetite, and treat vitamin deficiencies during stress or illness.",
+  "Nutri-Plus Gel":
+    "Nutri-Plus Gel is a fast-acting energy supplement and nutritional support for growing, active, or recovering cats.",
   // Add any other specific vitamins QA expects here
 };
 
@@ -204,16 +206,20 @@ function KitteneanCard({
               fill={COLOR_MAP[svgColor]}
             />
           </svg>
-          <img
-            className="rounded-full absolute border-[2.41px] border-white border-solid"
+          <picture
+            className="rounded-full absolute overflow-hidden border-[2.41px] border-white border-solid"
             style={{
               width: responsiveClamp(49.5, 121.61),
               height: responsiveClamp(49.5, 121.61),
               top: responsiveClamp(19.25, 42.72),
             }}
-            src={imageUrl}
-            alt="image of a cat"
-          />
+          >
+            <img
+              className="block h-full w-full object-cover"
+              src={imageUrl}
+              alt="image of a cat"
+            />
+          </picture>
         </div>
         <div
           className="font-gaegu flex flex-col relative w-[100%] max-[640px]:flex-wrap max-[640px]:flex-row"
@@ -365,7 +371,7 @@ function KitteneanCard({
               gap: responsiveClamp(5.84, 8),
             }}
           >
-                        <p
+            <p
               className="shrink-0 text-[17.12px] text-cateneo-lightbrown max-[640px]:w-[75px]"
               style={{ fontSize: responsiveClamp(12, 17.12) }}
             >

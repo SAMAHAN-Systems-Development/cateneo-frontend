@@ -15,6 +15,7 @@ import {
 } from "@/schemas/create-an-account-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateUser } from "@/client/mutations/auth-mutations";
+import { AccountCreationResultModal } from "./account-creation-result-modal";
 // Simple Modal implementation
 function Modal({
   open,
@@ -158,6 +159,10 @@ function DesktopDropdown({
 
 export default function SuperAdminNavigationBar() {
   const [isCreateAccountOpen, setIsCreateAccountOpen] = useState(false);
+  const [accountCreationResult, setAccountCreationResult] = useState<{
+    status: "success" | "error";
+    message: string;
+  } | null>(null);
   // Form logic for create account
   const form = useForm<signUpFormData>({
     resolver: zodResolver(signUpSchema),
@@ -173,11 +178,23 @@ export default function SuperAdminNavigationBar() {
 
   async function handleCreateAccountSubmit(data: signUpFormData) {
     try {
+      console.log(data);
       await createUserMutation.mutateAsync(data);
       setIsCreateAccountOpen(false);
       form.reset();
-    } catch {
-      // Optionally handle error
+      setAccountCreationResult({
+        status: "success",
+        message: `${data.firstName.trim()} ${data.lastName.trim()}'s account was created successfully.`,
+      });
+    } catch (error) {
+      setIsCreateAccountOpen(false);
+      setAccountCreationResult({
+        status: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Something went wrong while creating the account.",
+      });
     }
   }
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -289,6 +306,12 @@ export default function SuperAdminNavigationBar() {
             onSubmit={handleCreateAccountSubmit}
           />
         </Modal>
+        <AccountCreationResultModal
+          open={accountCreationResult !== null}
+          status={accountCreationResult?.status ?? "error"}
+          message={accountCreationResult?.message ?? ""}
+          onClose={() => setAccountCreationResult(null)}
+        />
 
         <button
           type="button"

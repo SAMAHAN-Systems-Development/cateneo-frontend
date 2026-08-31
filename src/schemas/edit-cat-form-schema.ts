@@ -1,4 +1,8 @@
 import { z } from "zod";
+import {differenceInYears} from "date-fns"
+
+const KITTEN_TYPES = ["KITTENean", "Rescued_KITTENean"]
+const ADULT_TYPES = ["CATenean", "Rescued_CATenean"]
 
 const requiredSelect = (label: string) =>
   z.string().min(1, { message: `${label} is required` });
@@ -28,18 +32,41 @@ export const editCatFormSchema = z
     color: z.array(z.string()).min(1, { message: "Color is required" }),
   })
   .superRefine((data, ctx) => {
-    if (data.adoptionStatus !== "Deceased") {
-      return;
-    }
-
-    if (!data.dateOfDeath || !data.dateOfDeath.trim()) {
+    if (
+      data.adoptionStatus === "Deceased" &&
+      (!data.dateOfDeath || !data.dateOfDeath.trim())
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Date of death is required when status is Deceased",
         path: ["dateOfDeath"],
       });
     }
+
+    if (data.dateOfBirth && data.type) {
+      const age = differenceInYears(new Date(), new Date(data.dateOfBirth));
+      const isKitten = age < 1;
+
+      if (isKitten && !KITTEN_TYPES.includes(data.type)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "Cats under 1 year old must be classified as KITTENean or Rescued_KITTENean",
+          path: ["type"],
+        });
+      }
+
+      if (!isKitten && !ADULT_TYPES.includes(data.type)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "Cats 1 year or older must be classified as CATenean or Rescued_CATenean",
+          path: ["type"],
+        });
+      }
+    }
   });
+
 
 export type EditCatFormData = z.infer<typeof editCatFormSchema>;
 

@@ -93,7 +93,8 @@ function KitteneanCard({
         height: responsiveClamp(350.75, 569),
       }}
     >
-      <Popover open={actionsIsOpen} onOpenChange={setActionsIsOpen}>
+      {(onEdit || onDelete) && (
+        <Popover open={actionsIsOpen} onOpenChange={setActionsIsOpen}>
         <PopoverTrigger asChild>
           <button
             type="button"
@@ -184,7 +185,8 @@ function KitteneanCard({
             <span>Delete</span>
           </button>
         </PopoverContent>
-      </Popover>
+        </Popover>
+      )}
       <CardContent
         className="flex flex-col w-[100%]"
         style={{ gap: responsiveClamp(18.72, 27.78) }}

@@ -32,6 +32,10 @@ import {
 } from "@/components/ui/select";
 import { CatColorIcon } from "@/components/ui/cat-color-icon";
 import { type AddCatFormData } from "@/schemas/add-cat-form-schema";
+import {
+  useGetEligbleFathers,
+  useGetEligbleMothers,
+} from "@/client/queries/cat-queries";
 
 interface AddCatFormProps {
   form: UseFormReturn<AddCatFormData>;
@@ -49,7 +53,6 @@ const typeOptions = [
   "Rescued_CATenean",
   "Rescued_KITTENean",
 ];
-const parentOptions = ["Kitteean", "Snowpaw", "Ambertail", "Whisker"];
 const statusOptions = [
   "Available",
   "Adoption_Pending",
@@ -66,7 +69,6 @@ const locationOptions = [
   "CENTRAL_CONVENIENCE",
 ];
 const vitaminOptions = ["Nematocide", "LCVit"];
-const healthOptions = ["Spayed", "Neutered"];
 const vaccineOptions = ["Anti-Rabies"];
 const colorOptions = [
   { value: "Black", label: "Black" },
@@ -105,6 +107,11 @@ const selectContentClass =
 const selectItemClass =
   "rounded-md py-2 pr-8 pl-2 text-sm font-gaegu text-cateneo-darkbrown outline-none focus:bg-cateneo-orange/15 focus:text-cateneo-darkbrown data-[highlighted]:bg-cateneo-orange/15 data-[highlighted]:text-cateneo-darkbrown [&_svg]:text-cateneo-darkbrown";
 
+type SelectOption = {
+  value: string;
+  label: string;
+};
+
 export default function AddCatForm({
   form,
   onSubmit,
@@ -114,8 +121,28 @@ export default function AddCatForm({
   title = "Add New Cat",
 }: AddCatFormProps) {
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+  const { data: eligibleMothers } = useGetEligbleMothers();
+  const { data: eligibleFathers } = useGetEligbleFathers();
+
+  const motherOptions = React.useMemo<SelectOption[]>(
+    () =>
+      (eligibleMothers ?? []).map((cat) => ({
+        value: String(cat.id),
+        label: cat.name ?? `Cat #${cat.id}`,
+      })),
+    [eligibleMothers],
+  );
+  const fatherOptions = React.useMemo<SelectOption[]>(
+    () =>
+      (eligibleFathers ?? []).map((cat) => ({
+        value: String(cat.id),
+        label: cat.name ?? `Cat #${cat.id}`,
+      })),
+    [eligibleFathers],
+  );
 
   const imageFile = useWatch({ control: form.control, name: "image" });
+  const selectedSex = useWatch({ control: form.control, name: "sex" });
   const selectedType = useWatch({ control: form.control, name: "type" });
   const selectedVitamins = useWatch({
     control: form.control,
@@ -131,6 +158,17 @@ export default function AddCatForm({
   });
 
   const isRescued = selectedType?.startsWith("Rescued_") ?? false;
+  const healthStatusOption =
+    selectedSex === "Female" ? "Spayed" : "Neutered";
+
+  React.useEffect(() => {
+    if (form.getValues("healthStatus")[0] === healthStatusOption) return;
+
+    form.setValue("healthStatus", [healthStatusOption], {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  }, [form, healthStatusOption]);
 
   // Clear dateRescued when switching away from a rescued classification
   React.useEffect(() => {
@@ -256,15 +294,15 @@ export default function AddCatForm({
               form={form}
               name="motherCat"
               label="Mother Cat"
-              placeholder="Kitteean"
-              options={parentOptions}
+              placeholder="Select mother cat"
+              options={motherOptions}
             />
             <SelectField
               form={form}
               name="fatherCat"
               label="Father Cat"
-              placeholder="Kitteean"
-              options={parentOptions}
+              placeholder="Select father cat"
+              options={fatherOptions}
             />
             <SelectField
               form={form}
@@ -322,7 +360,7 @@ export default function AddCatForm({
                   <FormLabel>Health Status</FormLabel>
                   <FormControl>
                     <div className="flex flex-wrap justify-left gap-2 lg:justify-start">
-                      {healthOptions.map((option) => {
+                      {[healthStatusOption].map((option) => {
                         const active = selectedHealthStatuses[0] === option;
                         return (
                           <button
@@ -658,7 +696,7 @@ function SelectField({
   name: "type" | "motherCat" | "fatherCat" | "adoptionStatus" | "location";
   label: string;
   placeholder: string;
-  options: string[];
+  options: Array<string | SelectOption>;
 }) {
   return (
     <FormField
@@ -673,15 +711,22 @@ function SelectField({
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
               <SelectContent className={selectContentClass}>
-                {options.map((option) => (
-                  <SelectItem
-                    className={selectItemClass}
-                    key={option}
-                    value={option}
-                  >
-                    {option}
-                  </SelectItem>
-                ))}
+                {options.map((option) => {
+                  const value =
+                    typeof option === "string" ? option : option.value;
+                  const optionLabel =
+                    typeof option === "string" ? option : option.label;
+
+                  return (
+                    <SelectItem
+                      className={selectItemClass}
+                      key={value}
+                      value={value}
+                    >
+                      {optionLabel}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </FormControl>

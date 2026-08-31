@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
+import { PageTransitionOverlay } from "@/components/ui/page-transition-overlay";
 
 const NAV_ITEMS = [
   { href: "/dashboard/cateneans", label: "Cateneans" },
@@ -30,6 +31,7 @@ type DashboardCategoryShellProps = {
   onSearchChange: (value: string) => void;
   searchPlaceholder?: string;
   isLoading?: boolean;
+  isRefreshing?: boolean;
   errorMessage?: string | null;
   page: number;
   limit: number;
@@ -50,6 +52,7 @@ export default function DashboardCategoryShell({
   onSearchChange,
   searchPlaceholder = "Search for Cat",
   isLoading = false,
+  isRefreshing = false,
   errorMessage = null,
   page,
   limit,
@@ -127,6 +130,7 @@ export default function DashboardCategoryShell({
             <span className="text-lg">Show</span>
             <Select
               value={String(limit)}
+              disabled={isRefreshing}
               onValueChange={(value) => onLimitChange(Number(value))}
             >
               <SelectTrigger className="h-10 w-20 rounded-lg border-2 border-cateneo-darkbrown bg-cateneo-white px-2.5 font-gaegu text-lg text-cateneo-darkbrown shadow-none outline-none focus-visible:border-cateneo-darkbrown focus-visible:ring-3 focus-visible:ring-ring/50 [&_svg]:text-cateneo-darkbrown">
@@ -149,7 +153,7 @@ export default function DashboardCategoryShell({
               variant="outline"
               size="icon"
               aria-label="Previous page"
-              disabled={page <= 1}
+              disabled={page <= 1 || isRefreshing}
               onClick={() => onPageChange(page - 1)}
               className="border-2 border-cateneo-lightbrown"
             >
@@ -163,7 +167,7 @@ export default function DashboardCategoryShell({
               variant="outline"
               size="icon"
               aria-label="Next page"
-              disabled={page >= totalPages}
+              disabled={page >= totalPages || isRefreshing}
               onClick={() => onPageChange(page + 1)}
               className="border-2 border-cateneo-lightbrown"
             >
@@ -172,6 +176,15 @@ export default function DashboardCategoryShell({
           </div>
         </div>
 
+        <div className="relative" aria-busy={isRefreshing}>
+        {isRefreshing && !isLoading && !errorMessage ? (
+          <PageTransitionOverlay />
+        ) : null}
+        <div
+          className={`transition-opacity duration-200 ${
+            isRefreshing && !isLoading ? "opacity-45" : "opacity-100"
+          }`}
+        >
         {errorMessage ? (
           <div className="mt-4 rounded-3xl border-2 border-red-200 bg-red-50 px-6 py-10">
             <p className="font-gaegu text-2xl text-red-600">{errorMessage}</p>
@@ -186,6 +199,8 @@ export default function DashboardCategoryShell({
         ) : (
           <div className="mt-4">{children}</div>
         )}
+        </div>
+        </div>
       </div>
     </section>
   );

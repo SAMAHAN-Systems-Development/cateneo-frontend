@@ -1,6 +1,7 @@
 import { apiClient } from "@/lib/api-client";
 import { loginFormData } from "@/schemas/login-form-schema";
 import { signUpFormData } from "@/schemas/create-an-account-form-schema";
+import type { ForgotPasswordFormData } from "@/schemas/password-recovery-form-schema";
 
 export interface AuthUser {
   id: string;
@@ -99,3 +100,20 @@ export const logoutService = async (): Promise<void> => {
     credentials: "include",
   });
 };
+
+export const forgotPasswordService = async (
+  formData: ForgotPasswordFormData,
+): Promise<{ message: string }> =>
+  apiClient("/api/users/forgot-password", {
+    method: "POST",
+    body: { email: formData.email.trim() },
+  });
+
+export const resetPasswordService = async (formData: {
+  token: string;
+  newPassword: string;
+}): Promise<{ message: string }> =>
+  apiClient("/api/users/reset-password", {
+    method: "POST",
+    body: { token: formData.token, newPassword: formData.newPassword },
+  });

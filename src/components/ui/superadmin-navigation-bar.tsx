@@ -16,6 +16,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateUser } from "@/client/mutations/auth-mutations";
 import { AccountCreationResultModal } from "./account-creation-result-modal";
+import { LogoutConfirmModal } from "./logout-confirm-modal";
 // Simple Modal implementation
 function Modal({
   open,
@@ -124,7 +125,7 @@ function DesktopDropdown({
     <li className="relative">
       <button
         type="button"
-        className={`inline-flex items-center gap-1 font-gaegu text-2xl transition-colors ${isActive ? "text-cateneo-orange" : "text-cateneo-black hover:text-cateneo-orange"}`}
+        className={`inline-flex items-center gap-1 whitespace-nowrap font-gaegu text-xl transition-colors duration-200 ${isActive ? "text-cateneo-orange" : "text-cateneo-black hover:text-cateneo-orange"}`}
         onClick={() => onToggle(menuKey)}
         aria-haspopup="menu"
         aria-expanded={isOpen}
@@ -198,6 +199,7 @@ export default function SuperAdminNavigationBar() {
     }
   }
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<DropdownKey | null>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -218,39 +220,48 @@ export default function SuperAdminNavigationBar() {
     setOpenDropdown(null);
   };
 
+  const requestLogout = () => {
+    closeMenus();
+    setIsLogoutConfirmOpen(true);
+  };
+
   const handleLogout = async () => {
+    if (isLoggingOut) return;
+
     try {
       await logout();
     } finally {
       closeMenus();
+      setIsLogoutConfirmOpen(false);
       router.replace("/login");
     }
   };
 
   return (
-    <header className="relative z-50 w-full bg-cateneo-white px-3 pt-4 pb-2 md:px-5 md:pt-5 md:pb-2">
-      <nav className="mx-auto flex w-full max-w-7xl items-center gap-2">
+    <header className="relative z-50 w-full bg-cateneo-white">
+      <nav className="relative flex w-full items-center justify-between px-4 py-3 text-cateneo-black md:flex-wrap md:justify-center md:gap-4 md:px-6 md:py-4 lg:mx-auto lg:max-w-[calc(100vw-2rem)] lg:px-4 xl:gap-10">
         <Link
           href="/dashboard/cateneans"
-          className="shrink-0"
+          className="hidden shrink-0 items-center transition-opacity duration-200 hover:opacity-90 md:flex"
           aria-label="Go to admin dashboard"
           onClick={closeMenus}
         >
           <Image
             src="/cateneo-navbar-icon.png"
             alt="Cateneo logo"
-            width={44}
-            height={44}
+            width={55}
+            height={55}
             priority
+            className="h-12 w-12 xl:h-[55px] xl:w-[55px]"
           />
         </Link>
 
-        <div className="hidden min-w-0 flex-1 items-center rounded-full border-2 border-cateneo-darkbrown bg-cateneo-white px-6 py-1.5 md:flex">
-          <ul className="flex w-full items-center justify-between gap-6">
+        <div className="hidden shrink-0 items-center rounded-full border-2 border-cateneo-darkbrown bg-cateneo-white py-2 shadow-lg md:flex md:px-6 lg:px-8 xl:mx-10 xl:px-20">
+          <ul className="flex items-center whitespace-nowrap font-gaegu text-xl md:gap-5 lg:gap-6 xl:gap-30">
             <li>
               <Link
                 href="/dashboard/cateneans"
-                className={`font-gaegu text-2xl transition-colors hover:text-cateneo-orange ${isHomeActive ? "text-cateneo-orange" : "text-cateneo-black"}`}
+                className={`transition-colors duration-200 hover:text-cateneo-orange ${isHomeActive ? "text-cateneo-orange" : "text-cateneo-black"}`}
               >
                 Home
               </Link>
@@ -258,7 +269,7 @@ export default function SuperAdminNavigationBar() {
             <li>
               <Link
                 href="/profile"
-                className={`font-gaegu text-2xl transition-colors hover:text-cateneo-orange ${isProfileActive ? "text-cateneo-orange" : "text-cateneo-black"}`}
+                className={`transition-colors duration-200 hover:text-cateneo-orange ${isProfileActive ? "text-cateneo-orange" : "text-cateneo-black"}`}
               >
                 Profile
               </Link>
@@ -288,15 +299,25 @@ export default function SuperAdminNavigationBar() {
           </ul>
         </div>
 
-        {isSuperAdmin && (
+        <div className="hidden shrink-0 items-center gap-4 md:flex">
+          {isSuperAdmin && (
+            <button
+              type="button"
+              className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-cateneo-lightbrown px-6 py-2 font-gaegu text-lg tracking-wide text-cateneo-white transition-opacity duration-200 hover:opacity-90 lg:px-8 xl:px-10 xl:text-xl"
+              onClick={() => setIsCreateAccountOpen(true)}
+            >
+              Create Account
+            </button>
+          )}
           <button
             type="button"
-            className={`ml-auto hidden rounded-full pl-8 pr-6 py-2 font-gaegu text-2xl text-cateneo-white transition-opacity hover:opacity-90 md:inline-flex bg-cateneo-lightbrown`}
-            onClick={() => setIsCreateAccountOpen(true)}
+            onClick={requestLogout}
+            disabled={isLoggingOut}
+            className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full border-2 border-cateneo-darkbrown px-6 py-2 font-gaegu text-lg tracking-wide text-cateneo-darkbrown transition-colors duration-200 hover:bg-cateneo-darkbrown hover:text-cateneo-white disabled:cursor-not-allowed disabled:opacity-60 lg:px-8 xl:px-10 xl:text-xl"
           >
-            Create Account
+            {isLoggingOut ? "Logging out..." : "Logout"}
           </button>
-        )}
+        </div>
         <Modal
           open={isCreateAccountOpen}
           onClose={() => setIsCreateAccountOpen(false)}
@@ -312,53 +333,70 @@ export default function SuperAdminNavigationBar() {
           message={accountCreationResult?.message ?? ""}
           onClose={() => setAccountCreationResult(null)}
         />
+        {isLogoutConfirmOpen && (
+          <LogoutConfirmModal
+            isPending={isLoggingOut}
+            onConfirm={handleLogout}
+            onCancel={() => setIsLogoutConfirmOpen(false)}
+          />
+        )}
 
         <button
           type="button"
-          onClick={handleLogout}
-          disabled={isLoggingOut}
-          className="hidden rounded-full border-2 border-cateneo-darkbrown px-5 py-2 font-gaegu text-2xl text-cateneo-darkbrown transition-colors hover:bg-cateneo-darkbrown hover:text-cateneo-white disabled:cursor-not-allowed disabled:opacity-60 md:inline-flex"
-        >
-          {isLoggingOut ? "Logging out..." : "Logout"}
-        </button>
-
-        <button
-          type="button"
-          className="ml-auto inline-flex size-9 items-center justify-center rounded-full border-2 border-cateneo-darkbrown text-cateneo-darkbrown md:hidden"
-          aria-label="Toggle admin navigation"
+          className="relative z-40 mr-auto inline-flex items-center justify-start rounded-md p-2 md:hidden"
+          aria-label="Open admin navigation menu"
           aria-expanded={isMobileOpen}
-          onClick={() => setIsMobileOpen((current) => !current)}
+          aria-controls="admin-mobile-navigation"
+          onClick={() => setIsMobileOpen(true)}
         >
-          <span className="sr-only">Menu</span>
-          <svg
-            viewBox="0 0 24 24"
-            className="size-5"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M4 7H20M4 12H20M4 17H20"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
+          <Image
+            src="/Property 1=Closed.svg"
+            alt=""
+            width={32}
+            height={32}
+            priority
+          />
         </button>
       </nav>
 
       {isMobileOpen && (
-        <div className="mx-auto mt-2 w-full max-w-7xl rounded-3xl border-2 border-cateneo-darkbrown bg-cateneo-white p-4 md:hidden">
-          <div className="flex flex-col gap-2.5 font-gaegu text-2xl text-cateneo-black">
+        <div
+          id="admin-mobile-navigation"
+          className="absolute left-3 top-2 z-50 max-h-[calc(100dvh-1rem)] min-w-[200px] max-w-[calc(100vw-1.5rem)] overflow-y-auto rounded-br-[50px] border-2 border-cateneo-darkbrown bg-cateneo-white p-3 shadow-lg md:hidden"
+        >
+          <div className="flex flex-col gap-4 font-gaegu text-xl text-cateneo-black">
+            <button
+              type="button"
+              className="mb-4 inline-flex w-fit items-center justify-start text-cateneo-lightbrown"
+              aria-label="Close admin navigation menu"
+              onClick={closeMenus}
+            >
+              <IoMdClose className="size-8" />
+            </button>
             <Link
               href="/dashboard/cateneans"
-              className={isHomeActive ? "text-cateneo-orange" : undefined}
+              aria-label="Go to admin dashboard"
+              className="mb-2 w-fit transition-opacity duration-200 hover:opacity-90"
+              onClick={closeMenus}
+            >
+              <Image
+                src="/cateneo-navbar-icon.png"
+                alt="Cateneo logo"
+                width={55}
+                height={55}
+                priority
+              />
+            </Link>
+            <Link
+              href="/dashboard/cateneans"
+              className={`transition-colors duration-200 hover:text-cateneo-orange ${isHomeActive ? "text-cateneo-orange" : "text-cateneo-black"}`}
               onClick={closeMenus}
             >
               Home
             </Link>
             <Link
               href="/profile"
-              className={isProfileActive ? "text-cateneo-orange" : undefined}
+              className={`transition-colors duration-200 hover:text-cateneo-orange ${isProfileActive ? "text-cateneo-orange" : "text-cateneo-black"}`}
               onClick={closeMenus}
             >
               Profile
@@ -368,8 +406,9 @@ export default function SuperAdminNavigationBar() {
               <>
                 <button
                   type="button"
-                  className="flex items-center justify-between"
+                  className={`flex items-center justify-between gap-4 transition-colors duration-200 hover:text-cateneo-orange ${managementItems.some((item) => isPathActive(pathname, item.href)) ? "text-cateneo-orange" : "text-cateneo-black"}`}
                   onClick={() => toggleDropdown("management")}
+                  aria-expanded={openDropdown === "management"}
                 >
                   Management
                   <ChevronDown
@@ -382,7 +421,7 @@ export default function SuperAdminNavigationBar() {
                       <Link
                         key={item.label}
                         href={item.href}
-                        className={`text-xl ${isPathActive(pathname, item.href) ? "text-cateneo-orange" : "text-cateneo-black"}`}
+                        className={`transition-colors duration-200 hover:text-cateneo-orange ${isPathActive(pathname, item.href) ? "text-cateneo-orange" : "text-cateneo-black"}`}
                         onClick={closeMenus}
                       >
                         {item.label}
@@ -395,8 +434,9 @@ export default function SuperAdminNavigationBar() {
 
             <button
               type="button"
-              className="flex items-center justify-between"
+              className={`flex items-center justify-between gap-4 transition-colors duration-200 hover:text-cateneo-orange ${adoptionItems.some((item) => isPathActive(pathname, item.href)) ? "text-cateneo-orange" : "text-cateneo-black"}`}
               onClick={() => toggleDropdown("adoptions")}
+              aria-expanded={openDropdown === "adoptions"}
             >
               Adoptions
               <ChevronDown
@@ -409,7 +449,7 @@ export default function SuperAdminNavigationBar() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className={`text-xl ${isPathActive(pathname, item.href) ? "text-cateneo-orange" : "text-cateneo-black"}`}
+                    className={`transition-colors duration-200 hover:text-cateneo-orange ${isPathActive(pathname, item.href) ? "text-cateneo-orange" : "text-cateneo-black"}`}
                     onClick={closeMenus}
                   >
                     {item.label}
@@ -421,7 +461,7 @@ export default function SuperAdminNavigationBar() {
             {isSuperAdmin && (
               <button
                 type="button"
-                className={`mt-2 inline-flex w-fit rounded-full pl-8 pr-6 py-2 text-cateneo-white bg-cateneo-orange`}
+                className="mt-2 inline-flex w-fit self-center whitespace-nowrap rounded-full bg-cateneo-lightbrown px-6 py-2 text-cateneo-white transition-opacity duration-200 hover:opacity-90"
                 onClick={() => {
                   setIsCreateAccountOpen(true);
                   closeMenus();
@@ -433,9 +473,9 @@ export default function SuperAdminNavigationBar() {
 
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={requestLogout}
               disabled={isLoggingOut}
-              className="mt-1 inline-flex w-fit rounded-full border-2 border-cateneo-darkbrown px-5 py-2 text-cateneo-darkbrown disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-1 inline-flex w-fit self-center whitespace-nowrap rounded-full border-2 border-cateneo-darkbrown px-5 py-2 text-cateneo-darkbrown transition-colors duration-200 hover:bg-cateneo-darkbrown hover:text-cateneo-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isLoggingOut ? "Logging out..." : "Logout"}
             </button>

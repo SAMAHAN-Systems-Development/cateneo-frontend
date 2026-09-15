@@ -149,18 +149,22 @@ export const changeUserPasswordService = async (formData: {
   });
 };
 
-export const softDeleteUser = async (id: string): Promise<User> => {
-  const result = await apiClient<User>(`/api/users/${id}`, {
+export const updateUserStatus = async (
+  id: string,
+  isActive: boolean,
+): Promise<User> => {
+  const result = await apiClient<User>(`/api/users/${id}/status`, {
     method: "PATCH",
+    body: JSON.stringify({ isActive }),
     credentials: "include",
   });
   return result;
 };
 
+export const softDeleteUser = async (id: string): Promise<User> => {
+  return updateUserStatus(id, false);
+};
+
 export const reactivateUser = async (id: string): Promise<User> => {
-  const result = await apiClient<User>(`/api/users/${id}/reactivate`, {
-    method: "PATCH",
-    credentials: "include",
-  });
-  return result;
+  return updateUserStatus(id, true);
 };

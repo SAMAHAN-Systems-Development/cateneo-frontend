@@ -1,6 +1,16 @@
 import { apiClient } from "@/lib/api-client";
 
-interface Catenean {
+export type CatParent = {
+  id: number;
+  name: string;
+};
+
+export type CatParentRelations = {
+  mother?: CatParent | null;
+  father?: CatParent | null;
+};
+
+interface Catenean extends CatParentRelations {
   id: number;
   name: string;
   sex: string;
@@ -8,8 +18,10 @@ interface Catenean {
   colors: string[];
   personality: string;
   classification: string;
+  status: CatStatus;
   imageUrl: string;
   reproductiveStatus: string;
+  vitamins?: Vitamin[];
   createdAt: Date;
   currentLocation?: string;
   location?: string;
@@ -111,7 +123,9 @@ export interface CreateNewCatDTO {
   vaccines?: Vaccine[];
 }
 
-export interface UpdateCatDTO extends Partial<CreateNewCatDTO> {
+export interface UpdateCatDTO
+  extends Partial<Omit<CreateNewCatDTO, "dateDeceased">> {
+  dateDeceased?: string | null;
   currentLocation?: CatLocation;
 }
 
@@ -290,6 +304,19 @@ export const adminUpdateCat = async (
     credentials: "include",
   });
   return result;
+};
+
+export const adminUploadCatImage = async (
+  id: number,
+  image: File,
+): Promise<Catenean> => {
+  const body = new FormData();
+  body.append("image", image);
+
+  return apiClient<Catenean>(`/api/cats/admin/${id}/image`, {
+    method: "POST",
+    body,
+  });
 };
 
 /**

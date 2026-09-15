@@ -3,6 +3,7 @@ import {
   UpdateCatDTO,
   adminCreateCat,
   adminUpdateCat,
+  adminUploadCatImage,
   adminUpdateCatStatus,
   adminAtomicAdoptCat,
   adminAdoptCat,
@@ -18,8 +19,18 @@ export const useAdminCreateCat = () => {
 
 export const useAdminUpdateCat = () => {
   return useMutation({
-    mutationFn: ({ id, formData }: { id: number; formData: UpdateCatDTO }) =>
-      adminUpdateCat(id, formData),
+    mutationFn: async ({
+      id,
+      formData,
+      image,
+    }: {
+      id: number;
+      formData: UpdateCatDTO;
+      image?: File | null;
+    }) => {
+      const cat = await adminUpdateCat(id, formData);
+      return image ? adminUploadCatImage(id, image) : cat;
+    },
   });
 };
 

@@ -1,8 +1,8 @@
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
-interface ApiRequestOptions extends RequestInit {
-  body?: any;
+interface ApiRequestOptions extends Omit<RequestInit, "body"> {
+  body?: unknown;
 }
 
 const getResponseCache = new Map<string, unknown>();
@@ -57,22 +57,24 @@ export async function apiClient<TResponse>(
   options: ApiRequestOptions = {},
 ): Promise<TResponse> {
   const { body, headers, ...rest } = options;
+  const isFormData = body instanceof FormData;
   const requestBody =
     body === undefined
       ? undefined
-      : typeof body === "string"
+      : isFormData || typeof body === "string"
         ? body
         : JSON.stringify(body);
+  const requestHeaders = new Headers(headers);
+  if (!isFormData && !requestHeaders.has("Content-Type")) {
+    requestHeaders.set("Content-Type", "application/json");
+  }
 
   const isGetRequest = !body && (!rest.method || rest.method === "GET");
   const cacheControl = isGetRequest ? { cache: "no-store" as const } : {};
   const cacheKey = `${(rest.method ?? "GET").toUpperCase()} ${API_BASE_URL}${path}`;
 
   const res = await fetch(`${API_BASE_URL}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(headers ?? {}),
-    },
+    headers: requestHeaders,
     body: requestBody,
     ...cacheControl,
     ...rest,
@@ -86,10 +88,7 @@ export async function apiClient<TResponse>(
     if (tokenRefreshed) {
       // Retry the original request with the new token
       const retryRes = await fetch(`${API_BASE_URL}${path}`, {
-        headers: {
-          "Content-Type": "application/json",
-          ...(headers ?? {}),
-        },
+        headers: requestHeaders,
         body: requestBody,
         ...cacheControl,
         ...rest,

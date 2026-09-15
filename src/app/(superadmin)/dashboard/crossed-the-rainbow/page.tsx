@@ -10,7 +10,11 @@ import {
 } from "@/client/mutations/cat-mutations";
 import { useGetAllCats } from "@/client/queries/cat-queries";
 import { getAdminCatById } from "@/client/service/catenean-service";
-import type { CateneanDTO } from "@/client/service/catenean-service";
+import type {
+  CateneanDTO,
+  CatParentRelations,
+} from "@/client/service/catenean-service";
+import { formatCatParents } from "@/lib/cat-parent-display";
 import DashboardCategoryShell from "@/components/sections/dashboard-category-shell";
 import CateneanCard, { type CatProps } from "@/components/ui/catenean-card";
 import { DeleteCatModal } from "@/components/ui/delete-cat-modal";
@@ -28,7 +32,7 @@ import {
 
 type CardColor = CatProps["color"][number];
 
-type RawCat = {
+type RawCat = CatParentRelations & {
   id: number;
   name: string;
   sex: string;
@@ -227,12 +231,12 @@ export default function Page() {
                     imageUrl={commonImageUrl}
                     name={cat.name || "Unknown Kittenean"}
                     gender={toKittenGender(cat.sex ?? "male")}
-                    parent="N/A"
+                    parent={formatCatParents(cat)}
                     dateOfBirth={toReadableDate(cat.dob)}
-                    medicine={cat.reproductiveStatus || null}
+                    medicine={cat.vitamins?.join(", ") || null}
                     residence={toDisplayLocation(cat)}
                     color={cardColors}
-                    healthStatus={cat.classification || "N/A"}
+                    healthStatus={cat.reproductiveStatus || "N/A"}
                     status={cat.status || "N/A"}
                     personality={commonPersonality}
                     svgColor={cardColors[0]}
@@ -257,8 +261,8 @@ export default function Page() {
                   catName={cat.name || "Unknown Cat"}
                   location={toDisplayLocation(cat)}
                   color={cardColors}
-                  healthStatus={cat.classification || "N/A"}
-                  medicine={cat.reproductiveStatus || null}
+                  healthStatus={cat.reproductiveStatus || "N/A"}
+                  medicine={cat.vitamins?.join(", ") || null}
                   personality={commonPersonality}
                   svgColor={cardColors[0]}
                   onEdit={() => {
@@ -300,6 +304,7 @@ export default function Page() {
                   await updateCat({
                     id: editedCard.id,
                     formData: mapEditFormDataToUpdateCatDTO(formData),
+                    image: formData.image,
                   });
                   const nextStatus = normalizeCatStatus(
                     formData.adoptionStatus,

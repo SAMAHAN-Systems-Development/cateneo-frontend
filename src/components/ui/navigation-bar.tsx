@@ -5,6 +5,9 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+const ADOPTION_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSfDsPUpwlSgTS_z29Mbmdt-QMlVo8Z0dplGRnJjWbg_sm_JAg/viewform";
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -106,25 +109,27 @@ export default function Navbar() {
         </li>
         {/* Mobile-only Adopt a Cat link */}
         <li className="md:hidden flex justify-center mt-2">
-          <Link
-            href="/"
+          <a
+            href={ADOPTION_FORM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="font-gaegu text-cateneo-white bg-cateneo-lightbrown px-6 py-2 rounded-full inline-block hover:opacity-90 transition-opacity duration-200"
             onClick={() => setIsMenuOpen(false)}
           >
             Adopt a Cat
-          </Link>
+          </a>
         </li>
       </ul>
 
       {/* Desktop Adopt Button */}
-      <div className="hidden shrink-0 rounded-full bg-cateneo-lightbrown px-6 py-2 font-gaegu text-lg tracking-wide text-cateneo-white md:block lg:px-8 xl:px-10 xl:text-xl">
-        <Link
-          href="/"
-          className="hover:opacity-90 transition-opacity duration-200"
-        >
-          Adopt a Cat
-        </Link>
-      </div>
+      <a
+        href={ADOPTION_FORM_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hidden shrink-0 rounded-full bg-cateneo-lightbrown px-6 py-2 font-gaegu text-lg tracking-wide text-cateneo-white transition-opacity duration-200 hover:opacity-90 md:block lg:px-8 xl:px-10 xl:text-xl"
+      >
+        Adopt a Cat
+      </a>
 
       {/* Mobile Burger Button (Always in the DOM, lower z-index than the menu) */}
       <button

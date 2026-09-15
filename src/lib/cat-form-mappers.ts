@@ -35,6 +35,7 @@ type RawCatForEdit = {
 type ParentReference =
   | string
   | number
+  | null
   | {
       id?: string | number;
       name?: string;
@@ -140,19 +141,6 @@ const toOptionalNumber = (value: string) => {
   return Number.isFinite(parsed) ? parsed : undefined;
 };
 
-const toReproductiveStatusForSex = (
-  sex: EditCatFormData["sex"],
-  healthStatus: string[],
-) => {
-  const selectedStatus = healthStatus[0];
-
-  if (sex === "Female") {
-    return selectedStatus === "Spayed" ? selectedStatus : "Spayed";
-  }
-
-  return selectedStatus === "Neutered" ? selectedStatus : "Neutered";
-};
-
 const toStringArray = (value?: RawListInput) => {
   if (typeof value === "string") {
     return value
@@ -185,15 +173,7 @@ export const mapRawCatToEditInitialData = (
     toParentIdString(cat.motherCat ?? cat.mother) ?? cat.motherId;
   const rawFatherCat =
     toParentIdString(cat.fatherCat ?? cat.father) ?? cat.fatherId;
-  const rawVitaminValues = toStringArray(cat.vitamins);
-  const rawVitaminFallbackValues = toStringArray(cat.vitamin);
-  const rawVaccineFallbackValues = toStringArray(cat.vaccines);
-  const rawVitamins =
-    rawVitaminValues.length > 0
-      ? rawVitaminValues
-      : rawVitaminFallbackValues.length > 0
-        ? rawVitaminFallbackValues
-        : rawVaccineFallbackValues;
+  const rawVitamins = toStringArray(cat.vitamins ?? cat.vitamin);
 
   return {
     id: cat.id,
@@ -243,11 +223,8 @@ export const mapEditFormDataToUpdateCatDTO = (
     name: formData.name,
     sex: formData.sex,
     dob: formData.dateOfBirth,
-    dateDeceased: formData.dateOfDeath || undefined,
-    reproductiveStatus: toReproductiveStatusForSex(
-      formData.sex,
-      formData.healthStatus,
-    ),
+    dateDeceased: formData.dateOfDeath || null,
+    reproductiveStatus: formData.healthStatus[0],
     personality: formData.personality,
     colors: mappedColors.length > 0 ? mappedColors : ["Black"],
     classification: toClassification(formData.type),

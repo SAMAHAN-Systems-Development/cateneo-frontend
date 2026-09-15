@@ -9,6 +9,8 @@ export type DeleteUserModalProps = {
   userName?: string;
   actionLabel?: string;
   confirmLabel?: string;
+  isPending?: boolean;
+  errorMessage?: string | null;
   onConfirm?: () => void;
   onCancel?: () => void;
   className?: string;
@@ -18,6 +20,8 @@ export function DeleteUserModal({
   userName = "this user",
   actionLabel = "remove",
   confirmLabel = "Confirm",
+  isPending = false,
+  errorMessage = null,
   onConfirm = () => {},
   onCancel = () => {},
   className,
@@ -31,9 +35,12 @@ export function DeleteUserModal({
       role="dialog"
       aria-modal="true"
       aria-label={`${actionLabel} ${userName}`}
-      onClick={onCancel}
+      aria-busy={isPending}
+      onClick={() => {
+        if (!isPending) onCancel();
+      }}
       onKeyDown={(event) => {
-        if (event.key === "Escape") onCancel();
+        if (event.key === "Escape" && !isPending) onCancel();
       }}
       tabIndex={-1}
     >
@@ -49,10 +56,17 @@ export function DeleteUserModal({
           {userName}?
         </p>
 
-        <div className="mt-5 flex items-center justify-center gap-6 sm:gap-10">
+        {errorMessage && (
+          <p role="alert" className="mt-4 text-lg text-error-five">
+            {errorMessage}
+          </p>
+        )}
+
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
           <RoundedButton
             type="button"
             onClick={onConfirm}
+            disabled={isPending}
             variant="default"
             className="bg-success-five text-cateneo-white hover:bg-success-four focus-visible:ring-success-three"
           >
@@ -62,6 +76,8 @@ export function DeleteUserModal({
           <RoundedButton
             type="button"
             onClick={onCancel}
+            disabled={isPending}
+            autoFocus
             variant="default"
             className="bg-[#83271B] text-cateneo-white hover:bg-[#A33A2B] focus-visible:ring-cateneo-darkbrown"
           >

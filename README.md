@@ -89,6 +89,18 @@ $ npm run dev
 Runs on https://localhost:5173/
 ```
 
+## Password recovery
+
+The login page links to `/forgot-password`, which sends the email address to
+`POST /api/users/forgot-password`. Email links open `/reset-password#token=...`;
+that page submits the token and new password to `POST /api/users/reset-password`.
+
+Configure the backend's `CLIENT_URL` to the frontend origin (for example,
+`http://localhost:3000` locally), or set `PASSWORD_RESET_URL` to the full
+`/reset-password` URL. The backend also needs its `SMTP_HOST`, `SMTP_FROM`, port,
+and any SMTP credentials required by the mail provider. Without those settings,
+the pages load but reset emails cannot be sent.
+
 ## Project Folder Structure
 
 ```bash

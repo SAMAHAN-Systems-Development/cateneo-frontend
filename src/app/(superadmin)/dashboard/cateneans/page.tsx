@@ -117,8 +117,8 @@ const mapCatsToCardData = (cats: RawCat[] | undefined): DashboardCardData[] => {
       catName: cat.name || "Unknown Cat",
       location: toDisplayLocation(cat),
       color: cardColors,
-      healthStatus: cat.classification || "N/A",
-      medicine: cat.reproductiveStatus || null,
+      healthStatus: cat.reproductiveStatus || "N/A",
+      medicine: cat.vitamins?.join(", ") || null,
       personality: cat.personality || "No personality details yet.",
       svgColor: cardColors[0],
       rawCat: cat,
@@ -261,6 +261,7 @@ export default function Page() {
                   await updateCat({
                     id: editedCard.id,
                     formData: mapEditFormDataToUpdateCatDTO(formData),
+                    image: formData.image,
                   });
                   const nextStatus = normalizeCatStatus(
                     formData.adoptionStatus,

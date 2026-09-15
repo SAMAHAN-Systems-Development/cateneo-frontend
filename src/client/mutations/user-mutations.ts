@@ -1,12 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   changeUserPasswordService,
+  reactivateUser,
+  softDeleteUser,
   updateMyProfile,
+  updateUserByAdmin,
+  updateUserStatus,
+  type UpdateUserByAdminDTO,
 } from "../service/user-service";
-import { softDeleteUser } from "../service/user-service";
-import { UpdateUserByAdminDTO } from "../service/user-service";
-import { updateUserByAdmin } from "../service/user-service";
-import { reactivateUser } from "../service/user-service";
 
 type UpdateMyProfileInput = {
   firstName: string;
@@ -49,6 +50,19 @@ export const useUpdaterUserByAdmin = () => {
       id: string;
       userData: UpdateUserByAdminDTO;
     }) => updateUserByAdmin(id, userData),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["find-all-users"] });
+    },
+  });
+};
+
+export const useUpdateUserStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["update-user-status"],
+    mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
+      updateUserStatus(id, isActive),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["find-all-users"] });
     },

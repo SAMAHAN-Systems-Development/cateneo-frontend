@@ -25,7 +25,7 @@ import { EditRoleModal } from "@/components/ui/edit-role-modal";
 import { EditRoleConfirmModal } from "@/components/ui/edit-role-confirm-modal";
 import { ViewProfileModal } from "@/components/ui/view-profile-modal";
 import {
-  useSoftDeleteUser,
+  useUpdateUserStatus,
   useUpdaterUserByAdmin,
 } from "@/client/mutations/user-mutations";
 import { findUserById } from "@/client/service/user-service";
@@ -219,8 +219,6 @@ export interface ListOfUsersTableProps {
   onFilterClick?: () => void;
   onViewUser?: (user: UserTableRow) => void;
   onEditUser?: (user: UserTableRow) => void;
-  onDeleteUser?: (user: UserTableRow) => void;
-  onReactivateUser?: (user: UserTableRow) => void | Promise<void>;
 }
 
 export function ListOfUsersTable({
@@ -230,11 +228,9 @@ export function ListOfUsersTable({
   onFilterClick,
   onViewUser,
   onEditUser,
-  onDeleteUser,
-  onReactivateUser,
 }: ListOfUsersTableProps) {
-  const { mutateAsync: softDeleteUser, isPending: isDeletingUser } =
-    useSoftDeleteUser();
+  const { mutateAsync: updateUserStatus, isPending: isUpdatingUserStatus } =
+    useUpdateUserStatus();
   const { mutateAsync: updateUserByAdmin, isPending: isUpdatingUser } =
     useUpdaterUserByAdmin();
   const [search, setSearch] = React.useState("");
@@ -253,6 +249,8 @@ export function ListOfUsersTable({
   const [userActionMode, setUserActionMode] = React.useState<
     "block" | "unblock" | null
   >(null);
+  const [userActionError, setUserActionError] = React.useState<string | null>(null);
+  const statusActionInFlight = React.useRef(false);
 
   const normalizeRole = (value?: string) => {
     if (!value) return "-";
@@ -345,20 +343,29 @@ export function ListOfUsersTable({
     setUserToEditRole(null);
   };
 
-  const { mutateAsync: reactivateUser, isPending: isReactivatingUser } =
-    require("@/client/mutations/user-mutations").useReactivateUser();
   const handleConfirmUserAction = async () => {
-    if (!userActionTarget || !userActionMode) return;
-
-    if (userActionMode === "block") {
-      await softDeleteUser(userActionTarget.id);
-    } else if (userActionMode === "unblock") {
-      await reactivateUser(userActionTarget.id);
+    if (!userActionTarget || !userActionMode || statusActionInFlight.current) {
+      return;
     }
 
-    onDeleteUser?.(userActionTarget);
-    setUserActionTarget(null);
-    setUserActionMode(null);
+    statusActionInFlight.current = true;
+    setUserActionError(null);
+    try {
+      await updateUserStatus({
+        id: userActionTarget.id,
+        isActive: userActionMode === "unblock",
+      });
+      setUserActionTarget(null);
+      setUserActionMode(null);
+    } catch (error) {
+      setUserActionError(
+        error instanceof Error
+          ? error.message
+          : "Unable to update this account. Please try again.",
+      );
+    } finally {
+      statusActionInFlight.current = false;
+    }
   };
 
   const filtered = React.useMemo(() => {
@@ -569,12 +576,13 @@ export function ListOfUsersTable({
                                 ? "default"
                                 : "destructive"
                             }
-                            disabled={isDeletingUser || isReactivatingUser}
+                            disabled={isUpdatingUserStatus}
                             onSelect={() => {
                               const nextMode =
                                 row.isBlocked === "Yes" ? "unblock" : "block";
                               setUserActionTarget(row);
                               setUserActionMode(nextMode);
+                              setUserActionError(null);
                             }}
                           >
                             {row.isBlocked === "Yes"
@@ -652,16 +660,21 @@ export function ListOfUsersTable({
       {userActionTarget ? (
         <DeleteUserModal
           userName={userActionTarget.name}
-          actionLabel={userActionMode === "unblock" ? "unblock" : "remove"}
-          confirmLabel={userActionMode === "unblock" ? "Unblock" : "Confirm"}
+          actionLabel={userActionMode === "unblock" ? "unblock" : "block"}
+          confirmLabel={
+            isUpdatingUserStatus
+              ? userActionMode === "unblock" ? "Unblocking..." : "Blocking..."
+              : userActionMode === "unblock" ? "Unblock" : "Block"
+          }
+          isPending={isUpdatingUserStatus}
+          errorMessage={userActionError}
           onCancel={() => {
-            if (isDeletingUser) return;
+            if (isUpdatingUserStatus || statusActionInFlight.current) return;
             setUserActionTarget(null);
             setUserActionMode(null);
+            setUserActionError(null);
           }}
-          onConfirm={async () => {
-            await handleConfirmUserAction();
-          }}
+          onConfirm={handleConfirmUserAction}
         />
       ) : null}
       {userToView ? (

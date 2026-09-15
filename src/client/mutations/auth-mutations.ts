@@ -3,6 +3,8 @@ import {
   loginService,
   createUserService,
   logoutService,
+  forgotPasswordService,
+  resetPasswordService,
 } from "../service/auth-service";
 import { loginFormData } from "@/schemas/login-form-schema";
 
@@ -30,3 +32,9 @@ export const useCreateUser = () => {
     mutationFn: createUserService,
   });
 };
+
+export const useForgotPassword = () =>
+  useMutation({ mutationFn: forgotPasswordService, retry: false, gcTime: 0 });
+
+export const useResetPassword = () =>
+  useMutation({ mutationFn: resetPasswordService, retry: false, gcTime: 0 });

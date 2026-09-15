@@ -23,7 +23,7 @@ export const editCatFormSchema = z
     vitamins: z.array(z.string()),
     healthStatus: z
       .array(z.string())
-      .min(1, { message: "Select at least one health status" }),
+      .max(1, { message: "Select only one health status" }),
     personality: z
       .string()
       .min(1, { message: "Personality is required" })
@@ -32,6 +32,17 @@ export const editCatFormSchema = z
     color: z.array(z.string()).min(1, { message: "Color is required" }),
   })
   .superRefine((data, ctx) => {
+    const healthStatus = data.healthStatus[0];
+    const expectedHealthStatus = data.sex === "Female" ? "Spayed" : "Neutered";
+
+    if (healthStatus && healthStatus !== expectedHealthStatus) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `${data.sex} cats can only have ${expectedHealthStatus} as their health status`,
+        path: ["healthStatus"],
+      });
+    }
+
     if (
       data.adoptionStatus === "Deceased" &&
       (!data.dateOfDeath || !data.dateOfDeath.trim())

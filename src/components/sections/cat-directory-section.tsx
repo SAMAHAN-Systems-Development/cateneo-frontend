@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { useGetAllCats } from "@/client/queries/cat-queries";
+import type { CatParentRelations } from "@/client/service/catenean-service";
+import { formatCatParents } from "@/lib/cat-parent-display";
 import PublicCateneanCard, {
   type PublicCateneanCardProps,
 } from "@/components/ui/public-catenean-card";
@@ -24,7 +26,7 @@ import {
 const tabs = ["Cateneans", "Kitteneans", "Cherished Felines"] as const;
 type TabName = (typeof tabs)[number];
 
-type DirectoryCat = {
+type DirectoryCat = CatParentRelations & {
   id: number;
   name?: string;
   sex?: string;
@@ -33,6 +35,7 @@ type DirectoryCat = {
   personality?: string;
   imageUrl?: string;
   reproductiveStatus?: string;
+  vitamins?: string[];
   classification?: string;
   status?: string;
   currentLocation?: string;
@@ -95,8 +98,8 @@ const toCateneanCard = (cat: DirectoryCat): PublicCateneanCardProps => {
     catName: cat.name || "Unknown Cat",
     location: toLocation(cat),
     color: colors,
-    healthStatus: cat.classification || "N/A",
-    medicine: cat.reproductiveStatus || null,
+    healthStatus: cat.reproductiveStatus || "N/A",
+    medicine: cat.vitamins?.join(", ") || null,
     personality: cat.personality || "No personality details yet.",
     svgColor: colors[0],
   };
@@ -108,12 +111,12 @@ const toKitteneanCard = (cat: DirectoryCat): PublicKitteneanCardProps => {
     imageUrl: cat.imageUrl || "/images/cat-placeholder.png",
     name: cat.name || "Unknown Kittenean",
     gender: cat.sex?.toLowerCase() === "female" ? "female" : "male",
-    parent: "N/A",
+    parent: formatCatParents(cat),
     dateOfBirth: toDate(cat.dob),
-    medicine: cat.reproductiveStatus || null,
+    medicine: cat.vitamins?.join(", ") || null,
     residence: toLocation(cat),
     color: colors,
-    healthStatus: cat.classification || "N/A",
+    healthStatus: cat.reproductiveStatus || "N/A",
     status: cat.status || "N/A",
     personality: cat.personality || "No personality details yet.",
     svgColor: colors[0],

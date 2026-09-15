@@ -3,6 +3,7 @@
 import { cloneElement, useState } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { MALE_SVG, FEMALE_SVG, COLOR_MAP } from "@/lib/kittenean-card-config";
+import { formatCatStatus } from "@/lib/cat-status-display";
 import { Popover as PopoverPrimitive } from "radix-ui";
 import {
   Popover,
@@ -29,8 +30,10 @@ export type KitteneanProps = {
 
 // Vitamin lookup dictionary for the popover descriptions
 const VITAMIN_DICTIONARY: Record<string, string> = {
-  "LC-Vit": "LC-Vit (or LC-Vit Plus) for cats is a popular, over-the-counter multivitamin syrup designed to boost immunity, increase appetite, and treat vitamin deficiencies during stress or illness.",
-  "Nutri-Plus Gel": "Nutri-Plus Gel is a fast-acting energy supplement and nutritional support for growing, active, or recovering cats.",
+  "LC-Vit":
+    "LC-Vit (or LC-Vit Plus) for cats is a popular, over-the-counter multivitamin syrup designed to boost immunity, increase appetite, and treat vitamin deficiencies during stress or illness.",
+  "Nutri-Plus Gel":
+    "Nutri-Plus Gel is a fast-acting energy supplement and nutritional support for growing, active, or recovering cats.",
   // Add any other specific vitamins QA expects here
 };
 
@@ -69,6 +72,7 @@ function KitteneanCard({
 }: KitteneanProps) {
   const [medicineIsOpen, setMedicineIsOpen] = useState(false);
   const [actionsIsOpen, setActionsIsOpen] = useState(false);
+  const displayStatus = formatCatStatus(status);
   const genderIcon =
     gender === "male"
       ? cloneElement(MALE_SVG, {
@@ -85,104 +89,104 @@ function KitteneanCard({
         });
   return (
     <Card
-      className="flex bg-cateneo-white border-[2px] rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B] max-[640px]:max-h-[273.75px]"
+      className="flex bg-cateneo-white border-[2px] rounded-[17.41px] relative pt-[22.29px] pb-[17.5px] border-[#83491B] max-[640px]:min-h-0!"
       style={{
         width: responsiveClamp(282, 297.36),
-        height: responsiveClamp(350.75, 569),
+        minHeight: responsiveClamp(350.75, 569),
       }}
     >
       {(onEdit || onDelete) && (
         <Popover open={actionsIsOpen} onOpenChange={setActionsIsOpen}>
-        <PopoverTrigger asChild>
-          <button
-            type="button"
-            className="absolute top-4 right-4 p-2 rounded-full hover:bg-cateneo-lightbrown/10 transition-colors z-10"
-            aria-label="Open card actions"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-cateneo-lightbrown/10 transition-colors z-10"
+              aria-label="Open card actions"
             >
-              <circle cx="5" cy="12" r="2" fill="#83491B" />
-              <circle cx="12" cy="12" r="2" fill="#83491B" />
-              <circle cx="19" cy="12" r="2" fill="#83491B" />
-            </svg>
-          </button>
-        </PopoverTrigger>
-        <PopoverContent
-          align="end"
-          sideOffset={8}
-          className="w-[190px] rounded-[24px] border-2 border-[#83491B] bg-[#e8e4d8] p-3 font-gaegu text-[#83491B]"
-        >
-          <button
-            type="button"
-            onClick={() => {
-              setActionsIsOpen(false);
-              onEdit?.();
-            }}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[28px] leading-none hover:bg-[#ded8c8] disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={!onEdit}
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="5" cy="12" r="2" fill="#83491B" />
+                <circle cx="12" cy="12" r="2" fill="#83491B" />
+                <circle cx="19" cy="12" r="2" fill="#83491B" />
+              </svg>
+            </button>
+          </PopoverTrigger>
+          <PopoverContent
+            align="end"
+            sideOffset={8}
+            className="w-[190px] rounded-[24px] border-2 border-[#83491B] bg-[#e8e4d8] p-3 font-gaegu text-[#83491B]"
           >
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+            <button
+              type="button"
+              onClick={() => {
+                setActionsIsOpen(false);
+                onEdit?.();
+              }}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[28px] leading-none hover:bg-[#ded8c8] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!onEdit}
             >
-              <path
-                d="M4 20H8L18.5 9.5C19.3284 8.67157 19.3284 7.32843 18.5 6.5C17.6716 5.67157 16.3284 5.67157 15.5 6.5L5 17V20Z"
-                stroke="#83491B"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span>Edit</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setActionsIsOpen(false);
-              onDelete?.();
-            }}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[28px] leading-none hover:bg-[#ded8c8] disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={!onDelete}
-          >
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4 20H8L18.5 9.5C19.3284 8.67157 19.3284 7.32843 18.5 6.5C17.6716 5.67157 16.3284 5.67157 15.5 6.5L5 17V20Z"
+                  stroke="#83491B"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span>Edit</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActionsIsOpen(false);
+                onDelete?.();
+              }}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[28px] leading-none hover:bg-[#ded8c8] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!onDelete}
             >
-              <path
-                d="M3 6H21"
-                stroke="#83491B"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <path
-                d="M8 6V4C8 3.44772 8.44772 3 9 3H15C15.5523 3 16 3.44772 16 4V6"
-                stroke="#83491B"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M19 6L18.3 18.2C18.2367 19.3128 17.3156 20.1875 16.2 20.1875H7.8C6.68439 20.1875 5.76332 19.3128 5.7 18.2L5 6"
-                stroke="#83491B"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span>Delete</span>
-          </button>
-        </PopoverContent>
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 6H21"
+                  stroke="#83491B"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M8 6V4C8 3.44772 8.44772 3 9 3H15C15.5523 3 16 3.44772 16 4V6"
+                  stroke="#83491B"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M19 6L18.3 18.2C18.2367 19.3128 17.3156 20.1875 16.2 20.1875H7.8C6.68439 20.1875 5.76332 19.3128 5.7 18.2L5 6"
+                  stroke="#83491B"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span>Delete</span>
+            </button>
+          </PopoverContent>
         </Popover>
       )}
       <CardContent
@@ -237,7 +241,7 @@ function KitteneanCard({
             {genderIcon}
           </div>
           <div
-            className="flex items-center max-[640px]:order-2 max-[640px]:w-[49%]"
+            className="flex min-w-0 items-center max-[640px]:order-2 max-[640px]:w-[49%]"
             style={{
               height: responsiveClamp(15.5, 27),
               gap: responsiveClamp(5.84, 8),
@@ -247,11 +251,12 @@ function KitteneanCard({
               className="text-[17.12px] text-cateneo-lightbrown"
               style={{ fontSize: responsiveClamp(12, 17.12) }}
             >
-              Parent:
+              Parents:
             </p>
             <p
-              className="text-[21.79px] text-cateneo-darkbrown max-w-[220px] leading-none line-clamp-1"
+              className="min-w-0 text-[21.79px] text-cateneo-darkbrown max-w-[220px] leading-none truncate"
               style={{ fontSize: responsiveClamp(13.5, 21.79) }}
+              title={parent}
             >
               {parent}
             </p>
@@ -367,7 +372,7 @@ function KitteneanCard({
               gap: responsiveClamp(5.84, 8),
             }}
           >
-                        <p
+            <p
               className="shrink-0 text-[17.12px] text-cateneo-lightbrown max-[640px]:w-[75px]"
               style={{ fontSize: responsiveClamp(12, 17.12) }}
             >
@@ -427,23 +432,24 @@ function KitteneanCard({
             </Popover>
           </div>
           <div
-            className="flex items-center max-[640px]:order-6 max-[640px]:w-[49%]"
+            className="flex min-w-0 items-center max-[640px]:order-6 max-[640px]:w-full"
             style={{
-              height: responsiveClamp(15.5, 27),
+              minHeight: responsiveClamp(15.5, 27),
               gap: responsiveClamp(5.84, 8),
             }}
           >
             <p
-              className="text-[17.12px] text-cateneo-lightbrown"
+              className="shrink-0 text-[17.12px] text-cateneo-lightbrown"
               style={{ fontSize: responsiveClamp(12, 17.12) }}
             >
               Status:
             </p>
             <p
-              className="text-[21.79px] text-cateneo-darkbrown max-w-[220px] truncate"
+              className="min-w-0 flex-1 text-[21.79px] text-cateneo-darkbrown leading-none break-words"
               style={{ fontSize: responsiveClamp(13.5, 21.79) }}
+              title={displayStatus}
             >
-              {status}
+              {displayStatus}
             </p>
           </div>
           <div className="pr-[41px] w-[100%] max-[640px]:order-9">

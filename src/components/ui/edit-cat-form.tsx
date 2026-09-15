@@ -13,6 +13,7 @@ import {
 } from "@/client/queries/cat-queries";
 import { cn } from "@/lib/utils";
 import { normalizeCatStatus } from "@/lib/cat-form-mappers";
+import { formatCatStatus } from "@/lib/cat-status-display";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
@@ -290,6 +291,7 @@ export default function EditCatForm({
   }, [cat, form]);
 
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+  const displayImageUrl = previewUrl || cat.imageUrl;
   const initialValues = React.useMemo(
     () => mapInitialCatToFormValues(cat),
     [cat],
@@ -299,7 +301,10 @@ export default function EditCatForm({
     [initialValues.type],
   );
   const adoptionStatusSelectOptions = React.useMemo(
-    () => withSelectedOptions(statusOptions, initialValues.adoptionStatus),
+    () =>
+      withSelectedOptions(statusOptions, initialValues.adoptionStatus).map(
+        (value) => ({ value, label: formatCatStatus(value) }),
+      ),
     [initialValues.adoptionStatus],
   );
   const locationSelectOptions = React.useMemo(
@@ -347,10 +352,6 @@ export default function EditCatForm({
   }, [initialValues.color]);
 
   const imageFile = useWatch({ control: form.control, name: "image" });
-  const selectedSex = useWatch({
-    control: form.control,
-    name: "sex",
-  });
   const selectedAdoptionStatus = useWatch({
     control: form.control,
     name: "adoptionStatus",
@@ -388,20 +389,6 @@ export default function EditCatForm({
       shouldValidate: true,
     });
   }, [form, showDateOfDeath]);
-
-  React.useEffect(() => {
-    const expectedHealthStatus =
-      selectedSex === "Female" ? "Spayed" : "Neutered";
-
-    if (form.getValues("healthStatus")[0] === expectedHealthStatus) {
-      return;
-    }
-
-    form.setValue("healthStatus", [expectedHealthStatus], {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-  }, [form, selectedSex]);
 
   const toggleArrayValue = (
     field: "vitamins" | "healthStatus",
@@ -652,12 +639,13 @@ export default function EditCatForm({
                       <span className="absolute right-3 top-3 inline-flex size-8 items-center justify-center rounded-full bg-cateneo-black text-cateneo-white ">
                         <Plus className="size-4" />
                       </span>
-                      {previewUrl ? (
+                      {displayImageUrl ? (
                         <div className="relative h-full w-full overflow-hidden rounded-lg">
                           <Image
-                            src={previewUrl}
+                            src={displayImageUrl}
                             alt="Cat preview"
                             fill
+                            unoptimized
                             className="object-cover"
                           />
                         </div>

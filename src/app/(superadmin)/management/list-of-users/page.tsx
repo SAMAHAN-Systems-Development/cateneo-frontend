@@ -2,7 +2,6 @@
 
 import * as React from "react";
 
-import { useReactivateUser } from "@/client/mutations/user-mutations";
 import { useFindAllUsers } from "@/client/queries/user-queries";
 import {
   ListOfUsersTable,
@@ -34,7 +33,6 @@ const normalizeIsBlocked = (isActive?: boolean) => {
 };
 
 const Page = () => {
-  const { mutateAsync: reactivateUser } = useReactivateUser();
   const { data, isLoading, isError, error } = useFindAllUsers({
     page: 1,
     limit: 10,
@@ -62,10 +60,6 @@ const Page = () => {
     });
   }, [usersData]);
 
-  const handleReactivateUser = async (user: UserTableRow) => {
-    await reactivateUser(user.id);
-  };
-
   return (
     <div className="w-full px-3 pb-6 md:px-5 md:pb-8">
       <div className="mx-auto w-full max-w-7xl">
@@ -78,7 +72,6 @@ const Page = () => {
         <ListOfUsersTable
           users={isLoading ? [] : users}
           isLoading={isLoading}
-          onReactivateUser={handleReactivateUser}
         />
       </div>
     </div>

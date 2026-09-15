@@ -10,7 +10,11 @@ import {
 } from "@/client/mutations/cat-mutations";
 import { useGetAllCats } from "@/client/queries/cat-queries";
 import { getAdminCatById } from "@/client/service/catenean-service";
-import type { CateneanDTO } from "@/client/service/catenean-service";
+import type {
+  CateneanDTO,
+  CatParentRelations,
+} from "@/client/service/catenean-service";
+import { formatCatParents } from "@/lib/cat-parent-display";
 import DashboardCategoryShell from "@/components/sections/dashboard-category-shell";
 import { DeleteCatModal } from "@/components/ui/delete-cat-modal";
 import EditCatForm, {
@@ -27,7 +31,7 @@ import {
 
 type CardColor = KitteneanProps["color"][number];
 
-type RawCat = {
+type RawCat = CatParentRelations & {
   id: number;
   name: string;
   sex: string;
@@ -126,12 +130,12 @@ const mapCatsToCardData = (cats: RawCat[] | undefined): DashboardCardData[] => {
       imageUrl: cat.imageUrl || "/images/cat-placeholder.png",
       name: cat.name || "Unknown Kittenean",
       gender: toCardSex(cat.sex ?? "male"),
-      parent: "N/A",
+      parent: formatCatParents(cat),
       dateOfBirth: toReadableDate(cat.dob),
-      medicine: cat.reproductiveStatus || null,
+      medicine: cat.vitamins?.join(", ") || null,
       residence: toDisplayLocation(cat),
       color: cardColors,
-      healthStatus: cat.classification || "N/A",
+      healthStatus: cat.reproductiveStatus || "N/A",
       status: cat.status || "N/A",
       personality: cat.personality || "No personality details yet.",
       svgColor: cardColors[0],
@@ -281,6 +285,7 @@ export default function Page() {
                   await updateCat({
                     id: editedCard.id,
                     formData: mapEditFormDataToUpdateCatDTO(formData),
+                    image: formData.image,
                   });
                   const nextStatus = normalizeCatStatus(
                     formData.adoptionStatus,

@@ -1,4 +1,5 @@
 import type { UseFormReturn } from "react-hook-form";
+import Link from "next/link";
 import { type loginFormData } from "@/schemas/login-form-schema";
 import { MdMailOutline } from "react-icons/md";
 import { GoLock } from "react-icons/go";
@@ -67,6 +68,15 @@ const LoginForm = ({ form, onSubmit, errorMessage }: LoginFormProps) => {
                 {errors.password.message}
               </p>
             )}
+          </div>
+
+          <div className="text-right">
+            <Link
+              href="/forgot-password"
+              className="rounded-sm text-sm text-cateneo-darkbrown underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cateneo-darkbrown sm:text-base"
+            >
+              Forgot password?
+            </Link>
           </div>
 
           <button

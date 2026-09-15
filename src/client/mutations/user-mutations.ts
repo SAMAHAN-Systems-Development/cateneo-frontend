@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import {
   changeUserPasswordService,
+  getMyProfile,
   reactivateUser,
   softDeleteUser,
   updateMyProfile,
@@ -40,6 +42,7 @@ export const useChangeUserPassword = () => {
 
 export const useUpdaterUserByAdmin = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationKey: ["update-user-by-admin"],
@@ -50,7 +53,36 @@ export const useUpdaterUserByAdmin = () => {
       id: string;
       userData: UpdateUserByAdminDTO;
     }) => updateUserByAdmin(id, userData),
-    onSuccess: async () => {
+    onSuccess: async (updatedUser) => {
+      const profile = queryClient.getQueryData<
+        Awaited<ReturnType<typeof getMyProfile>>
+      >(["get-my-profile"]);
+      const isEditingSelf =
+        profile && String(profile.id) === String(updatedUser.id);
+
+      if (isEditingSelf) {
+        await queryClient.cancelQueries({ queryKey: ["get-my-profile"] });
+        queryClient.setQueryData(["get-my-profile"], { ...profile, ...updatedUser });
+        queryClient.setQueryData<{ user: { role: string } | null }>(
+          ["currentUser"],
+          (current) =>
+            current?.user
+              ? { ...current, user: { ...current.user, role: updatedUser.role } }
+              : current,
+        );
+
+        if (updatedUser.role === "Volunteer") {
+          // The account can no longer fetch the SuperAdmin-only users list.
+          await queryClient.cancelQueries({ queryKey: ["find-all-users"] });
+          await queryClient.invalidateQueries({
+            queryKey: ["find-all-users"],
+            refetchType: "none",
+          });
+          router.replace("/dashboard/cateneans");
+          return;
+        }
+      }
+
       await queryClient.invalidateQueries({ queryKey: ["find-all-users"] });
     },
   });

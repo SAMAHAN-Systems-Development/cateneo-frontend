@@ -7,6 +7,7 @@ import {
   ListOfUsersTable,
   type UserTableRow,
 } from "@/components/ui/list-of-users-table";
+import { formatUserRole } from "@/lib/user-roles";
 
 const formatJoinedAt = (value?: string) => {
   if (!value) return "-";
@@ -17,14 +18,6 @@ const formatJoinedAt = (value?: string) => {
     day: "2-digit",
     year: "numeric",
   });
-};
-
-const normalizeRole = (value?: string) => {
-  if (!value) return "-";
-  if (value === "SUPERADMIN") return "Superadmin";
-  if (value === "ADMIN") return "Admin";
-  if (value === "VOLUNTEER") return "Volunteer";
-  return value;
 };
 
 const normalizeIsBlocked = (isActive?: boolean) => {
@@ -52,7 +45,7 @@ const Page = () => {
       return {
         id: user.id,
         name: fullName || "-",
-        role: normalizeRole(user.role),
+        role: formatUserRole(user.role),
         roleValue: user.role,
         isBlocked: normalizeIsBlocked(user.is_active),
         joinedAt: formatJoinedAt(user.createdAt),

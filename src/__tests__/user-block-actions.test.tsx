@@ -4,6 +4,8 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 
 import UsersPage from "@/app/(superadmin)/management/list-of-users/page";
 
+vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: vi.fn() }) }));
+
 const user = {
   id: "42",
   firstName: "Test",

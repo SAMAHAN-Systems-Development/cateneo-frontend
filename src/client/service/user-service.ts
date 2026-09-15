@@ -1,4 +1,5 @@
 import { apiClient } from "@/lib/api-client";
+import type { UserRole } from "@/lib/user-roles";
 
 interface User {
   id: string;
@@ -6,7 +7,7 @@ interface User {
   lastName: string;
   email: string;
   password: string;
-  role: "ADMIN" | "SUPERADMIN" | "VOLUNTEER";
+  role: UserRole;
   is_active?: boolean;
   createdAt?: string;
 }
@@ -18,7 +19,7 @@ interface UpdateUserDTO {
 }
 
 export interface UpdateUserByAdminDTO extends UpdateUserDTO {
-  role: string;
+  role: UserRole;
 }
 
 export interface PaginationQueryDTO {

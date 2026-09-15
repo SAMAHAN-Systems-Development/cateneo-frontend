@@ -29,6 +29,11 @@ import {
   useUpdaterUserByAdmin,
 } from "@/client/mutations/user-mutations";
 import { findUserById } from "@/client/service/user-service";
+import {
+  formatUserRole,
+  normalizeUserRole,
+  type UserRole,
+} from "@/lib/user-roles";
 import { cn } from "@/lib/utils";
 
 function DropdownMenu(
@@ -191,7 +196,7 @@ type ViewProfileModalData = {
 type EditRoleModalData = {
   id: string;
   userName: string;
-  roleValue: string;
+  roleValue: UserRole;
 };
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
@@ -242,8 +247,10 @@ export function ListOfUsersTable({
   const [viewUserError, setViewUserError] = React.useState<string | null>(null);
   const [userToEditRole, setUserToEditRole] =
     React.useState<EditRoleModalData | null>(null);
-  const [selectedRole, setSelectedRole] = React.useState("VOLUNTEER");
+  const [selectedRole, setSelectedRole] = React.useState<UserRole>("Volunteer");
   const [isRoleConfirmOpen, setIsRoleConfirmOpen] = React.useState(false);
+  const [roleUpdateError, setRoleUpdateError] = React.useState<string | null>(null);
+  const roleUpdateInFlight = React.useRef(false);
   const [userActionTarget, setUserActionTarget] =
     React.useState<UserTableRow | null>(null);
   const [userActionMode, setUserActionMode] = React.useState<
@@ -251,14 +258,6 @@ export function ListOfUsersTable({
   >(null);
   const [userActionError, setUserActionError] = React.useState<string | null>(null);
   const statusActionInFlight = React.useRef(false);
-
-  const normalizeRole = (value?: string) => {
-    if (!value) return "-";
-    if (value === "SUPERADMIN") return "Superadmin";
-    if (value === "ADMIN") return "Admin";
-    if (value === "VOLUNTEER") return "Volunteer";
-    return value;
-  };
 
   const formatJoinedAt = (value?: string) => {
     if (!value) return "-";
@@ -269,13 +268,6 @@ export function ListOfUsersTable({
       day: "2-digit",
       year: "numeric",
     });
-  };
-
-  const formatRoleLabel = (value: string) => {
-    if (value === "SUPERADMIN") return "Superadmin";
-    if (value === "ADMIN") return "Admin";
-    if (value === "VOLUNTEER") return "Volunteer";
-    return value;
   };
 
   const handleViewUser = async (user: UserTableRow) => {
@@ -299,7 +291,7 @@ export function ListOfUsersTable({
       setUserToView({
         userName: fullName || user.name,
         email: details.email || "-",
-        role: normalizeRole(details.role),
+        role: formatUserRole(details.role),
         isBlocked:
           typeof details.is_active === "boolean"
             ? details.is_active
@@ -315,32 +307,47 @@ export function ListOfUsersTable({
     }
   };
 
-  const canEditRole = (user: UserTableRow) => user.roleValue === "VOLUNTEER";
-
   const handleEditRole = (user: UserTableRow) => {
-    if (!canEditRole(user)) return;
+    const role = normalizeUserRole(user.roleValue);
+    if (!role || roleUpdateInFlight.current) return;
 
     setUserToEditRole({
       id: user.id,
       userName: user.name,
-      roleValue: user.roleValue,
+      roleValue: role,
     });
-    setSelectedRole(user.roleValue);
+    setSelectedRole(role);
     setIsRoleConfirmOpen(false);
+    setRoleUpdateError(null);
   };
 
   const handleConfirmRoleChange = async () => {
-    if (!userToEditRole) return;
+    if (
+      !userToEditRole ||
+      selectedRole === userToEditRole.roleValue ||
+      roleUpdateInFlight.current
+    ) {
+      return;
+    }
 
-    await updateUserByAdmin({
-      id: userToEditRole.id,
-      userData: {
-        role: selectedRole,
-      },
-    });
-
-    setIsRoleConfirmOpen(false);
-    setUserToEditRole(null);
+    roleUpdateInFlight.current = true;
+    setRoleUpdateError(null);
+    try {
+      await updateUserByAdmin({
+        id: userToEditRole.id,
+        userData: { role: selectedRole },
+      });
+      setIsRoleConfirmOpen(false);
+      setUserToEditRole(null);
+    } catch (error) {
+      setRoleUpdateError(
+        error instanceof Error
+          ? error.message
+          : "Unable to update this role. Please try again.",
+      );
+    } finally {
+      roleUpdateInFlight.current = false;
+    }
   };
 
   const handleConfirmUserAction = async () => {
@@ -563,6 +570,9 @@ export function ListOfUsersTable({
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="font-playpen focus:bg-[#EEDCBE] focus:text-cateneo-darkbrown"
+                            disabled={
+                              !normalizeUserRole(row.roleValue) || isUpdatingUser
+                            }
                             onSelect={() => {
                               handleEditRole(row);
                               onEditUser?.(row);
@@ -696,28 +706,34 @@ export function ListOfUsersTable({
       {userToEditRole && !isRoleConfirmOpen ? (
         <EditRoleModal
           userName={userToEditRole.userName}
-          currentRole={formatRoleLabel(userToEditRole.roleValue)}
+          currentRole={userToEditRole.roleValue}
           selectedRole={selectedRole}
           onRoleChange={(role) => setSelectedRole(role)}
           onCancel={() => {
-            if (isUpdatingUser) return;
+            if (isUpdatingUser || roleUpdateInFlight.current) return;
             setIsRoleConfirmOpen(false);
             setUserToEditRole(null);
+            setRoleUpdateError(null);
           }}
-          onConfirm={() => setIsRoleConfirmOpen(true)}
+          onConfirm={() => {
+            if (selectedRole !== userToEditRole.roleValue) {
+              setIsRoleConfirmOpen(true);
+            }
+          }}
         />
       ) : null}
       {userToEditRole && isRoleConfirmOpen ? (
         <EditRoleConfirmModal
           userName={userToEditRole.userName}
-          roleLabel={formatRoleLabel(selectedRole)}
+          roleLabel={formatUserRole(selectedRole)}
+          isPending={isUpdatingUser}
+          errorMessage={roleUpdateError}
           onCancel={() => {
-            if (isUpdatingUser) return;
+            if (isUpdatingUser || roleUpdateInFlight.current) return;
             setIsRoleConfirmOpen(false);
+            setRoleUpdateError(null);
           }}
-          onConfirm={async () => {
-            await handleConfirmRoleChange();
-          }}
+          onConfirm={handleConfirmRoleChange}
         />
       ) : null}
     </>

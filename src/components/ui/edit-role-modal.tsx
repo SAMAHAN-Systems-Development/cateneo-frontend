@@ -3,24 +3,35 @@
 import React from "react";
 
 import { RoundedButton } from "@/components/ui/rounded-button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  USER_ROLES,
+  formatUserRole,
+  normalizeUserRole,
+  type UserRole,
+} from "@/lib/user-roles";
 import { cn } from "@/lib/utils";
 
 export type EditRoleModalProps = {
   userName?: string;
-  currentRole?: string;
-  selectedRole?: string;
-  onRoleChange?: (role: string) => void;
+  currentRole?: UserRole;
+  selectedRole?: UserRole;
+  onRoleChange?: (role: UserRole) => void;
   onConfirm?: () => void;
   onCancel?: () => void;
   className?: string;
 };
 
-const ROLE_OPTIONS = ["VOLUNTEER", "ADMIN", "SUPERADMIN"] as const;
-
 export function EditRoleModal({
   userName = "this user",
-  currentRole = "VOLUNTEER",
-  selectedRole = "VOLUNTEER",
+  currentRole = "Volunteer",
+  selectedRole = "Volunteer",
   onRoleChange = () => {},
   onConfirm = () => {},
   onCancel = () => {},
@@ -60,31 +71,45 @@ export function EditRoleModal({
           >
             Role
           </label>
-          <select
-            id="user-role-select"
+          <Select
             value={selectedRole}
-            onChange={(event) => onRoleChange(event.target.value)}
-            className="w-full rounded-2xl border-2 border-cateneo-darkbrown bg-cateneo-white px-4 py-3 font-gaegu text-xl text-cateneo-black outline-none focus:border-cateneo-darkbrown"
+            onValueChange={(value) => {
+              const role = normalizeUserRole(value);
+              if (role) onRoleChange(role);
+            }}
           >
-            {ROLE_OPTIONS.map((role) => (
-              <option key={role} value={role}>
-                {role === "SUPERADMIN"
-                  ? "Superadmin"
-                  : role === "ADMIN"
-                    ? "Admin"
-                    : "Volunteer"}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger
+              id="user-role-select"
+              autoFocus
+              className="h-auto w-full rounded-2xl border-2 border-cateneo-darkbrown bg-cateneo-white px-4 py-3 font-gaegu text-xl text-cateneo-black focus-visible:border-cateneo-darkbrown focus-visible:ring-cateneo-darkbrown/20"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent
+              className="z-[60] rounded-2xl border-cateneo-darkbrown/20 bg-cateneo-white font-gaegu text-cateneo-black"
+              onEscapeKeyDown={(event) => event.stopPropagation()}
+            >
+              {USER_ROLES.map((role) => (
+                <SelectItem
+                  key={role}
+                  value={role}
+                  className="rounded-lg py-2 text-xl focus:bg-[#EEDCBE] focus:text-cateneo-darkbrown"
+                >
+                  {formatUserRole(role)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <p className="mt-3 text-lg text-cateneo-darkbrown/75">
-            Current role: {currentRole}
+            Current role: {formatUserRole(currentRole)}
           </p>
         </div>
 
-        <div className="mt-8 flex items-center justify-center gap-6 sm:gap-10">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
           <RoundedButton
             type="button"
             onClick={onConfirm}
+            disabled={selectedRole === currentRole}
             variant="default"
             className="bg-success-five text-cateneo-white hover:bg-success-four focus-visible:ring-success-three"
           >

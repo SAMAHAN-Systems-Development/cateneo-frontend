@@ -73,7 +73,12 @@ $ git fetch
 $ npm i
 ```
 
-5. Paste the .env
+5. Copy `.env.example` to `.env` in the project root (beside `package.json`).
+
+Set `NEXT_PUBLIC_API_BASE_URL` to your backend origin, for example
+`http://localhost:3001`, without a trailing slash or `/api` suffix. Restart the
+development server after changing it. The local `.env` is ignored by Git;
+`.env.example` is the shared template.
 
 6. Make a separate branch for your PR
 

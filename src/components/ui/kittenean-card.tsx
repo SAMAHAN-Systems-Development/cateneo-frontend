@@ -210,16 +210,20 @@ function KitteneanCard({
               fill={COLOR_MAP[svgColor]}
             />
           </svg>
-          <img
-            className="rounded-full absolute border-[2.41px] border-white border-solid"
+          <picture
+            className="rounded-full absolute overflow-hidden border-[2.41px] border-white border-solid"
             style={{
               width: responsiveClamp(49.5, 121.61),
               height: responsiveClamp(49.5, 121.61),
               top: responsiveClamp(19.25, 42.72),
             }}
-            src={imageUrl}
-            alt="image of a cat"
-          />
+          >
+            <img
+              className="block h-full w-full object-cover"
+              src={imageUrl}
+              alt="image of a cat"
+            />
+          </picture>
         </div>
         <div
           className="font-gaegu flex flex-col relative w-[100%] max-[640px]:flex-wrap max-[640px]:flex-row"

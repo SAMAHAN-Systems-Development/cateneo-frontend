@@ -200,16 +200,20 @@ function CateneanCard({
               fill={COLOR_MAP[svgColor]}
             />
           </svg>
-          <img
-            className="rounded-full absolute border-[2.41px] border-white border-solid"
+          <picture
+            className="rounded-full absolute overflow-hidden border-[2.41px] border-white border-solid"
             style={{
               width: responsiveClamp(49.5, 121.61),
               height: responsiveClamp(49.5, 121.61),
               top: responsiveClamp(19.25, 42.72),
             }}
-            src={imageUrl}
-            alt="image of a cat"
-          />
+          >
+            <img
+              className="block h-full w-full object-cover"
+              src={imageUrl}
+              alt="Cat"
+            />
+          </picture>
         </div>
 
         {/* ── Info rows ── */}
@@ -220,7 +224,10 @@ function CateneanCard({
           {/* Name + gender */}
           <div
             className="flex items-center max-[640px]:order-1 max-[640px]:w-[80%]"
-            style={{ height: responsiveClamp(15.5, 27), gap: responsiveClamp(5.84, 8) }}
+            style={{
+              height: responsiveClamp(15.5, 27),
+              gap: responsiveClamp(5.84, 8),
+            }}
           >
             <CardTitle
               className="text-[24.9px] text-cateneo-darkbrown max-w-[80%] leading-none line-clamp-1"
@@ -234,7 +241,10 @@ function CateneanCard({
           {/* Location */}
           <div
             className="flex items-center pl-[4px] max-[640px]:order-3 max-[640px]:w-[100%]"
-            style={{ height: responsiveClamp(15.5, 27), gap: responsiveClamp(5.84, 8) }}
+            style={{
+              height: responsiveClamp(15.5, 27),
+              gap: responsiveClamp(5.84, 8),
+            }}
           >
             <svg
               viewBox="0 0 19 23"
@@ -263,7 +273,10 @@ function CateneanCard({
           {/* Color */}
           <div
             className="flex items-center max-[640px]:order-5 max-[640px]:w-[100%]"
-            style={{ height: responsiveClamp(16, 27.97), gap: responsiveClamp(5.84, 8) }}
+            style={{
+              height: responsiveClamp(16, 27.97),
+              gap: responsiveClamp(5.84, 8),
+            }}
           >
             <p
               className="text-[17.12px] text-cateneo-lightbrown"
@@ -295,7 +308,10 @@ function CateneanCard({
           {/* Health status */}
           <div
             className="flex min-w-0 items-center max-[640px]:order-7 max-[640px]:w-[100%]"
-            style={{ height: responsiveClamp(15.5, 27), gap: responsiveClamp(5.84, 8) }}
+            style={{
+              height: responsiveClamp(15.5, 27),
+              gap: responsiveClamp(5.84, 8),
+            }}
           >
             <p
               className="shrink-0 text-[17.12px] text-cateneo-lightbrown max-[640px]:w-[75px]"
@@ -315,7 +331,10 @@ function CateneanCard({
           {/* Medicines */}
           <div
             className="flex items-center relative max-[640px]:order-8 max-[640px]:w-[90%]"
-            style={{ height: responsiveClamp(15.5, 27), gap: responsiveClamp(5.84, 8) }}
+            style={{
+              height: responsiveClamp(15.5, 27),
+              gap: responsiveClamp(5.84, 8),
+            }}
           >
             <p
               className="shrink-0 text-[17.12px] text-cateneo-lightbrown"
@@ -409,13 +428,34 @@ function CateneanCard({
           height: responsiveClamp(36, 38.5),
         }}
       >
-        <path d="M9.36617 19.4304C11.5416 19.0999 12.9778 16.7278 12.574 14.132C12.1702 11.5363 10.0794 9.70001 7.90394 10.0305C5.72852 10.361 4.29233 12.7331 4.69611 15.3289C5.0999 17.9246 7.19076 19.7609 9.36617 19.4304Z" fill="#83491B" />
-        <path d="M18.699 13.2058C21.0875 13.1576 22.9712 10.8088 22.9064 7.95977C22.8415 5.11068 20.8526 2.84012 18.4641 2.88832C16.0756 2.93651 14.1919 5.28522 14.2568 8.1343C14.3216 10.9834 16.3105 13.254 18.699 13.2058Z" fill="#83491B" />
-        <path d="M34.9014 13.4824C36.2783 10.9876 35.6966 8.03312 33.6022 6.88334C31.5078 5.73355 28.6938 6.8239 27.3169 9.3187C25.9401 11.8135 26.5217 14.768 28.6161 15.9178C30.7105 17.0676 33.5245 15.9772 34.9014 13.4824Z" fill="#83491B" />
-        <path d="M37.2359 24.2518C38.9924 22.2977 39.0853 19.5266 37.4435 18.0623C35.8017 16.598 33.0468 16.9951 31.2904 18.9491C29.5339 20.9032 29.441 23.6743 31.0828 25.1386C32.7246 26.6029 35.4795 26.2059 37.2359 24.2518Z" fill="#83491B" />
-        <path d="M19.6842 29.5281C22.9276 30.3972 26.258 28.4851 27.1229 25.2573C27.9878 22.0295 26.0596 18.7083 22.8162 17.8392C19.5728 16.9701 16.2424 18.8823 15.3775 22.1101C14.5126 25.3379 16.4408 28.6591 19.6842 29.5281Z" fill="#83491B" />
-        <path d="M13.3137 34.5046C16.9897 35.4896 20.6708 33.6714 21.5357 30.4436C22.4006 27.2158 20.1217 23.8007 16.4457 22.8157C12.7697 21.8307 9.08857 23.6489 8.22368 26.8767C7.35879 30.1045 9.63765 33.5196 13.3137 34.5046Z" fill="#83491B" />
-        <path d="M23.1027 37.1277C26.7787 38.1127 30.4598 36.2945 31.3247 33.0667C32.1896 29.8389 29.9108 26.4237 26.2348 25.4387C22.5588 24.4538 18.8776 26.2719 18.0127 29.4997C17.1479 32.7276 19.4267 36.1427 23.1027 37.1277Z" fill="#83491B" />
+        <path
+          d="M9.36617 19.4304C11.5416 19.0999 12.9778 16.7278 12.574 14.132C12.1702 11.5363 10.0794 9.70001 7.90394 10.0305C5.72852 10.361 4.29233 12.7331 4.69611 15.3289C5.0999 17.9246 7.19076 19.7609 9.36617 19.4304Z"
+          fill="#83491B"
+        />
+        <path
+          d="M18.699 13.2058C21.0875 13.1576 22.9712 10.8088 22.9064 7.95977C22.8415 5.11068 20.8526 2.84012 18.4641 2.88832C16.0756 2.93651 14.1919 5.28522 14.2568 8.1343C14.3216 10.9834 16.3105 13.254 18.699 13.2058Z"
+          fill="#83491B"
+        />
+        <path
+          d="M34.9014 13.4824C36.2783 10.9876 35.6966 8.03312 33.6022 6.88334C31.5078 5.73355 28.6938 6.8239 27.3169 9.3187C25.9401 11.8135 26.5217 14.768 28.6161 15.9178C30.7105 17.0676 33.5245 15.9772 34.9014 13.4824Z"
+          fill="#83491B"
+        />
+        <path
+          d="M37.2359 24.2518C38.9924 22.2977 39.0853 19.5266 37.4435 18.0623C35.8017 16.598 33.0468 16.9951 31.2904 18.9491C29.5339 20.9032 29.441 23.6743 31.0828 25.1386C32.7246 26.6029 35.4795 26.2059 37.2359 24.2518Z"
+          fill="#83491B"
+        />
+        <path
+          d="M19.6842 29.5281C22.9276 30.3972 26.258 28.4851 27.1229 25.2573C27.9878 22.0295 26.0596 18.7083 22.8162 17.8392C19.5728 16.9701 16.2424 18.8823 15.3775 22.1101C14.5126 25.3379 16.4408 28.6591 19.6842 29.5281Z"
+          fill="#83491B"
+        />
+        <path
+          d="M13.3137 34.5046C16.9897 35.4896 20.6708 33.6714 21.5357 30.4436C22.4006 27.2158 20.1217 23.8007 16.4457 22.8157C12.7697 21.8307 9.08857 23.6489 8.22368 26.8767C7.35879 30.1045 9.63765 33.5196 13.3137 34.5046Z"
+          fill="#83491B"
+        />
+        <path
+          d="M23.1027 37.1277C26.7787 38.1127 30.4598 36.2945 31.3247 33.0667C32.1896 29.8389 29.9108 26.4237 26.2348 25.4387C22.5588 24.4538 18.8776 26.2719 18.0127 29.4997C17.1479 32.7276 19.4267 36.1427 23.1027 37.1277Z"
+          fill="#83491B"
+        />
       </svg>
     </Card>
   );
